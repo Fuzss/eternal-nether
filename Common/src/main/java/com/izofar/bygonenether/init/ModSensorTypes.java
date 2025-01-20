@@ -1,20 +1,22 @@
 package com.izofar.bygonenether.init;
 
-import com.izofar.bygonenether.entity.ai.sensing.PiglinBruteSpecificSensor;
-import com.izofar.bygonenether.entity.ai.sensing.PiglinPrisonerSpecificSensor;
+import com.izofar.bygonenether.world.entity.ai.sensing.ModPiglinBruteSpecificSensor;
+import com.izofar.bygonenether.world.entity.ai.sensing.PiglinPrisonerSpecificSensor;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.ai.sensing.SensorType;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
 
-public abstract class ModSensorTypes {
+public class ModSensorTypes {
+    public static final Holder.Reference<SensorType<ModPiglinBruteSpecificSensor>> PIGLIN_BRUTE_SPECIFIC_SENSOR = ModRegistry.REGISTRIES.register(
+            Registries.SENSOR_TYPE,
+            "piglin_brute_specific_sensor",
+            () -> new SensorType<>(ModPiglinBruteSpecificSensor::new));
+    public static final Holder.Reference<SensorType<PiglinPrisonerSpecificSensor>> PIGLIN_PRISONER_SPECIFIC_SENSOR = ModRegistry.REGISTRIES.register(
+            Registries.SENSOR_TYPE,
+            "piglin_prisoner_specific_sensor",
+            () -> new SensorType<>(PiglinPrisonerSpecificSensor::new));
 
-	public static final DeferredRegister<SensorType<?>> MODDED_SENSOR_TYPES = DeferredRegister.create(ForgeRegistries.SENSOR_TYPES, "bygonenether");
-	
-	public static final RegistryObject<SensorType<PiglinBruteSpecificSensor>> PIGLIN_BRUTE_SPECIFIC_SENSOR = MODDED_SENSOR_TYPES.register("piglin_brute_specific_sensor", () -> new SensorType<>(PiglinBruteSpecificSensor::new));
-	public static final RegistryObject<SensorType<PiglinPrisonerSpecificSensor>> PIGLIN_PRISONER_SPECIFIC_SENSOR = MODDED_SENSOR_TYPES.register("piglin_prisoner_specific_sensor", () -> new SensorType<>(PiglinPrisonerSpecificSensor::new));
-
-	public static void register(IEventBus eventBus) { MODDED_SENSOR_TYPES.register(eventBus); }
-	
+    public static void boostrap() {
+        // NO-OP
+    }
 }

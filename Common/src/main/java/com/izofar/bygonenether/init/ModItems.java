@@ -1,83 +1,102 @@
 package com.izofar.bygonenether.init;
 
-import com.izofar.bygonenether.BygoneNetherMod;
-import com.izofar.bygonenether.item.ModShieldItem;
-import com.izofar.bygonenether.item.WarpedEnderpearlItem;
-import net.minecraft.world.item.*;
-import net.minecraftforge.common.ForgeSpawnEggItem;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import com.izofar.bygonenether.world.item.UnrepairableShieldItem;
+import com.izofar.bygonenether.world.item.WarpedEnderpearlItem;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.JukeboxSong;
+import net.minecraft.world.item.Rarity;
 
 public abstract class ModItems {
+    public static final Holder.Reference<Item> PIGLIN_PRISONER_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
+            ModEntityTypes.PIGLIN_PRISONER,
+            0XC79E88,
+            0XF9F3A4);
+    public static final Holder.Reference<Item> PIGLIN_HUNTER_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
+            ModEntityTypes.PIGLIN_HUNTER,
+            0XBA6645,
+            0XF9F3A4);
+    public static final Holder.Reference<Item> WEX_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
+            ModEntityTypes.WEX,
+            0X7198C8,
+            0X2B4667);
+    public static final Holder.Reference<Item> WARPED_ENDERMAN_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
+            ModEntityTypes.WARPED_ENDERMAN,
+            0X0E8281,
+            0X000000);
+    public static final Holder.Reference<Item> WRAITHER_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
+            ModEntityTypes.WRAITHER,
+            0X273333,
+            0X474D4D);
+    public static final Holder.Reference<Item> CORPOR_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
+            ModEntityTypes.CORPOR,
+            0X141414,
+            0X4A5757);
+    public static final Holder.Reference<Item> WITHER_SKELETON_KNIGHT_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
+            ModEntityTypes.WITHER_SKELETON_KNIGHT,
+            0X242424,
+            0X4E5252);
+    public static final Holder.Reference<Item> WITHER_SKELETON_HORSE_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
+            ModEntityTypes.WITHER_SKELETON_HORSE,
+            0X242424,
+            0X4D4747);
 
-	public static final DeferredRegister<Item> MODDED_ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, BygoneNetherMod.MODID);
+    public static final Holder.Reference<Item> COBBLED_BLACKSTONE = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.COBBLED_BLACKSTONE);
 
-	public static final RegistryObject<Item> PIGLIN_PRISONER_SPAWN_EGG = MODDED_ITEMS.register("piglin_prisoner_spawn_egg", () -> new ForgeSpawnEggItem(ModEntityTypes.PIGLIN_PRISONER, 0xc79e88, 0xf9f3a4, new Item.Properties()));
-	public static final RegistryObject<Item> PIGLIN_HUNTER_SPAWN_EGG = MODDED_ITEMS.register("piglin_hunter_spawn_egg", () -> new ForgeSpawnEggItem(ModEntityTypes.PIGLIN_HUNTER, 0xba6645, 0xf9f3a4, new Item.Properties()));
-	public static final RegistryObject<Item> WEX_SPAWN_EGG = MODDED_ITEMS.register("wex_spawn_egg", () -> new ForgeSpawnEggItem(ModEntityTypes.WEX, 0x7198c8, 0x2b4667, new Item.Properties()));
-	public static final RegistryObject<Item> WARPED_ENDERMAN_SPAWN_EGG = MODDED_ITEMS.register("warped_enderman_spawn_egg", () -> new ForgeSpawnEggItem(ModEntityTypes.WARPED_ENDERMAN, 0x0e8281, 0x000000, new Item.Properties()));
-	public static final RegistryObject<Item> WRAITHER_SPAWN_EGG = MODDED_ITEMS.register("wraither_spawn_egg", () -> new ForgeSpawnEggItem(ModEntityTypes.WRAITHER, 0x273333, 0x474d4d, new Item.Properties()));
-	public static final RegistryObject<Item> CORPOR_SPAWN_EGG = MODDED_ITEMS.register("corpor_spawn_egg", () -> new ForgeSpawnEggItem(ModEntityTypes.CORPOR, 0x141414, 0x4a5757, new Item.Properties()));
-	public static final RegistryObject<Item> WITHER_SKELETON_KNIGHT_SPAWN_EGG = MODDED_ITEMS.register("wither_skeleton_knight_spawn_egg", () -> new ForgeSpawnEggItem(ModEntityTypes.WITHER_SKELETON_KNIGHT, 0x242424, 0x4e5252, new Item.Properties()));
-	public static final RegistryObject<Item> WITHER_SKELETON_HORSE_SPAWN_EGG = MODDED_ITEMS.register("wither_skeleton_horse_spawn_egg", () -> new ForgeSpawnEggItem(ModEntityTypes.WITHER_SKELETON_HORSE, 0x242424, 0x4d4747, new Item.Properties()));
+    public static final Holder.Reference<Item> WITHERED_BLACKSTONE = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.WITHERED_BLACKSTONE);
+    public static final Holder.Reference<Item> WITHERED_BLACKSTONE_STAIRS = ModRegistry.REGISTRIES.registerBlockItem(
+            ModBlocks.WITHERED_BLACKSTONE_STAIRS);
+    public static final Holder.Reference<Item> WITHERED_BLACKSTONE_SLAB = ModRegistry.REGISTRIES.registerBlockItem(
+            ModBlocks.WITHERED_BLACKSTONE_SLAB);
 
-	public static final RegistryObject<Item> COBBLED_BLACKSTONE = MODDED_ITEMS.register("cobbled_blackstone", () -> new BlockItem(ModBlocks.COBBLED_BLACKSTONE.get(), new Item.Properties()));
+    public static final Holder.Reference<Item> CRACKED_WITHERED_BLACKSTONE = ModRegistry.REGISTRIES.registerBlockItem(
+            ModBlocks.CRACKED_WITHERED_BLACKSTONE);
+    public static final Holder.Reference<Item> CRACKED_WITHERED_BLACKSTONE_STAIRS = ModRegistry.REGISTRIES.registerBlockItem(
+            ModBlocks.CRACKED_WITHERED_BLACKSTONE_STAIRS);
+    public static final Holder.Reference<Item> CRACKED_WITHERED_BLACKSTONE_SLAB = ModRegistry.REGISTRIES.registerBlockItem(
+            ModBlocks.CRACKED_WITHERED_BLACKSTONE_SLAB);
 
-	public static final RegistryObject<Item> WITHERED_BLACKSTONE = MODDED_ITEMS.register("withered_blackstone", () -> new BlockItem(ModBlocks.WITHERED_BLACKSTONE.get(), new Item.Properties()));
-	public static final RegistryObject<Item> WITHERED_BLACKSTONE_STAIRS = MODDED_ITEMS.register("withered_blackstone_stairs", () -> new BlockItem(ModBlocks.WITHERED_BLACKSTONE_STAIRS.get(), new Item.Properties()));
-	public static final RegistryObject<Item> WITHERED_BLACKSTONE_SLAB = MODDED_ITEMS.register("withered_blackstone_slab", () -> new BlockItem(ModBlocks.WITHERED_BLACKSTONE_SLAB.get(), new Item.Properties()));
+    public static final Holder.Reference<Item> WITHERED_BASALT = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.WITHERED_BASALT);
+    public static final Holder.Reference<Item> WITHERED_COAL_BLACK = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.WITHERED_COAL_BLOCK);
+    public static final Holder.Reference<Item> WITHERED_QUARTZ_BLOCK = ModRegistry.REGISTRIES.registerBlockItem(
+            ModBlocks.WITHERED_QUARTZ_BLOCK);
 
-	public static final RegistryObject<Item> CRACKED_WITHERED_BLACKSTONE = MODDED_ITEMS.register("cracked_withered_blackstone", () -> new BlockItem(ModBlocks.CRACKED_WITHERED_BLACKSTONE.get(), new Item.Properties()));
-	public static final RegistryObject<Item> CRACKED_WITHERED_BLACKSTONE_STAIRS = MODDED_ITEMS.register("cracked_withered_blackstone_stairs", () -> new BlockItem(ModBlocks.CRACKED_WITHERED_BLACKSTONE_STAIRS.get(), new Item.Properties()));
-	public static final RegistryObject<Item> CRACKED_WITHERED_BLACKSTONE_SLAB = MODDED_ITEMS.register("cracked_withered_blackstone_slab", () -> new BlockItem(ModBlocks.CRACKED_WITHERED_BLACKSTONE_SLAB.get(), new Item.Properties()));
+    public static final Holder.Reference<Item> CHISELED_WITHERED_BLACKSTONE = ModRegistry.REGISTRIES.registerBlockItem(
+            ModBlocks.CHISELED_WITHERED_BLACKSTONE);
+    public static final Holder.Reference<Item> WITHERED_DEBRIS = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.WITHERED_DEBRIS);
+    public static final Holder.Reference<Item> SOUL_STONE = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.SOUL_STONE);
 
-	public static final RegistryObject<Item> WITHERED_BASALT = MODDED_ITEMS.register("withered_basalt", () -> new BlockItem(ModBlocks.WITHERED_BASALT.get(), new Item.Properties()));
-	public static final RegistryObject<Item> WITHERED_COAL_BLACK = MODDED_ITEMS.register("withered_coal_block", () -> new BlockItem(ModBlocks.WITHERED_COAL_BLOCK.get(), new Item.Properties()));
-	public static final RegistryObject<Item> WITHERED_QUARTZ_BLOCK = MODDED_ITEMS.register("withered_quartz_block", () -> new BlockItem(ModBlocks.WITHERED_QUARTZ_BLOCK.get(), new Item.Properties()));
+    public static final Holder.Reference<Item> WARPED_NETHER_BRICKS = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.WARPED_NETHER_BRICKS);
+    public static final Holder.Reference<Item> CHISELED_WARPED_NETHER_BRICKS = ModRegistry.REGISTRIES.registerBlockItem(
+            ModBlocks.CHISELED_WARPED_NETHER_BRICKS);
+    public static final Holder.Reference<Item> WARPED_NETHER_BRICK_STAIRS = ModRegistry.REGISTRIES.registerBlockItem(
+            ModBlocks.WARPED_NETHER_BRICK_STAIRS);
+    public static final Holder.Reference<Item> WARPED_NETHER_BRICK_SLAB = ModRegistry.REGISTRIES.registerBlockItem(
+            ModBlocks.WARPED_NETHER_BRICK_SLAB);
 
+    public static final ResourceKey<JukeboxSong> WITHER_WALTZ_JUKEBOX_SONG = ModRegistry.REGISTRIES.makeResourceKey(
+            Registries.JUKEBOX_SONG,
+            "wither_waltz");
+    public static final Holder.Reference<Item> WITHER_WALTZ_MUSIC_DISC = ModRegistry.REGISTRIES.registerItem(
+            "wither_waltz_music_disc",
+            () -> new Item(new Item.Properties().stacksTo(1)
+                    .rarity(Rarity.RARE)
+                    .jukeboxPlayable(WITHER_WALTZ_JUKEBOX_SONG)));
+    public static final Holder.Reference<Item> WARPED_ENDER_PEARL = ModRegistry.REGISTRIES.registerItem(
+            "warped_ender_pearl",
+            () -> new WarpedEnderpearlItem(new Item.Properties().stacksTo(16).rarity(Rarity.RARE)));
 
-	public static final RegistryObject<Item> CHISELED_WITHERED_BLACKSTONE = MODDED_ITEMS.register("chiseled_withered_blackstone", () -> new BlockItem(ModBlocks.CHISELED_WITHERED_BLACKSTONE.get(), new Item.Properties()));
-	public static final RegistryObject<Item> WITHERED_DEBRIS = MODDED_ITEMS.register("withered_debris", () -> new BlockItem(ModBlocks.WITHERED_DEBRIS.get(), new Item.Properties()));
-	public static final RegistryObject<Item> SOUL_STONE = MODDED_ITEMS.register("soul_stone", () -> new BlockItem(ModBlocks.SOUL_STONE.get(), new Item.Properties()));
+    public static final Holder.Reference<Item> NETHERITE_BELL = ModRegistry.REGISTRIES.registerItem("netherite_bell",
+            () -> new BlockItem(ModBlocks.NETHERITE_BELL.value(),
+                    new Item.Properties().rarity(Rarity.EPIC).fireResistant()));
+    public static final Holder.Reference<Item> GILDED_NETHERITE_SHIELD = ModRegistry.REGISTRIES.registerItem(
+            "gilded_netherite_shield",
+            () -> new UnrepairableShieldItem(new Item.Properties().durability(1512).rarity(Rarity.RARE).fireResistant()));
 
-	public static final RegistryObject<Item> WARPED_NETHER_BRICKS = MODDED_ITEMS.register("warped_nether_bricks", () -> new BlockItem(ModBlocks.WARPED_NETHER_BRICKS.get(), new Item.Properties()));
-	public static final RegistryObject<Item> CHISELED_WARPED_NETHER_BRICKS = MODDED_ITEMS.register("chiseled_warped_nether_bricks", () -> new BlockItem(ModBlocks.CHISELED_WARPED_NETHER_BRICKS.get(), new Item.Properties()));
-	public static final RegistryObject<Item> WARPED_NETHER_BRICK_STAIRS = MODDED_ITEMS.register("warped_nether_brick_stairs", () -> new BlockItem(ModBlocks.WARPED_NETHER_BRICK_STAIRS.get(), new Item.Properties()));
-	public static final RegistryObject<Item> WARPED_NETHER_BRICK_SLAB = MODDED_ITEMS.register("warped_nether_brick_slab", () -> new BlockItem(ModBlocks.WARPED_NETHER_BRICK_SLAB.get(), new Item.Properties()));
-
-	public static final RegistryObject<Item> WITHER_WALTZ_MUSIC_DISC = MODDED_ITEMS.register("wither_waltz_music_disc", () -> new RecordItem(4, ModSounds.WITHER_WALTZ, new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 5040));
-	public static final RegistryObject<Item> WARPED_ENDER_PEARL = MODDED_ITEMS.register("warped_ender_pearl", () -> new WarpedEnderpearlItem(new Item.Properties().stacksTo(16).rarity(Rarity.RARE)));
-
-	public static final RegistryObject<Item> NETHERITE_BELL = MODDED_ITEMS.register("netherite_bell", () -> new BlockItem(ModBlocks.NETHERITE_BELL.get(), new Item.Properties().rarity(Rarity.EPIC).fireResistant()));
-	public static final RegistryObject<Item> GILDED_NETHERITE_SHIELD = MODDED_ITEMS.register("gilded_netherite_shield", () -> new ModShieldItem(new Item.Properties().durability(1512).rarity(Rarity.RARE).fireResistant()));
-
-	public static RegistryObject<Item> CRUSHED_WITHERED_DEBRIS;
-	public static RegistryObject<Item> NETHERITE_SCRAP_NUGGET;
-	public static RegistryObject<Item> NETHERITE_SCRAP_INGOT;
-
-	public static RegistryObject<Item> WITHERED_BLACKSTONE_VERTICAL_SLAB;
-	public static RegistryObject<Item> CRACKED_WITHERED_BLACKSTONE_VERTICAL_SLAB;
-	public static RegistryObject<Item> WARPED_NETHER_BRICK_VERTICAL_SLAB;
-	
-	public static void register(IEventBus eventBus) { 
-		registerModCompatibilityItems();
-		MODDED_ITEMS.register(eventBus); 
-	}
-
-	private static void registerModCompatibilityItems() {
-		if (ModList.get().isLoaded("create")) {
-			CRUSHED_WITHERED_DEBRIS = MODDED_ITEMS.register("crushed_withered_debris", () -> new Item((new Item.Properties())));
-			NETHERITE_SCRAP_NUGGET = MODDED_ITEMS.register("netherite_scrap_nugget", () -> new Item((new Item.Properties())));
-			NETHERITE_SCRAP_INGOT = MODDED_ITEMS.register("netherite_scrap_ingot", () -> new Item((new Item.Properties())));
-		}
-		if (ModList.get().isLoaded("quark")) {
-			WITHERED_BLACKSTONE_VERTICAL_SLAB = MODDED_ITEMS.register("withered_blackstone_vertical_slab", () -> new BlockItem(ModBlocks.WITHERED_BLACKSTONE_VERTICAL_SLAB.get(), new Item.Properties()));
-			CRACKED_WITHERED_BLACKSTONE_VERTICAL_SLAB = MODDED_ITEMS.register("cracked_withered_blackstone_vertical_slab", () -> new BlockItem(ModBlocks.CRACKED_WITHERED_BLACKSTONE_VERTICAL_SLAB.get(), new Item.Properties()));
-			WARPED_NETHER_BRICK_VERTICAL_SLAB = MODDED_ITEMS.register("warped_nether_brick_vertical_slab", () -> new BlockItem(ModBlocks.WARPED_NETHER_BRICK_VERTICAL_SLAB.get(), new Item.Properties()));
-		}
-	}
-
+    public static void boostrap() {
+        // NO-OP
+    }
 }

@@ -1,6 +1,6 @@
 package com.izofar.bygonenether.mixin;
 
-import com.izofar.bygonenether.init.ModTags;
+import com.izofar.bygonenether.init.ModRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
@@ -25,7 +25,8 @@ public class NoDeltasInStructuresMixin {
     private void bygonenether_noDeltasInStructures(FeaturePlaceContext<DeltaFeatureConfiguration> context, CallbackInfoReturnable<Boolean> cir) {
         Registry<Structure> configuredStructureFeatureRegistry = context.level().registryAccess().registryOrThrow(Registries.STRUCTURE);
         StructureManager structureFeatureManager = ((WorldGenRegionAccessor)context.level()).getStructureFeatureManager();
-        for (Holder<Structure> configuredStructureFeature : configuredStructureFeatureRegistry.getOrCreateTag(ModTags.NO_BASALT)) {
+        for (Holder<Structure> configuredStructureFeature : configuredStructureFeatureRegistry.getOrCreateTag(
+                ModRegistry.NO_BASALT_STRUCTURE_TAG_KEY)) {
             if (structureFeatureManager.getStructureAt(context.origin(), configuredStructureFeature.value()).isValid()) {
                 cir.setReturnValue(false);
                 return;

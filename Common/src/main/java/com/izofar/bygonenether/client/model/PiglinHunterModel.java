@@ -1,6 +1,6 @@
 package com.izofar.bygonenether.client.model;
 
-import com.izofar.bygonenether.entity.PiglinHunter;
+import com.izofar.bygonenether.world.entity.monster.PiglinHunter;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.PiglinModel;
@@ -9,12 +9,8 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class PiglinHunterModel extends PiglinModel<PiglinHunter> {
-
     private final ModelPart hoglinSkull;
 
     public PiglinHunterModel(ModelPart root) {
@@ -26,7 +22,15 @@ public class PiglinHunterModel extends PiglinModel<PiglinHunter> {
         MeshDefinition meshdefinition = PiglinModel.createMesh(CubeDeformation.NONE);
         PartDefinition partdefinition = meshdefinition.getRoot();
 
-        partdefinition.addOrReplaceChild("hoglin_skull", CubeListBuilder.create().texOffs(61, 1).addBox(-7.0F, 16.5F, 0.0F, 14.0F, 6.0F, 19.0F, new CubeDeformation(-0.9F)).texOffs(61, 3).addBox(5.0F, 11.5F, 0.0F, 2.0F, 11.0F, 2.0F, CubeDeformation.NONE).texOffs(70, 3).addBox(-7.0F, 11.5F, 0.0F, 2.0F, 11.0F, 2.0F, CubeDeformation.NONE), PartPose.offsetAndRotation(0.0F, 15.5F, 25.0F, -1.6581F, 0.0F, 3.1416F));
+        partdefinition.addOrReplaceChild("hoglin_skull",
+                CubeListBuilder.create()
+                        .texOffs(61, 1)
+                        .addBox(-7.0F, 16.5F, 0.0F, 14.0F, 6.0F, 19.0F, new CubeDeformation(-0.9F))
+                        .texOffs(61, 3)
+                        .addBox(5.0F, 11.5F, 0.0F, 2.0F, 11.0F, 2.0F, CubeDeformation.NONE)
+                        .texOffs(70, 3)
+                        .addBox(-7.0F, 11.5F, 0.0F, 2.0F, 11.0F, 2.0F, CubeDeformation.NONE),
+                PartPose.offsetAndRotation(0.0F, 15.5F, 25.0F, -1.6581F, 0.0F, 3.1416F));
         return LayerDefinition.create(meshdefinition, 128, 64);
     }
 
@@ -50,18 +54,18 @@ public class PiglinHunterModel extends PiglinModel<PiglinHunter> {
     }
 
     private void poseRightArmShield() {
-        this.rightArm.xRot = (-(float)Math.PI / 2F) * 0.5F - 0.9424779F + ((float)Math.PI / 4F);
-        this.rightArm.yRot = (-(float)Math.PI / 6F);
+        this.rightArm.xRot = (-(float) Math.PI / 2F) * 0.5F - 0.9424779F + ((float) Math.PI / 4F);
+        this.rightArm.yRot = (-(float) Math.PI / 6F);
     }
 
     private void poseLeftArmShield() {
-        this.leftArm.xRot = (-(float)Math.PI / 2F) * 0.5F - 0.9424779F + ((float)Math.PI / 4F);
-        this.leftArm.yRot = ((float)Math.PI / 6F);
+        this.leftArm.xRot = (-(float) Math.PI / 2F) * 0.5F - 0.9424779F + ((float) Math.PI / 4F);
+        this.leftArm.yRot = ((float) Math.PI / 6F);
     }
 
     @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        super.renderToBuffer(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-        hoglinSkull.render(poseStack, buffer, packedLight, packedOverlay);
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int color) {
+        super.renderToBuffer(poseStack, buffer, packedLight, packedOverlay, color);
+        this.hoglinSkull.render(poseStack, buffer, packedLight, packedOverlay, color);
     }
 }

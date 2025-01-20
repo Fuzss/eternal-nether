@@ -52,7 +52,7 @@ public class ModifyPiglinBruteAi {
             return;
         }
 
-        Optional<Player> optional2 = brain.getMemory(ModMemoryModuleTypes.NEAREST_TARGETABLE_PLAYER_NOT_WEARING_GILD.get());
+        Optional<Player> optional2 = brain.getMemory(ModMemoryModuleTypes.NEAREST_TARGETABLE_PLAYER_NOT_WEARING_GILD_MEMORY_MODULE_TYPE.get());
         cir.setReturnValue(optional2.isPresent() && Sensor.isEntityAttackable(piglin, optional2.get()) ? optional2 : Optional.empty());
     }
 

@@ -1,6 +1,6 @@
 package com.izofar.bygonenether.mixin;
 
-import com.izofar.bygonenether.entity.ai.ModPiglinBruteAi;
+import com.izofar.bygonenether.world.entity.ai.ModPiglinBruteAi;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.behavior.BehaviorUtils;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
@@ -14,7 +14,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
@@ -47,6 +46,6 @@ public class ModifyPiglinAi {
             )
     )
     private static boolean bygonenether_isWearingGold(ItemStack stack, LivingEntity wearer) {
-        return stack.makesPiglinsNeutral(wearer) || ModPiglinBruteAi.armorIsGoldTrim(wearer, stack);
+        return stack.makesPiglinsNeutral(wearer) || ModPiglinBruteAi.armorIsGoldTrim(stack);
     }
 }

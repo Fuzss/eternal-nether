@@ -1,7 +1,7 @@
 package com.izofar.bygonenether.mixin;
 
-import com.izofar.bygonenether.BygoneNetherMod;
-import com.izofar.bygonenether.init.ModTags;
+import com.izofar.bygonenether.init.ModRegistry;
+import fuzs.eternalnether.EternalNether;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -25,20 +25,25 @@ public class NoBasaltColumnsInStructuresMixin {
             method = "canPlaceAt(Lnet/minecraft/world/level/LevelAccessor;ILnet/minecraft/core/BlockPos$MutableBlockPos;)Z",
             at = @At(value = "HEAD"),
             cancellable = true
-        )
+    )
     private static void bygonenether_noBasaltColumnsInStructures(LevelAccessor levelAccessor, int seaLevel, BlockPos.MutableBlockPos mutableBlockPos, CallbackInfoReturnable<Boolean> cir) {
-        if(!(levelAccessor instanceof WorldGenRegion)) {
+        if (!(levelAccessor instanceof WorldGenRegion)) {
             return;
         }
 
         SectionPos sectionPos = SectionPos.of(mutableBlockPos);
-        if (!levelAccessor.getChunk(sectionPos.x(), sectionPos.z()).getStatus().isOrAfter(ChunkStatus.STRUCTURE_REFERENCES)) {
-            BygoneNetherMod.LOGGER.warn("Bygone Nether: Detected a mod with a broken basalt columns configuredfeature that is trying to place blocks outside the 3x3 safe chunk area for features. Find the broken mod and report to them to fix the placement of their basalt columns feature.");
+        if (!levelAccessor.getChunk(sectionPos.x(), sectionPos.z())
+                .getStatus()
+                .isOrAfter(ChunkStatus.STRUCTURE_REFERENCES)) {
+            EternalNether.LOGGER.warn(
+                    "Bygone Nether: Detected a mod with a broken basalt columns configuredfeature that is trying to place blocks outside the 3x3 safe chunk area for features. Find the broken mod and report to them to fix the placement of their basalt columns feature.");
             return;
         }
-        Registry<Structure> configuredStructureFeatureRegistry = levelAccessor.registryAccess().registryOrThrow(Registries.STRUCTURE);
-        StructureManager structureFeatureManager = ((WorldGenRegionAccessor)levelAccessor).getStructureFeatureManager();
-        for (Holder<Structure> configuredStructureFeature : configuredStructureFeatureRegistry.getOrCreateTag(ModTags.NO_BASALT)) {
+        Registry<Structure> configuredStructureFeatureRegistry = levelAccessor.registryAccess()
+                .registryOrThrow(Registries.STRUCTURE);
+        StructureManager structureFeatureManager = ((WorldGenRegionAccessor) levelAccessor).getStructureFeatureManager();
+        for (Holder<Structure> configuredStructureFeature : configuredStructureFeatureRegistry.getOrCreateTag(
+                ModRegistry.NO_BASALT_STRUCTURE_TAG_KEY)) {
             if (structureFeatureManager.getStructureAt(mutableBlockPos, configuredStructureFeature.value()).isValid()) {
                 cir.setReturnValue(false);
                 return;
