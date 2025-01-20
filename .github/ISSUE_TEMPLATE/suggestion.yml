@@ -1,27 +1,46 @@
-# This template is repurposed from the Create Mod bug report template at:
-#   https://raw.githubusercontent.com/Creators-of-Create/Create/mc1.18/dev/.github/ISSUE_TEMPLATE/suggestion.yml
-name: Suggestion
-description: Suggest something that would improve Bygone Nether
-labels: [ "suggestion" ]
+name: Leave A Suggestion
+description: >-
+  Please do not ask for mod updates or ports, they will come when they are ready.
+title: "[Suggestion]: "
+labels: ["enhancement"]
+assignees:
+  - Fuzss
 body:
-  -   type: textarea
-      attributes:
-        label: Describe the Suggestion
-        description: What should I add or change to make Bygone Nether better?
-      validations:
-        required: true
-  -   type: textarea
-      attributes:
-        label: Screenshots and Videos
-        description: If applicable, add screenshots or videos to help explain your suggestion.
-      validations:
-        required: false
-  -   type: textarea
-      attributes:
-        label: Additional Context
-        description: Add any extra context about the suggestion here.
-      validations:
-        required: false
-  -   type: markdown
-      attributes:
-        value: "Thank you for taking the time to make this suggestion and help improve Bygone Nether!"
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this issue report!
+  - type: dropdown
+    id: loader
+    attributes:
+      label: Mod Loader (Optional)
+      description: What mod loader are you using to play the mod?
+      multiple: false
+      options:
+        - "⸺"
+        - "Fabric"
+        - "NeoForge"
+        - "Forge"
+        - "Quilt"
+    validations:
+      required: true
+  - type: input
+    id: minecraft
+    attributes:
+      label: Minecraft Version(s) (Optional)
+      description: What Minecraft version(s) are you using the play the mod?
+      placeholder: ex. 1.20.1
+  - type: input
+    id: version
+    attributes:
+      label: Mod Version(s) (Optional)
+      description: What mod version(s) are you using to play?
+      placeholder: ex. v8.0.0
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggestion (Required)
+      placeholder: >-
+        ex. Here is my very awesome suggestion for your mod. It would be some much better if you could add that!
+    validations:
+      required: true

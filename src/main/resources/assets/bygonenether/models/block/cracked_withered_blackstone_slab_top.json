@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/slab_top",
-  "textures": {
-    "bottom": "bygonenether:block/cracked_withered_blackstone",
-    "top": "bygonenether:block/cracked_withered_blackstone",
-    "side": "bygonenether:block/cracked_withered_blackstone"
-  }
-}
