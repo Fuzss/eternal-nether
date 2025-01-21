@@ -1,20 +1,22 @@
 package fuzs.eternalnether.client;
 
-import com.izofar.bygonenether.client.renderer.blockentity.NetheriteBellRenderer;
-import com.izofar.bygonenether.client.renderer.entity.*;
-import com.izofar.bygonenether.init.ModEntityTypes;
-import com.izofar.bygonenether.init.ModItems;
+import fuzs.eternalnether.client.renderer.ShieldItemRenderer;
+import fuzs.eternalnether.client.renderer.blockentity.NetheriteBellRenderer;
+import fuzs.eternalnether.client.renderer.entity.*;
+import fuzs.eternalnether.init.ModBlocks;
+import fuzs.eternalnether.init.ModEntityTypes;
+import fuzs.eternalnether.init.ModItems;
 import fuzs.eternalnether.EternalNether;
 import fuzs.puzzleslib.api.client.core.v1.ClientModConstructor;
-import fuzs.puzzleslib.api.client.core.v1.context.BlockEntityRenderersContext;
-import fuzs.puzzleslib.api.client.core.v1.context.BuiltinModelItemRendererContext;
-import fuzs.puzzleslib.api.client.core.v1.context.EntityRenderersContext;
-import fuzs.puzzleslib.api.client.core.v1.context.ItemModelPropertiesContext;
+import fuzs.puzzleslib.api.client.core.v1.context.*;
+import fuzs.puzzleslib.api.core.v1.ContentRegistrationFlags;
+import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 
 public class EternalNetherClient implements ClientModConstructor {
     public static final ResourceLocation BLOCKING_ITEM_MODEL_PROPERTY = EternalNether.id("blocking");
@@ -34,14 +36,19 @@ public class EternalNetherClient implements ClientModConstructor {
     }
 
     @Override
+    public void onRegisterBlockColorProviders(ColorProvidersContext<Block, BlockColor> context) {
+        ClientModConstructor.super.onRegisterBlockColorProviders(context);
+    }
+
+    @Override
     public void onRegisterBlockEntityRenderers(BlockEntityRenderersContext context) {
-        context.registerBlockEntityRenderer(ModEntityTypes.NETHERITE_BELL_BLOCK_ENTITY_TYPE.value(),
+        context.registerBlockEntityRenderer(ModBlocks.NETHERITE_BELL_BLOCK_ENTITY_TYPE.value(),
                 NetheriteBellRenderer::new);
     }
 
     @Override
     public void onRegisterBuiltinModelItemRenderers(BuiltinModelItemRendererContext context) {
-        context.registerItemRenderer();
+        context.registerItemRenderer(new ShieldItemRenderer(), ModItems.GILDED_NETHERITE_SHIELD.value());
     }
 
     @Override
@@ -52,5 +59,10 @@ public class EternalNetherClient implements ClientModConstructor {
                             livingEntity.getUseItem() == itemStack ? 1.0F : 0.0F;
                 },
                 ModItems.GILDED_NETHERITE_SHIELD.value());
+    }
+
+    @Override
+    public ContentRegistrationFlags[] getContentRegistrationFlags() {
+        return new ContentRegistrationFlags[]{ContentRegistrationFlags.DYNAMIC_RENDERERS};
     }
 }

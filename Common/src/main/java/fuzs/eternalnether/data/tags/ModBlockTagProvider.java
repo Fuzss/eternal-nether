@@ -1,7 +1,7 @@
 package fuzs.eternalnether.data.tags;
 
-import com.izofar.bygonenether.init.ModBlocks;
-import com.izofar.bygonenether.init.ModRegistry;
+import fuzs.eternalnether.init.ModBlocks;
+import fuzs.eternalnether.init.ModRegistry;
 import fuzs.puzzleslib.api.data.v2.core.DataProviderContext;
 import fuzs.puzzleslib.api.data.v2.tags.AbstractTagProvider;
 import net.minecraft.core.HolderLookup;

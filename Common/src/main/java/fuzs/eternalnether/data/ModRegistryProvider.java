@@ -1,7 +1,7 @@
 package fuzs.eternalnether.data;
 
-import com.izofar.bygonenether.init.ModItems;
-import com.izofar.bygonenether.init.ModSoundEvents;
+import fuzs.eternalnether.init.ModItems;
+import fuzs.eternalnether.init.ModSoundEvents;
 import fuzs.puzzleslib.api.data.v2.AbstractRegistriesDatapackGenerator;
 import fuzs.puzzleslib.api.data.v2.core.DataProviderContext;
 import net.minecraft.Util;
