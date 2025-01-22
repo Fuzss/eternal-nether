@@ -1,6 +1,5 @@
 package fuzs.eternalnether;
 
-import fuzs.eternalnether.handler.BlockInteractionHandler;
 import fuzs.eternalnether.init.ModEntityTypes;
 import fuzs.eternalnether.init.ModFeatures;
 import fuzs.eternalnether.init.ModItems;
@@ -9,6 +8,7 @@ import fuzs.eternalnether.util.CreativeModeTabHelper;
 import fuzs.eternalnether.world.entity.animal.horse.WitherSkeletonHorse;
 import fuzs.eternalnether.world.entity.monster.*;
 import fuzs.eternalnether.world.entity.monster.piglin.PiglinPrisoner;
+import fuzs.eternalnether.world.entity.monster.piglin.PiglinPrisonerAi;
 import fuzs.eternalnether.world.entity.projectile.EnderPearlTeleportCallback;
 import fuzs.eternalnether.world.entity.projectile.ThrownWarpedEnderpearl;
 import fuzs.puzzleslib.api.biome.v1.BiomeLoadingContext;
@@ -21,15 +21,21 @@ import fuzs.puzzleslib.api.core.v1.context.CreativeModeTabContext;
 import fuzs.puzzleslib.api.core.v1.context.EntityAttributesCreateContext;
 import fuzs.puzzleslib.api.core.v1.context.SpawnPlacementsContext;
 import fuzs.puzzleslib.api.core.v1.utility.ResourceLocationHelper;
-import fuzs.puzzleslib.api.event.v1.entity.player.PlayerInteractEvents;
+import fuzs.puzzleslib.api.event.v1.core.EventResult;
 import fuzs.puzzleslib.api.event.v1.level.BlockEvents;
 import fuzs.puzzleslib.api.item.v2.CreativeModeTabConfigurator;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.entity.animal.horse.SkeletonHorse;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.piglin.PiglinBrute;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.Heightmap;
 import org.slf4j.Logger;
@@ -47,8 +53,12 @@ public class EternalNether implements ModConstructor {
     }
 
     private static void registerEventHandlers() {
-        PlayerInteractEvents.ATTACK_BLOCK.register(BlockInteractionHandler::onAttackBlock);
-        BlockEvents.BREAK.register(BlockInteractionHandler::onBreakBlock);
+        BlockEvents.BREAK.register((ServerLevel serverLevel, BlockPos blockPos, BlockState blockState, Player player, ItemStack itemInHand) -> {
+            if (blockState.is(Blocks.IRON_BARS)) {
+                PiglinPrisonerAi.exciteNearbyPiglins(player, false);
+            }
+            return EventResult.PASS;
+        });
         EnderPearlTeleportCallback.EVENT.register(ThrownWarpedEnderpearl::onEnderPearlTeleport);
     }
 

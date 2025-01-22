@@ -1,22 +1,23 @@
 package fuzs.eternalnether.client.renderer.blockentity;
 
-import fuzs.eternalnether.world.level.block.entity.NetheriteBellBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import fuzs.eternalnether.EternalNether;
+import fuzs.eternalnether.world.level.block.entity.NetheriteBellBlockEntity;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.inventory.InventoryMenu;
 
 public class NetheriteBellRenderer implements BlockEntityRenderer<NetheriteBellBlockEntity> {
-    private static final ResourceLocation TEXTURE_LOCATION = EternalNether.id(
-            "textures/entity/netherite_bell/netherite_bell_body.png");
+    public static final Material NETHERITE_BELL_MATERIAL = new Material(InventoryMenu.BLOCK_ATLAS,
+            EternalNether.id("entity/bell/netherite_bell_body"));
 
     private final ModelPart bellBody;
 
@@ -43,7 +44,7 @@ public class NetheriteBellRenderer implements BlockEntityRenderer<NetheriteBellB
         }
         this.bellBody.xRot = xRot;
         this.bellBody.zRot = zRot;
-        VertexConsumer vertexconsumer = buffer.getBuffer(RenderType.entitySolid(TEXTURE_LOCATION));
+        VertexConsumer vertexconsumer = NETHERITE_BELL_MATERIAL.buffer(buffer, RenderType::entitySolid);
         this.bellBody.render(poseStack, vertexconsumer, packedLight, packedOverlay);
     }
 }

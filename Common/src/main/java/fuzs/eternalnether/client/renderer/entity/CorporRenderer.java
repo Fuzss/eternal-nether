@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 public class CorporRenderer extends HumanoidMobRenderer<Corpor, CorporModel> {
-    private static final ResourceLocation TEXTURE_LOCATION = EternalNether.id("textures/entity/wither/corpor.png");
+    private static final ResourceLocation TEXTURE_LOCATION = EternalNether.id("textures/entity/skeleton/corpor.png");
 
     public CorporRenderer(EntityRendererProvider.Context context) {
         super(context, new CorporModel(CorporModel.createBodyLayer().bakeRoot()), 0.5F);

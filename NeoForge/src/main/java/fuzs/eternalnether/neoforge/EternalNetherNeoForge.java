@@ -1,8 +1,13 @@
 package fuzs.eternalnether.neoforge;
 
 import fuzs.eternalnether.EternalNether;
+import fuzs.eternalnether.data.ModRecipeProvider;
 import fuzs.eternalnether.data.ModRegistryProvider;
+import fuzs.eternalnether.data.loot.ModBlockLootProvider;
+import fuzs.eternalnether.data.loot.ModEntityTypeLootProvider;
+import fuzs.eternalnether.data.tags.ModBiomeTagProvider;
 import fuzs.eternalnether.data.tags.ModBlockTagProvider;
+import fuzs.eternalnether.data.tags.ModItemTagProvider;
 import fuzs.eternalnether.world.entity.projectile.EnderPearlTeleportCallback;
 import fuzs.puzzleslib.api.core.v1.ModConstructor;
 import fuzs.puzzleslib.api.event.v1.core.EventResult;
@@ -19,7 +24,12 @@ public class EternalNetherNeoForge {
         ModConstructor.construct(EternalNether.MOD_ID, EternalNether::new);
         DataProviderHelper.registerDataProviders(EternalNether.MOD_ID,
                 ModRegistryProvider::new,
-                ModBlockTagProvider::new);
+                ModBlockTagProvider::new,
+                ModItemTagProvider::new,
+                ModBiomeTagProvider::new,
+                ModBlockLootProvider::new,
+                ModEntityTypeLootProvider::new,
+                ModRecipeProvider::new);
         registerEventHandlers();
     }
 

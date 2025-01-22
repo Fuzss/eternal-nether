@@ -9,12 +9,12 @@ import net.minecraft.client.model.ShieldModel;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.blockentity.BannerRenderer;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -23,10 +23,10 @@ import net.minecraft.world.level.block.entity.BannerPatternLayers;
 import java.util.Objects;
 
 public class ShieldItemRenderer implements ReloadingBuiltInItemRenderer {
-    private static final Material SHIELD_BASE_MATERIAL = new Material(InventoryMenu.BLOCK_ATLAS,
-            EternalNether.id("entity/shield/gilded_netherite_shield_base"));
-    private static final Material NO_PATTERN_SHIELD_MATERIAL = new Material(InventoryMenu.BLOCK_ATLAS,
-            EternalNether.id("entity/shield/gilded_netherite_shield_base_nopattern"));
+    public static final Material SHIELD_BASE_MATERIAL = new Material(Sheets.SHIELD_SHEET,
+            EternalNether.id("entity/gilded_netherite_shield_base"));
+    public static final Material NO_PATTERN_SHIELD_MATERIAL = new Material(Sheets.SHIELD_SHEET,
+            EternalNether.id("entity/gilded_netherite_shield_base_nopattern"));
 
     private ShieldModel shieldModel;
 

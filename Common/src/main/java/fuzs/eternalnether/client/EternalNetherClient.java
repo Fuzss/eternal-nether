@@ -1,25 +1,38 @@
 package fuzs.eternalnether.client;
 
+import fuzs.eternalnether.EternalNether;
+import fuzs.eternalnether.client.handler.FirstPersonRenderingHandler;
 import fuzs.eternalnether.client.renderer.ShieldItemRenderer;
 import fuzs.eternalnether.client.renderer.blockentity.NetheriteBellRenderer;
 import fuzs.eternalnether.client.renderer.entity.*;
 import fuzs.eternalnether.init.ModBlocks;
 import fuzs.eternalnether.init.ModEntityTypes;
 import fuzs.eternalnether.init.ModItems;
-import fuzs.eternalnether.EternalNether;
 import fuzs.puzzleslib.api.client.core.v1.ClientModConstructor;
 import fuzs.puzzleslib.api.client.core.v1.context.*;
+import fuzs.puzzleslib.api.client.event.v1.renderer.RenderHandEvents;
 import fuzs.puzzleslib.api.core.v1.ContentRegistrationFlags;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
 public class EternalNetherClient implements ClientModConstructor {
     public static final ResourceLocation BLOCKING_ITEM_MODEL_PROPERTY = EternalNether.id("blocking");
+
+    @Override
+    public void onConstructMod() {
+        registerEventHandlers();
+    }
+
+    private static void registerEventHandlers() {
+        RenderHandEvents.MAIN_HAND.register(FirstPersonRenderingHandler.renderMainHand(InteractionHand.MAIN_HAND));
+        RenderHandEvents.OFF_HAND.register(FirstPersonRenderingHandler.renderMainHand(InteractionHand.OFF_HAND)::onRenderMainHand);
+    }
 
     @Override
     public void onRegisterEntityRenderers(EntityRenderersContext context) {

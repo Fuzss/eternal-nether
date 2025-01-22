@@ -1,18 +1,18 @@
 package fuzs.eternalnether.client.renderer.entity;
 
-import fuzs.eternalnether.client.model.WitherSkeletonKnightModel;
-import fuzs.eternalnether.world.entity.monster.WitherSkeletonKnight;
 import com.mojang.blaze3d.vertex.PoseStack;
 import fuzs.eternalnether.EternalNether;
+import fuzs.eternalnether.client.model.WitherSkeletonKnightModel;
+import fuzs.eternalnether.world.entity.monster.WitherSkeletonKnight;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 public class WitherSkeletonKnightRenderer extends HumanoidMobRenderer<WitherSkeletonKnight, WitherSkeletonKnightModel> {
     private static final ResourceLocation TEXTURE_LOCATION = EternalNether.id(
-            "textures/entity/wither/wither_skeleton_knight.png");
+            "textures/entity/skeleton/wither_skeleton_knight.png");
     private static final ResourceLocation DISARMORED_TEXTURE_LOCATION = EternalNether.id(
-            "textures/entity/wither/wither_skeleton_knight_disarmored.png");
+            "textures/entity/skeleton/wither_skeleton_knight_disarmored.png");
 
     public WitherSkeletonKnightRenderer(EntityRendererProvider.Context context) {
         super(context, new WitherSkeletonKnightModel(WitherSkeletonKnightModel.createBodyLayer().bakeRoot()), 0.5F);

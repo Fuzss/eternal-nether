@@ -10,7 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 
 public class WexRenderer extends MobRenderer<Wex, WexModel> {
-    private static final ResourceLocation TEXTURE_LOCATION = EternalNether.id("textures/entity/wex/wex.png");
+    private static final ResourceLocation TEXTURE_LOCATION = EternalNether.id("textures/entity/skeleton/wex.png");
     private static final ResourceLocation CHARGING_TEXTURE_LOCATION = EternalNether.id(
             "textures/entity/wex/wex_charging.png");
 

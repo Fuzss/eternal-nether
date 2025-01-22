@@ -7,12 +7,11 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.EnderpearlItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-public class WarpedEnderpearlItem extends EnderpearlItem {
-    private static final int COOL_DOWN = 10;
+public class WarpedEnderpearlItem extends Item {
 
     public WarpedEnderpearlItem(Properties properties) {
         super(properties);
@@ -20,6 +19,7 @@ public class WarpedEnderpearlItem extends EnderpearlItem {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
+        // copied from super, but replaces thrown pearl entity
         ItemStack itemInHand = player.getItemInHand(interactionHand);
         level.playSound(null,
                 player.getX(),
@@ -29,7 +29,7 @@ public class WarpedEnderpearlItem extends EnderpearlItem {
                 SoundSource.NEUTRAL,
                 0.5F,
                 0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F));
-        player.getCooldowns().addCooldown(this, COOL_DOWN);
+        player.getCooldowns().addCooldown(this, 10);
         if (!level.isClientSide) {
             ThrownWarpedEnderpearl thrownWarpedEnderpearl = new ThrownWarpedEnderpearl(level, player);
             thrownWarpedEnderpearl.setItem(itemInHand);
