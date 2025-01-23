@@ -4,6 +4,8 @@ import fuzs.eternalnether.init.ModEntityTypes;
 import fuzs.eternalnether.init.ModItems;
 import fuzs.puzzleslib.api.data.v2.AbstractLootProvider;
 import fuzs.puzzleslib.api.data.v2.core.DataProviderContext;
+import net.minecraft.core.Holder;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.LootPool;
@@ -16,6 +18,8 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceWit
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
+import java.util.stream.Stream;
+
 public class ModEntityTypeLootProvider extends AbstractLootProvider.EntityTypes {
 
     public ModEntityTypeLootProvider(DataProviderContext context) {
@@ -23,7 +27,33 @@ public class ModEntityTypeLootProvider extends AbstractLootProvider.EntityTypes 
     }
 
     @Override
+    protected Stream<Holder.Reference<EntityType<?>>> getRegistryEntries() {
+        return Stream.concat(super.getRegistryEntries(), Stream.of(EntityType.WITHER_SKELETON.builtInRegistryHolder()));
+    }
+
+    @Override
     public void addLootTables() {
+        this.add(EntityType.WITHER_SKELETON,
+                LootTable.lootTable()
+                        .withPool(LootPool.lootPool()
+                                .setRolls(ConstantValue.exactly(1.0F))
+                                .add(LootItem.lootTableItem(Items.COAL)
+                                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(-1.0F, 1.0F)))
+                                        .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries(),
+                                                UniformGenerator.between(0.0F, 1.0F)))))
+                        .withPool(LootPool.lootPool()
+                                .setRolls(ConstantValue.exactly(1.0F))
+                                .add(LootItem.lootTableItem(ModItems.WITHERED_BONE.value())
+                                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F)))
+                                        .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries(),
+                                                UniformGenerator.between(0.0F, 1.0F)))))
+                        .withPool(LootPool.lootPool()
+                                .setRolls(ConstantValue.exactly(1.0F))
+                                .add(LootItem.lootTableItem(Blocks.WITHER_SKELETON_SKULL))
+                                .when(LootItemKilledByPlayerCondition.killedByPlayer())
+                                .when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(this.registries(),
+                                        0.025F,
+                                        0.01F))));
         this.add(ModEntityTypes.WEX.value(), LootTable.lootTable());
         this.add(ModEntityTypes.PIGLIN_HUNTER.value(), LootTable.lootTable());
         this.add(ModEntityTypes.PIGLIN_PRISONER.value(), LootTable.lootTable());

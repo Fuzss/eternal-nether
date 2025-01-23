@@ -2,6 +2,7 @@ package fuzs.eternalnether.world.entity.animal.horse;
 
 import fuzs.eternalnether.world.entity.monster.piglin.PiglinPrisonerAi;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
@@ -22,7 +23,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 
 public class WitherSkeletonHorse extends SkeletonHorse {
 
-    public WitherSkeletonHorse(EntityType<? extends SkeletonHorse> entityType, Level level){
+    public WitherSkeletonHorse(EntityType<? extends SkeletonHorse> entityType, Level level) {
         super(entityType, level);
     }
 
@@ -31,7 +32,23 @@ public class WitherSkeletonHorse extends SkeletonHorse {
     }
 
     @Override
-    public void tick(){
+    public void aiStep() {
+        if (this.level().isClientSide && this.random.nextInt(3) == 0) {
+            this.level()
+                    .addParticle(ParticleTypes.SOUL_FIRE_FLAME,
+                            this.getX(this.random.nextGaussian() * 0.25),
+                            this.getRandomY() + 0.15,
+                            this.getZ(this.random.nextGaussian() * 0.25),
+                            0.0,
+                            this.random.nextDouble() * -0.05,
+                            0.0);
+        }
+
+        super.aiStep();
+    }
+
+    @Override
+    public void tick() {
         super.tick();
         this.floatHorse();
     }
@@ -46,7 +63,7 @@ public class WitherSkeletonHorse extends SkeletonHorse {
     @Override
     public boolean hurt(DamageSource source, float amount) {
         this.getPassengers().forEach((Entity passenger) -> {
-            if(passenger instanceof AbstractPiglin piglin && source.getEntity() instanceof LivingEntity target) {
+            if (passenger instanceof AbstractPiglin piglin && source.getEntity() instanceof LivingEntity target) {
                 PiglinPrisonerAi.setAngerTarget(piglin, target);
             }
         });
@@ -77,11 +94,12 @@ public class WitherSkeletonHorse extends SkeletonHorse {
             }
         }
     }
-    
+
     private void floatHorse() {
         if (this.isInLava()) {
             CollisionContext collisioncontext = CollisionContext.of(this);
-            if (collisioncontext.isAbove(LiquidBlock.STABLE_SHAPE, this.blockPosition(), true) && !this.level().getFluidState(this.blockPosition().above()).is(FluidTags.LAVA)) {
+            if (collisioncontext.isAbove(LiquidBlock.STABLE_SHAPE, this.blockPosition(), true) &&
+                    !this.level().getFluidState(this.blockPosition().above()).is(FluidTags.LAVA)) {
                 this.setOnGround(true);
             } else {
                 this.setDeltaMovement(this.getDeltaMovement().scale(0.5D).add(0.0D, 0.05D, 0.0D));

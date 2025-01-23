@@ -5,8 +5,7 @@
   "package": "${modGroup}.mixin",
   "mixins": [
     "PiglinAiMixin",
-    "PiglinBruteAiMixin",
-    "PlayerMixin"
+    "PiglinBruteAiMixin"
   ],
   "client": [
   ],

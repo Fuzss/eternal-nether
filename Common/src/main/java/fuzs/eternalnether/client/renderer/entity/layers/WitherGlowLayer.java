@@ -1,8 +1,8 @@
 package fuzs.eternalnether.client.renderer.entity.layers;
 
-import fuzs.eternalnether.world.entity.monster.Wraither;
 import com.mojang.blaze3d.vertex.PoseStack;
 import fuzs.eternalnether.EternalNether;
+import fuzs.eternalnether.world.entity.monster.Wraither;
 import net.minecraft.client.model.SkeletonModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -12,7 +12,7 @@ import net.minecraft.world.entity.monster.AbstractSkeleton;
 
 public class WitherGlowLayer<T extends AbstractSkeleton, M extends SkeletonModel<T>> extends EyesLayer<T, M> {
     private static final RenderType RENDER_TYPE = RenderType.eyes(EternalNether.id(
-            "textures/entity/wither/wraither_eyes.png"));
+            "textures/entity/skeleton/wraither_eyes.png"));
 
     public WitherGlowLayer(RenderLayerParent<T, M> layer) {
         super(layer);

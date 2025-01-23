@@ -1,6 +1,0 @@
-{
-	"parent": "block/cube_all",
-	"textures": {
-		"all": "bygonenether:block/chiseled_warped_nether_bricks"
-	}
-}

@@ -1,9 +1,11 @@
 package fuzs.eternalnether.init;
 
+import fuzs.eternalnether.world.item.CutlassItem;
 import fuzs.eternalnether.world.item.UnrepairableShieldItem;
 import fuzs.eternalnether.world.item.WarpedEnderpearlItem;
 import fuzs.eternalnether.world.item.WitheredBoneMealItem;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.*;
@@ -99,18 +101,17 @@ public final class ModItems {
             "withered_bone_meal",
             () -> new WitheredBoneMealItem(new Item.Properties()));
 
-    public static final Holder.Reference<Item> NETHERITE_BELL = ModRegistry.REGISTRIES.registerItem("netherite_bell",
-            () -> new BlockItem(ModBlocks.NETHERITE_BELL.value(),
-                    new Item.Properties().rarity(Rarity.EPIC).fireResistant()));
+    public static final Holder.Reference<Item> NETHERITE_BELL = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.NETHERITE_BELL,
+            () -> new Item.Properties().rarity(Rarity.EPIC).fireResistant());
     public static final Holder.Reference<Item> GILDED_NETHERITE_SHIELD = ModRegistry.REGISTRIES.registerItem(
             "gilded_netherite_shield",
             () -> new UnrepairableShieldItem(new Item.Properties().durability(1512)
                     .rarity(Rarity.RARE)
                     .fireResistant()));
     public static final Holder.Reference<Item> CUTLASS = ModRegistry.REGISTRIES.registerItem("cutlass",
-            () -> new UnrepairableShieldItem(new Item.Properties().attributes(SwordItem.createAttributes(Tiers.IRON,
-                    3,
-                    -2.0F))));
+            () -> new CutlassItem(new Item.Properties().durability(312)
+                    .component(DataComponents.TOOL, CutlassItem.createToolProperties())
+                    .attributes(SwordItem.createAttributes(Tiers.IRON, 3, -1.6F))));
 
     public static void boostrap() {
         // NO-OP

@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.function.BiFunction;
 
 public class ModRecipeProvider extends AbstractRecipeProvider {
-    private static final Map<BlockFamily.Variant, BiFunction<ItemLike, ItemLike, RecipeBuilder>> SHAPE_BUILDERS = ImmutableMap.<BlockFamily.Variant, BiFunction<ItemLike, ItemLike, RecipeBuilder>>builder()
+    private static final Map<BlockFamily.Variant, BiFunction<ItemLike, ItemLike, RecipeBuilder>> STONECUTTING_BUILDERS = ImmutableMap.<BlockFamily.Variant, BiFunction<ItemLike, ItemLike, RecipeBuilder>>builder()
             .put(BlockFamily.Variant.CHISELED,
                     (itemLike, itemLike2) -> SingleItemRecipeBuilder.stonecutting(Ingredient.of(itemLike2),
                             RecipeCategory.BUILDING_BLOCKS,
@@ -78,7 +78,7 @@ public class ModRecipeProvider extends AbstractRecipeProvider {
     }
 
     public static void generateForEnabledBlockFamilies(RecipeOutput recipeOutput, FeatureFlagSet enabledFeatures) {
-        ModBlockFamilies.getAllBlockFamilies()
+        ModBlockFamilies.getAllFamilies()
                 .filter(BlockFamily::shouldGenerateRecipe)
                 .forEach(blockFamily -> generateRecipes(recipeOutput, blockFamily, enabledFeatures));
     }
@@ -88,7 +88,7 @@ public class ModRecipeProvider extends AbstractRecipeProvider {
         // also automatically generate stone-cutting recipes
         blockFamily.getVariants().forEach((BlockFamily.Variant variant, Block block) -> {
             if (block.requiredFeatures().isSubsetOf(requiredFeatures)) {
-                BiFunction<ItemLike, ItemLike, RecipeBuilder> biFunction = SHAPE_BUILDERS.get(variant);
+                BiFunction<ItemLike, ItemLike, RecipeBuilder> biFunction = STONECUTTING_BUILDERS.get(variant);
                 ItemLike itemLike = getBaseBlock(blockFamily, variant);
                 if (biFunction != null) {
                     RecipeBuilder recipeBuilder = biFunction.apply(block, itemLike);

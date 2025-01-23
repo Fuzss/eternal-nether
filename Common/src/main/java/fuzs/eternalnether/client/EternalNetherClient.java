@@ -1,6 +1,5 @@
 package fuzs.eternalnether.client;
 
-import fuzs.eternalnether.EternalNether;
 import fuzs.eternalnether.client.handler.FirstPersonRenderingHandler;
 import fuzs.eternalnether.client.renderer.ShieldItemRenderer;
 import fuzs.eternalnether.client.renderer.blockentity.NetheriteBellRenderer;
@@ -15,14 +14,12 @@ import fuzs.puzzleslib.api.core.v1.ContentRegistrationFlags;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
 public class EternalNetherClient implements ClientModConstructor {
-    public static final ResourceLocation BLOCKING_ITEM_MODEL_PROPERTY = EternalNether.id("blocking");
 
     @Override
     public void onConstructMod() {
@@ -66,7 +63,7 @@ public class EternalNetherClient implements ClientModConstructor {
 
     @Override
     public void onRegisterItemModelProperties(ItemModelPropertiesContext context) {
-        context.registerItemProperty(BLOCKING_ITEM_MODEL_PROPERTY,
+        context.registerItemProperty(ShieldItemRenderer.BLOCKING_ITEM_MODEL_PROPERTY,
                 (ItemStack itemStack, ClientLevel clientLevel, LivingEntity livingEntity, int seed) -> {
                     return livingEntity != null && livingEntity.isUsingItem() &&
                             livingEntity.getUseItem() == itemStack ? 1.0F : 0.0F;

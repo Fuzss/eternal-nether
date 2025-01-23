@@ -11,6 +11,7 @@ import fuzs.eternalnether.world.entity.monster.piglin.PiglinPrisoner;
 import fuzs.eternalnether.world.entity.monster.piglin.PiglinPrisonerAi;
 import fuzs.eternalnether.world.entity.projectile.EnderPearlTeleportCallback;
 import fuzs.eternalnether.world.entity.projectile.ThrownWarpedEnderpearl;
+import fuzs.eternalnether.world.item.CutlassItem;
 import fuzs.puzzleslib.api.biome.v1.BiomeLoadingContext;
 import fuzs.puzzleslib.api.biome.v1.BiomeLoadingPhase;
 import fuzs.puzzleslib.api.biome.v1.BiomeModificationContext;
@@ -22,6 +23,7 @@ import fuzs.puzzleslib.api.core.v1.context.EntityAttributesCreateContext;
 import fuzs.puzzleslib.api.core.v1.context.SpawnPlacementsContext;
 import fuzs.puzzleslib.api.core.v1.utility.ResourceLocationHelper;
 import fuzs.puzzleslib.api.event.v1.core.EventResult;
+import fuzs.puzzleslib.api.event.v1.entity.living.UseItemEvents;
 import fuzs.puzzleslib.api.event.v1.level.BlockEvents;
 import fuzs.puzzleslib.api.item.v2.CreativeModeTabConfigurator;
 import net.minecraft.core.BlockPos;
@@ -59,6 +61,7 @@ public class EternalNether implements ModConstructor {
             }
             return EventResult.PASS;
         });
+        UseItemEvents.START.register(CutlassItem::onUseItemStart);
         EnderPearlTeleportCallback.EVENT.register(ThrownWarpedEnderpearl::onEnderPearlTeleport);
     }
 
@@ -70,6 +73,7 @@ public class EternalNether implements ModConstructor {
 
     @Override
     public void onRegisterBiomeModifications(BiomeModificationsContext context) {
+        if (true) return;
         context.register(BiomeLoadingPhase.ADDITIONS,
                 (BiomeLoadingContext biomeLoadingContext) -> biomeLoadingContext.is(Biomes.SOUL_SAND_VALLEY),
                 (BiomeModificationContext biomeModificationContext) -> {

@@ -1,10 +1,12 @@
 package fuzs.eternalnether.neoforge;
 
 import fuzs.eternalnether.EternalNether;
+import fuzs.eternalnether.data.ModAdvancementProvider;
 import fuzs.eternalnether.data.ModRecipeProvider;
-import fuzs.eternalnether.data.ModRegistryProvider;
 import fuzs.eternalnether.data.loot.ModBlockLootProvider;
+import fuzs.eternalnether.data.loot.ModChestLootProvider;
 import fuzs.eternalnether.data.loot.ModEntityTypeLootProvider;
+import fuzs.eternalnether.data.registries.ModDatapackRegistriesProvider;
 import fuzs.eternalnether.data.tags.ModBiomeTagProvider;
 import fuzs.eternalnether.data.tags.ModBlockTagProvider;
 import fuzs.eternalnether.data.tags.ModItemTagProvider;
@@ -23,13 +25,15 @@ public class EternalNetherNeoForge {
     public EternalNetherNeoForge() {
         ModConstructor.construct(EternalNether.MOD_ID, EternalNether::new);
         DataProviderHelper.registerDataProviders(EternalNether.MOD_ID,
-                ModRegistryProvider::new,
+                ModDatapackRegistriesProvider::new,
                 ModBlockTagProvider::new,
                 ModItemTagProvider::new,
                 ModBiomeTagProvider::new,
                 ModBlockLootProvider::new,
                 ModEntityTypeLootProvider::new,
-                ModRecipeProvider::new);
+                ModChestLootProvider::new,
+                ModRecipeProvider::new,
+                ModAdvancementProvider::new);
         registerEventHandlers();
     }
 

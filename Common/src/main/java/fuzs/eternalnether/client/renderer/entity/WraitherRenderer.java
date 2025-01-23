@@ -7,10 +7,10 @@ import fuzs.eternalnether.world.entity.monster.Wraither;
 import fuzs.puzzleslib.api.core.v1.utility.ResourceLocationHelper;
 import net.minecraft.client.model.SkeletonModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.resources.ResourceLocation;
 
-public class WraitherRenderer extends MobRenderer<Wraither, SkeletonModel<Wraither>> {
+public class WraitherRenderer extends HumanoidMobRenderer<Wraither, SkeletonModel<Wraither>> {
     private static final ResourceLocation TEXTURE_LOCATION = ResourceLocationHelper.withDefaultNamespace(
             "textures/entity/skeleton/wither_skeleton.png");
     private static final ResourceLocation POSSESSED_TEXTURE_LOCATION = EternalNether.id(

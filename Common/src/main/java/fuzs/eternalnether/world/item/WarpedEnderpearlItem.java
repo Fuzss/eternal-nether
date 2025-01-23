@@ -33,7 +33,8 @@ public class WarpedEnderpearlItem extends Item {
         if (!level.isClientSide) {
             ThrownWarpedEnderpearl thrownWarpedEnderpearl = new ThrownWarpedEnderpearl(level, player);
             thrownWarpedEnderpearl.setItem(itemInHand);
-            thrownWarpedEnderpearl.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 1.0F);
+            // increase velocity
+            thrownWarpedEnderpearl.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 2.5F, 1.0F);
             level.addFreshEntity(thrownWarpedEnderpearl);
         }
 

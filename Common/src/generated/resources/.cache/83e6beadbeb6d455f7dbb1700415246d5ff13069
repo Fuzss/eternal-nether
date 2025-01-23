@@ -1,4 +1,4 @@
-// 1.21.1	2025-01-22T17:45:26.702248	Entity Type Loot Tables
+// 1.21.1	2025-01-23T13:50:14.364113	Entity Type Loot Tables
 2116215c2991260e0515d5b1d89adbd97fda1547 data/eternalnether/loot_table/entities/corpor.json
 6db6e516dd502283fd7d3af712555f9c9b8ae656 data/eternalnether/loot_table/entities/piglin_hunter.json
 fbb3bd55140c87a49a270378974c05963a698dd5 data/eternalnether/loot_table/entities/piglin_prisoner.json
@@ -7,3 +7,4 @@ c36ac4255a2c4a292e51428ce2b129e5b79b5051 data/eternalnether/loot_table/entities/
 59d24acca5c37c6ccf0fe62313402f90c47d9194 data/eternalnether/loot_table/entities/wither_skeleton_horse.json
 b0188daf9d5c8fbc57af6cb70ad506f32395e187 data/eternalnether/loot_table/entities/wither_skeleton_knight.json
 8f731c41ee33f1e999086fb857562b4cd0ea24d4 data/eternalnether/loot_table/entities/wraither.json
+bc827edce0e2c87c351c99f340b90202fc24119b data/minecraft/loot_table/entities/wither_skeleton.json

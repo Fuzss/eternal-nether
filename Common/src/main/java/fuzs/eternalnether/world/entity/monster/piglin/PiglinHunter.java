@@ -34,7 +34,7 @@ public class PiglinHunter extends Piglin implements ShieldedMob {
             EntityDataSerializers.INT);
     private static final ResourceLocation SPEED_MODIFIER_ATTACKING_ID = EternalNether.id("shielded_speed_penalty");
     private static final AttributeModifier SPEED_MODIFIER_BLOCKING = new AttributeModifier(SPEED_MODIFIER_ATTACKING_ID,
-            -0.10,
+            -0.1,
             AttributeModifier.Operation.ADD_VALUE);
     private static final float SHIELDED_BASE_PROBABILITY = 0.35F;
     private static final float GILDED_SHIELDED_BASE_PROBABILITY = 0.05F;

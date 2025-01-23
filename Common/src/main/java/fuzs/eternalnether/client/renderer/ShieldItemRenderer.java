@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.blockentity.BannerRenderer;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -23,6 +24,7 @@ import net.minecraft.world.level.block.entity.BannerPatternLayers;
 import java.util.Objects;
 
 public class ShieldItemRenderer implements ReloadingBuiltInItemRenderer {
+    public static final ResourceLocation BLOCKING_ITEM_MODEL_PROPERTY = EternalNether.id("blocking");
     public static final Material SHIELD_BASE_MATERIAL = new Material(Sheets.SHIELD_SHEET,
             EternalNether.id("entity/gilded_netherite_shield_base"));
     public static final Material NO_PATTERN_SHIELD_MATERIAL = new Material(Sheets.SHIELD_SHEET,

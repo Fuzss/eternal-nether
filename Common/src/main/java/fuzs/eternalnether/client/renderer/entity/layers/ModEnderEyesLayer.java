@@ -9,7 +9,7 @@ import net.minecraft.world.entity.monster.EnderMan;
 
 public class ModEnderEyesLayer<T extends EnderMan, M extends EndermanModel<T>> extends EyesLayer<T, M> {
     private static final RenderType RENDER_TYPE = RenderType.eyes(EternalNether.id(
-            "textures/entity/warped_enderman/warped_enderman_eyes.png"));
+            "textures/entity/enderman/warped_enderman_eyes.png"));
 
     public ModEnderEyesLayer(RenderLayerParent<T, M> layer) {
         super(layer);
