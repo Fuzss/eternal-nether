@@ -1,12 +1,12 @@
 {
-  "name": "bygonenether:citadel/top",
+  "name": "eternalnether:citadel/top",
   "fallback": "minecraft:empty",
   "elements": [
     {
       "weight": 4,
       "element": {
-        "location": "bygonenether:citadel/citadel_top",
-        "processors": "bygonenether:citadel/citadel",
+        "location": "eternalnether:citadel/citadel_top",
+        "processors": "eternalnether:citadel/citadel",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"
       }
@@ -14,8 +14,8 @@
     {
       "weight": 3,
       "element": {
-        "location": "bygonenether:citadel/citadel_branch_top",
-        "processors": "bygonenether:citadel/citadel",
+        "location": "eternalnether:citadel/citadel_branch_top",
+        "processors": "eternalnether:citadel/citadel",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"
       }

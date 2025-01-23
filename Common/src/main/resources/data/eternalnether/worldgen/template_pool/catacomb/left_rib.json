@@ -1,12 +1,12 @@
 {
-  "name": "bygonenether:catacomb/left_rib",
+  "name": "eternalnether:catacomb/left_rib",
   "fallback": "minecraft:empty",
   "elements": [
     {
       "weight": 2,
       "element": {
-        "location": "bygonenether:catacomb/left_rib/straight_treasure",
-        "processors": "bygonenether:catacomb/withered_blackstone",
+        "location": "eternalnether:catacomb/left_rib/straight_treasure",
+        "processors": "eternalnether:catacomb/withered_blackstone",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"
       }
@@ -14,8 +14,8 @@
     {
       "weight": 1,
       "element": {
-        "location": "bygonenether:catacomb/left_rib/straight_prison",
-        "processors": "bygonenether:catacomb/withered_blackstone",
+        "location": "eternalnether:catacomb/left_rib/straight_prison",
+        "processors": "eternalnether:catacomb/withered_blackstone",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"
       }
@@ -23,8 +23,8 @@
     {
       "weight": 1,
       "element": {
-        "location": "bygonenether:catacomb/left_rib/straight_portal",
-        "processors": "bygonenether:catacomb/withered_blackstone",
+        "location": "eternalnether:catacomb/left_rib/straight_portal",
+        "processors": "eternalnether:catacomb/withered_blackstone",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"
       }

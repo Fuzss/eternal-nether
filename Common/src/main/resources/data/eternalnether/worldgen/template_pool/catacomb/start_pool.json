@@ -1,12 +1,12 @@
 {
-  "name": "bygonenether:catacomb/start_pool",
+  "name": "eternalnether:catacomb/start_pool",
   "fallback": "minecraft:empty",
   "elements": [
     {
       "weight": 1,
       "element": {
-        "location": "bygonenether:catacomb/large_skull",
-        "processors": "bygonenether:catacomb/catacomb_skull",
+        "location": "eternalnether:catacomb/large_skull",
+        "processors": "eternalnether:catacomb/catacomb_skull",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"
       }
