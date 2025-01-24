@@ -11,7 +11,7 @@ import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 
-public final class ModStructureTypes {
+public final class ModStructures {
     public static final Holder.Reference<StructureType<CatacombStructure>> CATACOMB_STRUCTURE_TYPE = ModRegistry.REGISTRIES.register(
             Registries.STRUCTURE_TYPE,
             "catacomb",

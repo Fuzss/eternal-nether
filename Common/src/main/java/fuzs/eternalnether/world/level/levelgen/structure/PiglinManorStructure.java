@@ -1,6 +1,6 @@
 package fuzs.eternalnether.world.level.levelgen.structure;
 
-import fuzs.eternalnether.init.ModStructureTypes;
+import fuzs.eternalnether.init.ModStructures;
 import fuzs.eternalnether.util.ModStructureUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -105,6 +105,6 @@ public class PiglinManorStructure extends Structure {
 
     @Override
     public StructureType<?> type() {
-        return ModStructureTypes.PIGLIN_MANOR_STRUCTURE_TYPE.value();
+        return ModStructures.PIGLIN_MANOR_STRUCTURE_TYPE.value();
     }
 }

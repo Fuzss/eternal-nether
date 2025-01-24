@@ -35,6 +35,6 @@ public final class ModRegistry {
         ModFeatures.boostrap();
         ModSensorTypes.boostrap();
         ModSoundEvents.boostrap();
-        ModStructureTypes.boostrap();
+        ModStructures.boostrap();
     }
 }

@@ -70,7 +70,7 @@ public class PiglinPrisoner extends AbstractPiglin implements CrossbowAttackMob,
             SensorType.NEAREST_PLAYERS,
             SensorType.NEAREST_ITEMS,
             SensorType.HURT_BY,
-            ModSensorTypes.PIGLIN_PRISONER_SPECIFIC_SENSOR.value());
+            ModSensorTypes.PIGLIN_PRISONER_SPECIFIC_SENSOR_TYPE.value());
     protected static final ImmutableList<MemoryModuleType<?>> MEMORY_TYPES = ImmutableList.of(MemoryModuleType.LOOK_TARGET,
             MemoryModuleType.DOORS_TO_CLOSE,
             MemoryModuleType.NEAREST_LIVING_ENTITIES,

@@ -100,7 +100,7 @@ public final class ModEntityTypes {
     public static void setPiglinBruteSensorsAndMemories() {
         PiglinBrute.SENSOR_TYPES = ImmutableList.<SensorType<? extends Sensor<? super PiglinBrute>>>builder()
                 .addAll(PiglinBrute.SENSOR_TYPES)
-                .add(ModSensorTypes.PIGLIN_BRUTE_SPECIFIC_SENSOR.value())
+                .add(ModSensorTypes.PIGLIN_BRUTE_SPECIFIC_SENSOR_TYPE.value())
                 .build();
         PiglinBrute.MEMORY_TYPES = ImmutableList.<MemoryModuleType<?>>builder()
                 .addAll(PiglinBrute.MEMORY_TYPES)

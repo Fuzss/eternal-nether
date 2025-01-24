@@ -75,4 +75,9 @@ public class EternalNetherClient implements ClientModConstructor {
     public ContentRegistrationFlags[] getContentRegistrationFlags() {
         return new ContentRegistrationFlags[]{ContentRegistrationFlags.DYNAMIC_RENDERERS};
     }
+
+    @Override
+    public void onRegisterLayerDefinitions(LayerDefinitionsContext context) {
+        // TODO set this up, models are currently unable to reload
+    }
 }

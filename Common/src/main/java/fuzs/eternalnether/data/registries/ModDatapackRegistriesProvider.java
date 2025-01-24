@@ -42,7 +42,7 @@ public class ModDatapackRegistriesProvider extends AbstractDatapackRegistriesPro
     }
 
     public static void bootstrapStructures(BootstrapContext<Structure> context) {
-        context.register(ModStructureTypes.CATACOMB_STRUCTURE,
+        context.register(ModStructures.CATACOMB_STRUCTURE,
                 new CatacombStructure(new Structure.StructureSettings.Builder(context.lookup(Registries.BIOME)
                         .getOrThrow(ModRegistry.HAS_CATACOMB_BIOME_TAG_KEY)).spawnOverrides(Map.of(MobCategory.MONSTER,
                         new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.PIECE,
@@ -50,13 +50,13 @@ public class ModDatapackRegistriesProvider extends AbstractDatapackRegistriesPro
                                         1,
                                         1,
                                         1))))).generationStep(GenerationStep.Decoration.UNDERGROUND_DECORATION).build(),
-                        context.lookup(Registries.TEMPLATE_POOL).getOrThrow(ModStructureTypes.CATACOMB_START_POOL),
+                        context.lookup(Registries.TEMPLATE_POOL).getOrThrow(ModStructures.CATACOMB_START_POOL),
                         Optional.empty(),
                         3,
                         UniformHeight.of(VerticalAnchor.absolute(56), VerticalAnchor.absolute(84)),
                         Optional.empty(),
                         128));
-        context.register(ModStructureTypes.CITADEL_STRUCTURE,
+        context.register(ModStructures.CITADEL_STRUCTURE,
                 new CitadelStructure(new Structure.StructureSettings.Builder(context.lookup(Registries.BIOME)
                         .getOrThrow(ModRegistry.HAS_CITADEL_BIOME_TAG_KEY)).spawnOverrides(Map.of(MobCategory.MONSTER,
                                 new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.PIECE,
@@ -71,13 +71,13 @@ public class ModDatapackRegistriesProvider extends AbstractDatapackRegistriesPro
                         .generationStep(GenerationStep.Decoration.SURFACE_STRUCTURES)
                         .terrainAdapation(TerrainAdjustment.BEARD_THIN)
                         .build(),
-                        context.lookup(Registries.TEMPLATE_POOL).getOrThrow(ModStructureTypes.CITADEL_START_POOL),
+                        context.lookup(Registries.TEMPLATE_POOL).getOrThrow(ModStructures.CITADEL_START_POOL),
                         Optional.empty(),
                         4,
                         UniformHeight.of(VerticalAnchor.absolute(48), VerticalAnchor.absolute(70)),
                         Optional.empty(),
                         116));
-        context.register(ModStructureTypes.PIGLIN_MANOR_STRUCTURE,
+        context.register(ModStructures.PIGLIN_MANOR_STRUCTURE,
                 new CitadelStructure(new Structure.StructureSettings.Builder(context.lookup(Registries.BIOME)
                         .getOrThrow(ModRegistry.HAS_PIGLIN_MANOR_BIOME_TAG_KEY)).spawnOverrides(Map.of(MobCategory.MONSTER,
                                 new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.PIECE,
@@ -89,7 +89,7 @@ public class ModDatapackRegistriesProvider extends AbstractDatapackRegistriesPro
                         .generationStep(GenerationStep.Decoration.SURFACE_STRUCTURES)
                         .terrainAdapation(TerrainAdjustment.BEARD_THIN)
                         .build(),
-                        context.lookup(Registries.TEMPLATE_POOL).getOrThrow(ModStructureTypes.PIGLIN_MANOR_START_POOL),
+                        context.lookup(Registries.TEMPLATE_POOL).getOrThrow(ModStructures.PIGLIN_MANOR_START_POOL),
                         Optional.empty(),
                         1,
                         UniformHeight.of(VerticalAnchor.absolute(34), VerticalAnchor.absolute(72)),
@@ -98,9 +98,9 @@ public class ModDatapackRegistriesProvider extends AbstractDatapackRegistriesPro
     }
 
     public static void bootstrapStructureSets(BootstrapContext<StructureSet> context) {
-        context.register(ModStructureTypes.CATACOMB_STRUCTURE_SET,
+        context.register(ModStructures.CATACOMB_STRUCTURE_SET,
                 new StructureSet(List.of(StructureSet.entry(context.lookup(Registries.STRUCTURE)
-                        .getOrThrow(ModStructureTypes.CATACOMB_STRUCTURE))),
+                        .getOrThrow(ModStructures.CATACOMB_STRUCTURE))),
                         new RandomSpreadStructurePlacement(Vec3i.ZERO,
                                 StructurePlacement.FrequencyReductionMethod.DEFAULT,
                                 1.0F,
@@ -110,9 +110,9 @@ public class ModDatapackRegistriesProvider extends AbstractDatapackRegistriesPro
                                 12,
                                 4,
                                 RandomSpreadType.LINEAR)));
-        context.register(ModStructureTypes.CITADEL_STRUCTURE_SET,
+        context.register(ModStructures.CITADEL_STRUCTURE_SET,
                 new StructureSet(List.of(StructureSet.entry(context.lookup(Registries.STRUCTURE)
-                        .getOrThrow(ModStructureTypes.CITADEL_STRUCTURE))),
+                        .getOrThrow(ModStructures.CITADEL_STRUCTURE))),
                         new RandomSpreadStructurePlacement(Vec3i.ZERO,
                                 StructurePlacement.FrequencyReductionMethod.DEFAULT,
                                 1.0F,
@@ -122,9 +122,9 @@ public class ModDatapackRegistriesProvider extends AbstractDatapackRegistriesPro
                                 12,
                                 4,
                                 RandomSpreadType.LINEAR)));
-        context.register(ModStructureTypes.PIGLIN_MANOR_STRUCTURE_SET,
+        context.register(ModStructures.PIGLIN_MANOR_STRUCTURE_SET,
                 new StructureSet(List.of(StructureSet.entry(context.lookup(Registries.STRUCTURE)
-                        .getOrThrow(ModStructureTypes.PIGLIN_MANOR_STRUCTURE))),
+                        .getOrThrow(ModStructures.PIGLIN_MANOR_STRUCTURE))),
                         new RandomSpreadStructurePlacement(Vec3i.ZERO,
                                 StructurePlacement.FrequencyReductionMethod.DEFAULT,
                                 1.0F,

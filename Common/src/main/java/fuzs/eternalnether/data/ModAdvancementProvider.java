@@ -3,7 +3,7 @@ package fuzs.eternalnether.data;
 import fuzs.eternalnether.EternalNether;
 import fuzs.eternalnether.init.ModEntityTypes;
 import fuzs.eternalnether.init.ModItems;
-import fuzs.eternalnether.init.ModStructureTypes;
+import fuzs.eternalnether.init.ModStructures;
 import fuzs.puzzleslib.api.data.v2.AbstractAdvancementProvider;
 import fuzs.puzzleslib.api.data.v2.core.DataProviderContext;
 import net.minecraft.advancements.Advancement;
@@ -64,34 +64,34 @@ public class ModAdvancementProvider extends AbstractAdvancementProvider {
                 .rewards(AdvancementRewards.Builder.experience(500))
                 .addCriterion("in_catacomb",
                         PlayerTrigger.TriggerInstance.located(LocationPredicate.Builder.inStructure(registries.lookupOrThrow(
-                                Registries.STRUCTURE).getOrThrow(ModStructureTypes.CATACOMB_STRUCTURE))))
+                                Registries.STRUCTURE).getOrThrow(ModStructures.CATACOMB_STRUCTURE))))
                 .addCriterion("in_citadel",
                         PlayerTrigger.TriggerInstance.located(LocationPredicate.Builder.inStructure(registries.lookupOrThrow(
-                                Registries.STRUCTURE).getOrThrow(ModStructureTypes.CITADEL_STRUCTURE))))
+                                Registries.STRUCTURE).getOrThrow(ModStructures.CITADEL_STRUCTURE))))
                 .addCriterion("in_piglin_manor",
                         PlayerTrigger.TriggerInstance.located(LocationPredicate.Builder.inStructure(registries.lookupOrThrow(
-                                Registries.STRUCTURE).getOrThrow(ModStructureTypes.PIGLIN_MANOR_STRUCTURE))))
+                                Registries.STRUCTURE).getOrThrow(ModStructures.PIGLIN_MANOR_STRUCTURE))))
                 .save(writer, EXPLORE_STRUCTURES_ADVANCEMENT.name());
         Advancement.Builder.advancement()
                 .display(display(new ItemStack(ModItems.WITHERED_DEBRIS), CATACOMB_ADVANCEMENT.id()))
                 .parent(EXPLORE_STRUCTURES_ADVANCEMENT.asParent())
                 .addCriterion("in_catacomb",
                         PlayerTrigger.TriggerInstance.located(LocationPredicate.Builder.inStructure(registries.lookupOrThrow(
-                                Registries.STRUCTURE).getOrThrow(ModStructureTypes.CATACOMB_STRUCTURE))))
+                                Registries.STRUCTURE).getOrThrow(ModStructures.CATACOMB_STRUCTURE))))
                 .save(writer, CATACOMB_ADVANCEMENT.name());
         Advancement.Builder.advancement()
                 .display(display(new ItemStack(ModItems.CHISELED_WARPED_NETHER_BRICKS), CITADEL_ADVANCEMENT.id()))
                 .parent(EXPLORE_STRUCTURES_ADVANCEMENT.asParent())
                 .addCriterion("in_citadel",
                         PlayerTrigger.TriggerInstance.located(LocationPredicate.Builder.inStructure(registries.lookupOrThrow(
-                                Registries.STRUCTURE).getOrThrow(ModStructureTypes.CITADEL_STRUCTURE))))
+                                Registries.STRUCTURE).getOrThrow(ModStructures.CITADEL_STRUCTURE))))
                 .save(writer, CITADEL_ADVANCEMENT.name());
         Advancement.Builder.advancement()
                 .display(display(new ItemStack(Items.CRIMSON_PLANKS), PIGLIN_MANOR_ADVANCEMENT.id()))
                 .parent(EXPLORE_STRUCTURES_ADVANCEMENT.asParent())
                 .addCriterion("in_piglin_manor",
                         PlayerTrigger.TriggerInstance.located(LocationPredicate.Builder.inStructure(registries.lookupOrThrow(
-                                Registries.STRUCTURE).getOrThrow(ModStructureTypes.PIGLIN_MANOR_STRUCTURE))))
+                                Registries.STRUCTURE).getOrThrow(ModStructures.PIGLIN_MANOR_STRUCTURE))))
                 .save(writer, PIGLIN_MANOR_ADVANCEMENT.name());
         Advancement.Builder.advancement()
                 .display(display(new ItemStack(ModItems.NETHERITE_BELL),
