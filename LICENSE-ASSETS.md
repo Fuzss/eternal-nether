@@ -1,3 +1,24 @@
+The following assets:
+
++ `/assets/eternalnether/textures/block/chiseled_warped_nether_bricks.png`
++ `/assets/eternalnether/textures/block/soul_stone.png`
++ `/assets/eternalnether/textures/block/warped_nether_bricks.png`
++ `/assets/eternalnether/textures/block/withered_debris_side.png`
++ `/assets/eternalnether/textures/block/withered_debris_top.png`
++ `/assets/eternalnether/textures/entity/enderman/warped_enderman_fresh.png`
++ `/assets/eternalnether/textures/entity/enderman/warped_enderman_long_vine.png`
++ `/assets/eternalnether/textures/entity/enderman/warped_enderman_short_vine.png`
++ `/assets/eternalnether/textures/item/cutlass.png`
++ `/assets/eternalnether/textures/item/warped_ender_pearl.png`
++ `/assets/eternalnether/textures/item/withered_bone.png`
++ `/assets/eternalnether/textures/item/withered_bone_meal.png`
+
+are released as
+
+Copyright (c) 2025 Tamlighter. All Rights Reserved.
+
+All other assets:
+
 MIT License
 
 Copyright (c) 2022 izofar
