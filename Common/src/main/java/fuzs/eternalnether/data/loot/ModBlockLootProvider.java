@@ -17,6 +17,7 @@ public class ModBlockLootProvider extends AbstractLootProvider.Blocks {
 
     @Override
     public void addLootTables() {
+        // TODO replace this with an injection instead of replacing the table in the future
         this.add(Blocks.BLACKSTONE, (Block block) -> {
             return this.createSingleItemTableWithSilkTouch(block, ModBlocks.COBBLED_BLACKSTONE.value());
         });

@@ -1,5 +1,6 @@
 package fuzs.eternalnether.init;
 
+import fuzs.eternalnether.util.HSV;
 import fuzs.eternalnether.world.item.CutlassItem;
 import fuzs.eternalnether.world.item.UnrepairableShieldItem;
 import fuzs.eternalnether.world.item.WarpedEnderpearlItem;
@@ -8,42 +9,11 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.FastColor;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.*;
 
 public final class ModItems {
-    public static final Holder.Reference<Item> PIGLIN_PRISONER_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
-            ModEntityTypes.PIGLIN_PRISONER,
-            0XC79E88,
-            0XF9F3A4);
-    public static final Holder.Reference<Item> PIGLIN_HUNTER_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
-            ModEntityTypes.PIGLIN_HUNTER,
-            0XBA6645,
-            0XF9F3A4);
-    public static final Holder.Reference<Item> WEX_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
-            ModEntityTypes.WEX,
-            0X7198C8,
-            0X2B4667);
-    public static final Holder.Reference<Item> WARPED_ENDERMAN_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
-            ModEntityTypes.WARPED_ENDERMAN,
-            0X0E8281,
-            0X000000);
-    public static final Holder.Reference<Item> WRAITHER_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
-            ModEntityTypes.WRAITHER,
-            0X273333,
-            0X474D4D);
-    public static final Holder.Reference<Item> CORPOR_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
-            ModEntityTypes.CORPOR,
-            0X141414,
-            0X4A5757);
-    public static final Holder.Reference<Item> WITHER_SKELETON_KNIGHT_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
-            ModEntityTypes.WITHER_SKELETON_KNIGHT,
-            0X242424,
-            0X4E5252);
-    public static final Holder.Reference<Item> WITHER_SKELETON_HORSE_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
-            ModEntityTypes.WITHER_SKELETON_HORSE,
-            0X242424,
-            0X4D4747);
-
     public static final Holder.Reference<Item> COBBLED_BLACKSTONE = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.COBBLED_BLACKSTONE);
 
     public static final Holder.Reference<Item> WITHERED_BLACKSTONE = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.WITHERED_BLACKSTONE);
@@ -113,7 +83,56 @@ public final class ModItems {
                     .component(DataComponents.TOOL, CutlassItem.createToolProperties())
                     .attributes(SwordItem.createAttributes(Tiers.IRON, 3, -1.6F))));
 
+    public static final Holder.Reference<Item> PIGLIN_PRISONER_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
+            ModEntityTypes.PIGLIN_PRISONER,
+            0XC79E88,
+            0XF9F3A4);
+    public static final Holder.Reference<Item> PIGLIN_HUNTER_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
+            ModEntityTypes.PIGLIN_HUNTER,
+            0XBA6645,
+            0XF9F3A4);
+    public static final Holder.Reference<Item> WEX_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
+            ModEntityTypes.WEX,
+            0X7198C8,
+            generateHighlightColor(0X7198C8));
+    public static final Holder.Reference<Item> WARPED_ENDERMAN_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
+            ModEntityTypes.WARPED_ENDERMAN,
+            0X0E8281,
+            generateHighlightColor(0X0E8281));
+    public static final Holder.Reference<Item> WRAITHER_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
+            ModEntityTypes.WRAITHER,
+            0X474D4D,
+            generateHighlightColor(0X474D4D));
+    public static final Holder.Reference<Item> CORPOR_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
+            ModEntityTypes.CORPOR,
+            0X4A5757,
+            generateHighlightColor(0X4A5757));
+    public static final Holder.Reference<Item> WITHER_SKELETON_KNIGHT_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
+            ModEntityTypes.WITHER_SKELETON_KNIGHT,
+            0X4E5252,
+            generateHighlightColor(0X4E5252));
+    public static final Holder.Reference<Item> WITHER_SKELETON_HORSE_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
+            ModEntityTypes.WITHER_SKELETON_HORSE,
+            0X4D4747,
+            generateHighlightColor(0X4D4747));
+
     public static void boostrap() {
         // NO-OP
+    }
+
+    /**
+     * @author ChatGPT
+     */
+    @Deprecated
+    public static int generateHighlightColor(int backgroundColor) {
+        // Convert base color to HSB
+        int hsv = HSV.rgbToHsv(HSV.from8BitChannel(FastColor.ARGB32.red(backgroundColor)),
+                HSV.from8BitChannel(FastColor.ARGB32.green(backgroundColor)),
+                HSV.from8BitChannel(FastColor.ARGB32.blue(backgroundColor)));
+        // Modify saturation and brightness
+        float saturation = Math.min(1.0F, HSV.saturationFloat(hsv) * 1.2F);
+        float value = Math.max(0.0F, HSV.valueFloat(hsv) * 0.75F);
+        // Convert back to RGB
+        return Mth.hsvToRgb(HSV.hueFloat(hsv), saturation, value);
     }
 }

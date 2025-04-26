@@ -1,4 +1,4 @@
-package fuzs.eternalnether;
+package fuzs.eternalnether.util;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -18,12 +18,12 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
- * A simply utility for replacing string values in {@code json} and {@code nbt} files.
+ * A simple utility for replacing string values in {@code json} and {@code nbt} files.
  * <p>
  * Useful for switching out mod ids, configure directories ideally as:
  * <ul>
- *     <li>{@code inputDirectory}: {@code "../Common/src/generated/resources/data"}</li>
- *     <li>{@code outputDirectory}: {@code "../Common/src/main/resources/data"}</li>
+ *     <li>{@code inputDirectory}: {@code "../Common/src/main/resources/data"}</li>
+ *     <li>{@code outputDirectory}: {@code "../Common/src/generated/resources/data"}</li>
  * </ul>
  */
 public abstract class DataFixer<T> {

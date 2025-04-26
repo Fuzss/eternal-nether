@@ -33,6 +33,7 @@ public class ModEntityTypeLootProvider extends AbstractLootProvider.EntityTypes 
 
     @Override
     public void addLootTables() {
+        // TODO replace this with an injection instead of replacing the table in the future
         this.add(EntityType.WITHER_SKELETON,
                 LootTable.lootTable()
                         .withPool(LootPool.lootPool()
