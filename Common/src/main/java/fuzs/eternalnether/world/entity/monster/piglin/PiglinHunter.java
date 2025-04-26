@@ -102,17 +102,16 @@ public class PiglinHunter extends Piglin implements ShieldedMob {
 
     @Override
     public void startUsingShield() {
-        if (this.isUsingShield() || this.isShieldDisabled()) {
-            return;
-        }
-        for (InteractionHand interactionhand : InteractionHand.values()) {
-            if (this.getItemInHand(interactionhand).is(ModItems.GILDED_NETHERITE_SHIELD.value())) {
-                this.startUsingItem(interactionhand);
-                this.setUsingShield(true);
-                this.setShieldMainhand(interactionhand == InteractionHand.MAIN_HAND);
-                AttributeInstance attributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
-                if (attributeinstance != null && !attributeinstance.hasModifier(SPEED_MODIFIER_ATTACKING_ID)) {
-                    attributeinstance.addTransientModifier(SPEED_MODIFIER_BLOCKING);
+        if (!this.isUsingShield() && !this.isShieldDisabled()) {
+            for (InteractionHand interactionHand : InteractionHand.values()) {
+                if (this.getItemInHand(interactionHand).is(ModItems.GILDED_NETHERITE_SHIELD.value())) {
+                    this.startUsingItem(interactionHand);
+                    this.setUsingShield(true);
+                    this.setShieldMainHand(interactionHand == InteractionHand.MAIN_HAND);
+                    AttributeInstance attributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
+                    if (attributeinstance != null && !attributeinstance.hasModifier(SPEED_MODIFIER_ATTACKING_ID)) {
+                        attributeinstance.addTransientModifier(SPEED_MODIFIER_BLOCKING);
+                    }
                 }
             }
         }
@@ -120,16 +119,15 @@ public class PiglinHunter extends Piglin implements ShieldedMob {
 
     @Override
     public void stopUsingShield() {
-        if (!this.isUsingShield()) {
-            return;
-        }
-        for (InteractionHand interactionhand : InteractionHand.values()) {
-            if (this.getItemInHand(interactionhand).is(ModItems.GILDED_NETHERITE_SHIELD.value())) {
-                this.stopUsingItem();
-                this.setUsingShield(false);
-                AttributeInstance attributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
-                if (attributeinstance != null) {
-                    attributeinstance.removeModifier(SPEED_MODIFIER_BLOCKING);
+        if (this.isUsingShield()) {
+            for (InteractionHand interactionhand : InteractionHand.values()) {
+                if (this.getItemInHand(interactionhand).is(ModItems.GILDED_NETHERITE_SHIELD.value())) {
+                    this.stopUsingItem();
+                    this.setUsingShield(false);
+                    AttributeInstance attributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
+                    if (attributeinstance != null) {
+                        attributeinstance.removeModifier(SPEED_MODIFIER_BLOCKING);
+                    }
                 }
             }
         }
@@ -143,11 +141,11 @@ public class PiglinHunter extends Piglin implements ShieldedMob {
         this.entityData.set(DATA_IS_SHIELDED, isShielded);
     }
 
-    private boolean isShieldMainhand() {
+    private boolean isShieldMainHand() {
         return this.entityData.get(DATA_SHIELD_HAND);
     }
 
-    private void setShieldMainhand(boolean isShieldedMainHand) {
+    private void setShieldMainHand(boolean isShieldedMainHand) {
         this.entityData.set(DATA_SHIELD_HAND, isShieldedMainHand);
     }
 
@@ -164,7 +162,7 @@ public class PiglinHunter extends Piglin implements ShieldedMob {
     }
 
     public InteractionHand getShieldHand() {
-        return this.isUsingShield() ? (this.isShieldMainhand() ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND) :
+        return this.isUsingShield() ? (this.isShieldMainHand() ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND) :
                 null;
     }
 }

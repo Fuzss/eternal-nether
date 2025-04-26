@@ -38,29 +38,20 @@ public class WitherSkeletonKnight extends WitherSkeleton implements ShieldedMob 
     private static final EntityDataAccessor<Boolean> DATA_IS_DISARMORED = SynchedEntityData.defineId(
             WitherSkeletonKnight.class,
             EntityDataSerializers.BOOLEAN);
-    private static final ResourceLocation SPEED_MODIFIER_ATTACKING_ID = EternalNether.id("shielded_speed_penalty");
-    private static final AttributeModifier SPEED_MODIFIER_BLOCKING = new AttributeModifier(SPEED_MODIFIER_ATTACKING_ID,
+    private static final ResourceLocation SPEED_MODIFIER_BLOCKING_ID = EternalNether.id("blocking");
+    private static final AttributeModifier SPEED_MODIFIER_BLOCKING = new AttributeModifier(SPEED_MODIFIER_BLOCKING_ID,
             -0.10,
             AttributeModifier.Operation.ADD_VALUE);
-
-    private static final float BREAK_HEALTH = 20.0F;
+    private static final ResourceLocation SPEED_MODIFIER_DISARMOURED_ID = ResourceLocation.withDefaultNamespace(
+            "disarmoured");
+    private static final AttributeModifier SPEED_MODIFIER_DISARMOURED = new AttributeModifier(
+            SPEED_MODIFIER_DISARMOURED_ID,
+            0.35F,
+            AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+    private static final float BREAK_HEALTH_PERCENT = 0.35F;
 
     public WitherSkeletonKnight(EntityType<? extends WitherSkeleton> entityType, Level level) {
         super(entityType, level);
-    }
-
-    @Override
-    protected void registerGoals() {
-        this.goalSelector.addGoal(1, new UseShieldGoal<>(this, Player.class));
-        super.registerGoals();
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-        if (!this.level().isClientSide) {
-            this.decrementShieldCooldown();
-        }
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -69,6 +60,29 @@ public class WitherSkeletonKnight extends WitherSkeleton implements ShieldedMob 
                 .add(Attributes.MAX_HEALTH, 60.0D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.5D)
                 .add(Attributes.ARMOR, 2.0D);
+    }
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_IS_DISARMORED, false);
+        builder.define(DATA_IS_SHIELDED, false);
+        builder.define(DATA_SHIELD_HAND, false);
+        builder.define(DATA_SHIELD_COOLDOWN, 0);
+    }
+
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(1, new UseShieldGoal<>(this, Player.class));
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (!this.level().isClientSide) {
+            this.decrementShieldCooldown();
+        }
     }
 
     @Override
@@ -81,15 +95,6 @@ public class WitherSkeletonKnight extends WitherSkeleton implements ShieldedMob 
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         this.setDisarmored(tag.getBoolean("Disarmored"));
-    }
-
-    @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(DATA_IS_DISARMORED, false);
-        builder.define(DATA_IS_SHIELDED, false);
-        builder.define(DATA_SHIELD_HAND, false);
-        builder.define(DATA_SHIELD_COOLDOWN, 0);
     }
 
     public boolean isDisarmored() {
@@ -107,20 +112,26 @@ public class WitherSkeletonKnight extends WitherSkeleton implements ShieldedMob 
     }
 
     @Override
-    public boolean hurt(DamageSource source, float damage) {
-        boolean result = super.hurt(source, damage);
-        if (!this.isDisarmored() && this.getHealth() < BREAK_HEALTH) {
-            this.setDisarmored(true);
-            this.playSound(SoundEvents.SHIELD_BREAK, 1.2F, 0.8F + this.level().random.nextFloat() * 0.4F);
-            this.setSpeed(0.25f);
+    public boolean hurt(DamageSource damageSource, float damageAmount) {
+        if (super.hurt(damageSource, damageAmount)) {
+            if (!this.isDisarmored() && this.getHealth() / this.getMaxHealth() < BREAK_HEALTH_PERCENT) {
+                this.setDisarmored(true);
+                this.playSound(SoundEvents.SHIELD_BREAK, 1.2F, 0.8F + this.level().random.nextFloat() * 0.4F);
+                AttributeInstance attribute = this.getAttribute(Attributes.MOVEMENT_SPEED);
+                if (attribute != null && !attribute.hasModifier(SPEED_MODIFIER_DISARMOURED_ID)) {
+                    attribute.addPermanentModifier(SPEED_MODIFIER_DISARMOURED);
+                }
+            }
+            return true;
+        } else {
+            return false;
         }
-        return result;
     }
 
     @Override
-    public void knockback(double x, double y, double z) {
+    public void knockback(double strength, double x, double z) {
         if (!this.isUsingShield()) {
-            super.knockback(x, y, z);
+            super.knockback(strength, x, z);
         } else {
             this.playSound(SoundEvents.SHIELD_BLOCK, 1.0F, 0.8F + this.level().random.nextFloat() * 0.4F);
         }
@@ -148,17 +159,16 @@ public class WitherSkeletonKnight extends WitherSkeleton implements ShieldedMob 
 
     @Override
     public void startUsingShield() {
-        if (this.isUsingShield() || this.isShieldDisabled()) {
-            return;
-        }
-        for (InteractionHand interactionhand : InteractionHand.values()) {
-            if (this.getItemInHand(interactionhand).is(Items.SHIELD)) {
-                this.startUsingItem(interactionhand);
-                this.setUsingShield(true);
-                this.setShieldMainhand(interactionhand == InteractionHand.MAIN_HAND);
-                AttributeInstance attributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
-                if (attributeinstance != null && !attributeinstance.hasModifier(SPEED_MODIFIER_ATTACKING_ID)) {
-                    attributeinstance.addTransientModifier(SPEED_MODIFIER_BLOCKING);
+        if (!this.isUsingShield() && !this.isShieldDisabled()) {
+            for (InteractionHand interactionHand : InteractionHand.values()) {
+                if (this.getItemInHand(interactionHand).is(Items.SHIELD)) {
+                    this.startUsingItem(interactionHand);
+                    this.setUsingShield(true);
+                    this.setShieldMainHand(interactionHand == InteractionHand.MAIN_HAND);
+                    AttributeInstance attributeInstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
+                    if (attributeInstance != null && !attributeInstance.hasModifier(SPEED_MODIFIER_BLOCKING_ID)) {
+                        attributeInstance.addTransientModifier(SPEED_MODIFIER_BLOCKING);
+                    }
                 }
             }
         }
@@ -166,16 +176,15 @@ public class WitherSkeletonKnight extends WitherSkeleton implements ShieldedMob 
 
     @Override
     public void stopUsingShield() {
-        if (!this.isUsingShield()) {
-            return;
-        }
-        for (InteractionHand interactionhand : InteractionHand.values()) {
-            if (this.getItemInHand(interactionhand).is(Items.SHIELD)) {
-                this.stopUsingItem();
-                this.setUsingShield(false);
-                AttributeInstance attributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
-                if (attributeinstance != null) {
-                    attributeinstance.removeModifier(SPEED_MODIFIER_BLOCKING);
+        if (this.isUsingShield()) {
+            for (InteractionHand interactionHand : InteractionHand.values()) {
+                if (this.getItemInHand(interactionHand).is(Items.SHIELD)) {
+                    this.stopUsingItem();
+                    this.setUsingShield(false);
+                    AttributeInstance attributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
+                    if (attributeinstance != null) {
+                        attributeinstance.removeModifier(SPEED_MODIFIER_BLOCKING);
+                    }
                 }
             }
         }
@@ -189,11 +198,11 @@ public class WitherSkeletonKnight extends WitherSkeleton implements ShieldedMob 
         this.entityData.set(DATA_IS_SHIELDED, isShielded);
     }
 
-    private boolean isShieldMainhand() {
+    private boolean isShieldMainHand() {
         return this.entityData.get(DATA_SHIELD_HAND);
     }
 
-    private void setShieldMainhand(boolean isShieldedMainHand) {
+    private void setShieldMainHand(boolean isShieldedMainHand) {
         this.entityData.set(DATA_SHIELD_HAND, isShieldedMainHand);
     }
 
@@ -201,8 +210,8 @@ public class WitherSkeletonKnight extends WitherSkeleton implements ShieldedMob 
         return this.entityData.get(DATA_SHIELD_COOLDOWN);
     }
 
-    private void setShieldCooldown(int newShieldCooldown) {
-        this.entityData.set(DATA_SHIELD_COOLDOWN, newShieldCooldown);
+    private void setShieldCooldown(int shieldCooldown) {
+        this.entityData.set(DATA_SHIELD_COOLDOWN, shieldCooldown);
     }
 
     private void decrementShieldCooldown() {
@@ -210,7 +219,7 @@ public class WitherSkeletonKnight extends WitherSkeleton implements ShieldedMob 
     }
 
     public InteractionHand getShieldHand() {
-        return this.isUsingShield() ? (this.isShieldMainhand() ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND) :
+        return this.isUsingShield() ? (this.isShieldMainHand() ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND) :
                 null;
     }
 }

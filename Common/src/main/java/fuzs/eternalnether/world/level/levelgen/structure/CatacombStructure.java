@@ -60,6 +60,7 @@ public class CatacombStructure extends Structure {
                 !ModStructureUtils.isLavaLake(blockReader);
     }
 
+    @Override
     public Optional<Structure.GenerationStub> findGenerationPoint(Structure.GenerationContext context) {
         if (checkLocation(context)) {
             BlockPos blockPos = ModStructureUtils.getElevation(context,
@@ -85,5 +86,4 @@ public class CatacombStructure extends Structure {
     public StructureType<?> type() {
         return ModStructures.CATACOMB_STRUCTURE_TYPE.value();
     }
-
 }

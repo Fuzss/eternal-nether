@@ -39,7 +39,6 @@ public final class ModItems {
     public static final Holder.Reference<Item> WITHERED_COAL_BLACK = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.WITHERED_COAL_BLOCK);
     public static final Holder.Reference<Item> WITHERED_QUARTZ_BLOCK = ModRegistry.REGISTRIES.registerBlockItem(
             ModBlocks.WITHERED_QUARTZ_BLOCK);
-
     public static final Holder.Reference<Item> WITHERED_DEBRIS = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.WITHERED_DEBRIS);
     public static final Holder.Reference<Item> SOUL_STONE = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.SOUL_STONE);
     public static final Holder.Reference<Item> WITHERED_BONE_BLOCK = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.WITHERED_BONE_BLOCK);

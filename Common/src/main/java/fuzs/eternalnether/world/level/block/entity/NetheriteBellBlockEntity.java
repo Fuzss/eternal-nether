@@ -1,8 +1,8 @@
 package fuzs.eternalnether.world.level.block.entity;
 
 import fuzs.eternalnether.init.ModBlocks;
-import fuzs.eternalnether.world.entity.monster.piglin.PiglinPrisoner;
 import fuzs.eternalnether.init.ModEntityTypes;
+import fuzs.eternalnether.world.entity.monster.piglin.PiglinPrisoner;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ColorParticleOption;
@@ -137,22 +137,22 @@ public class NetheriteBellBlockEntity extends BlockEntity {
     private static void showBellParticles(Level level, BlockPos blockPos, List<LivingEntity> piglinPrisoners) {
         MutableInt mutableint = new MutableInt(16700985);
         int i = (int) piglinPrisoners.stream()
-                .filter((piglinPrisoner) -> blockPos.closerToCenterThan(piglinPrisoner.position(),
+                .filter((LivingEntity livingEntity) -> blockPos.closerToCenterThan(livingEntity.position(),
                         HIGHLIGHT_PIGLIN_PRISONERS_RADIUS))
                 .count();
         piglinPrisoners.stream()
-                .filter((piglinPrisoner) -> isRescuedPiglinPrisonerWithinRange(blockPos,
-                        piglinPrisoner,
+                .filter((LivingEntity livingEntity) -> isRescuedPiglinPrisonerWithinRange(blockPos,
+                        livingEntity,
                         HIGHLIGHT_PIGLIN_PRISONERS_RADIUS))
-                .forEach((p_155195_) -> {
-                    double d0 = Math.sqrt((p_155195_.getX() - (double) blockPos.getX()) *
-                            (p_155195_.getX() - (double) blockPos.getX()) +
-                            (p_155195_.getZ() - (double) blockPos.getZ()) *
-                                    (p_155195_.getZ() - (double) blockPos.getZ()));
+                .forEach((LivingEntity livingEntity) -> {
+                    double d0 = Math.sqrt((livingEntity.getX() - (double) blockPos.getX()) *
+                            (livingEntity.getX() - (double) blockPos.getX()) +
+                            (livingEntity.getZ() - (double) blockPos.getZ()) *
+                                    (livingEntity.getZ() - (double) blockPos.getZ()));
                     double d1 = (double) ((float) blockPos.getX() + 0.5F) +
-                            1.0D / d0 * (p_155195_.getX() - (double) blockPos.getX());
+                            1.0D / d0 * (livingEntity.getX() - (double) blockPos.getX());
                     double d2 = (double) ((float) blockPos.getZ() + 0.5F) +
-                            1.0D / d0 * (p_155195_.getZ() - (double) blockPos.getZ());
+                            1.0D / d0 * (livingEntity.getZ() - (double) blockPos.getZ());
                     int j = Mth.clamp((i - 21) / -2, 3, 15);
                     for (int k = 0; k < j; ++k) {
                         int l = mutableint.addAndGet(5);
@@ -187,12 +187,13 @@ public class NetheriteBellBlockEntity extends BlockEntity {
         entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, GLOW_DURATION));
     }
 
-    private static void broadcastRescue(LivingEntity entity) {
-        ((PiglinPrisoner) entity).rescue();
+    private static void broadcastRescue(LivingEntity livingEntity) {
+        ((PiglinPrisoner) livingEntity).rescue();
     }
 
     @FunctionalInterface
     interface ResonationEndAction {
-        void run(Level p_155221_, BlockPos p_155222_, List<LivingEntity> p_155223_);
+
+        void run(Level level, BlockPos blockPos, List<LivingEntity> entities);
     }
 }

@@ -19,6 +19,7 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.monster.Evoker;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.WitherSkeleton;
 import net.minecraft.world.item.ItemStack;
@@ -28,20 +29,19 @@ import net.minecraft.world.scores.PlayerTeam;
 public class Wraither extends WitherSkeleton {
     private static final EntityDataAccessor<Boolean> DATA_IS_POSSESSED = SynchedEntityData.defineId(Wraither.class,
             EntityDataSerializers.BOOLEAN);
-    private static final ResourceLocation SPEED_MODIFIER_DISPOSSESSED_ID = EternalNether.id("dispossessed_speed_penalty");
+    private static final ResourceLocation SPEED_MODIFIER_DISPOSSESSED_ID = EternalNether.id("dispossessed");
     private static final AttributeModifier SPEED_MODIFIER_DISPOSSESSED = new AttributeModifier(
             SPEED_MODIFIER_DISPOSSESSED_ID,
-            -0.1,
+            0.1,
             AttributeModifier.Operation.ADD_VALUE);
+    private static final float DISPOSSESS_HEALTH_PERCENT = 0.35F;
 
     public Wraither(EntityType<? extends WitherSkeleton> entityType, Level level) {
         super(entityType, level);
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Monster.createMonsterAttributes()
-                .add(Attributes.MOVEMENT_SPEED, 0.35D)
-                .add(Attributes.MAX_HEALTH, 25.0D);
+        return Monster.createMonsterAttributes().add(Attributes.MOVEMENT_SPEED, 0.35).add(Attributes.MAX_HEALTH, 24.0);
     }
 
     @Override
@@ -76,19 +76,24 @@ public class Wraither extends WitherSkeleton {
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
-        boolean isHurt = super.hurt(source, amount);
-        if (this.isPossessed() && this.getHealth() < 10.0F) {
-            this.dispossess();
+    public boolean hurt(DamageSource damageSource, float damageAmount) {
+        if (super.hurt(damageSource, damageAmount)) {
+            if (this.isPossessed() && this.getHealth() / this.getMaxHealth() < DISPOSSESS_HEALTH_PERCENT) {
+                this.dispossess();
+            }
+            return true;
+        } else {
+            return false;
         }
-        return isHurt;
     }
 
+    /**
+     * @see Evoker.EvokerSummonSpellGoal#performSpellCasting()
+     */
     private void dispossess() {
         this.setPossessed(false);
         this.getAttribute(Attributes.MOVEMENT_SPEED).addOrReplacePermanentModifier(SPEED_MODIFIER_DISPOSSESSED);
         if (this.level() instanceof ServerLevel serverLevel) {
-            // spawning copied from Evoker
             Wex wex = ModEntityTypes.WEX.value().create(serverLevel);
             if (wex != null) {
                 BlockPos blockPos = this.blockPosition().above();

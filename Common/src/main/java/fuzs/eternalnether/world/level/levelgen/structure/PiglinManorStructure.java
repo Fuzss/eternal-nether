@@ -1,10 +1,10 @@
 package fuzs.eternalnether.world.level.levelgen.structure;
 
-import fuzs.eternalnether.init.ModStructures;
-import fuzs.eternalnether.util.ModStructureUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import fuzs.eternalnether.init.ModStructures;
+import fuzs.eternalnether.util.ModStructureUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.QuartPos;
