@@ -9,6 +9,7 @@ import fuzs.eternalnether.data.loot.ModEntityTypeLootProvider;
 import fuzs.eternalnether.data.registries.ModDatapackRegistriesProvider;
 import fuzs.eternalnether.data.tags.ModBiomeTagProvider;
 import fuzs.eternalnether.data.tags.ModBlockTagProvider;
+import fuzs.eternalnether.data.tags.ModEntityTypeTagProvider;
 import fuzs.eternalnether.data.tags.ModItemTagProvider;
 import fuzs.eternalnether.world.entity.projectile.EnderPearlTeleportCallback;
 import fuzs.puzzleslib.api.core.v1.ModConstructor;
@@ -28,6 +29,7 @@ public class EternalNetherNeoForge {
                 ModDatapackRegistriesProvider::new,
                 ModBlockTagProvider::new,
                 ModItemTagProvider::new,
+                ModEntityTypeTagProvider::new,
                 ModBiomeTagProvider::new,
                 ModBlockLootProvider::new,
                 ModEntityTypeLootProvider::new,

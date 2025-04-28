@@ -4,7 +4,7 @@
   "group": "withered_bone_meal",
   "ingredients": [
     {
-      "item": "eternalnether:withered_bone"
+      "item": "eternalnether:withered_bone_block"
     }
   ],
   "result": {

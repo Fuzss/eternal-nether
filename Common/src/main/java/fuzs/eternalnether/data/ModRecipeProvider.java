@@ -72,7 +72,7 @@ public class ModRecipeProvider extends AbstractRecipeProvider {
                 RecipeCategory.MISC,
                 ModItems.WITHERED_BONE_MEAL.value(),
                 RecipeCategory.BUILDING_BLOCKS,
-                ModItems.WITHERED_BONE.value(),
+                ModItems.WITHERED_BONE_BLOCK.value(),
                 getConversionRecipeName(ModItems.WITHERED_BONE_MEAL.value(), ModItems.WITHERED_BONE_BLOCK.value()),
                 getItemName(ModItems.WITHERED_BONE_MEAL.value()));
     }
