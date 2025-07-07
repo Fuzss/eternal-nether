@@ -1,0 +1,12 @@
+{
+  "values": [
+    "eternalnether:cobbled_blackstone",
+    "eternalnether:soul_stone",
+    "eternalnether:withered_bone_block",
+    "eternalnether:warped_nether_bricks",
+    "eternalnether:warped_nether_brick_stairs",
+    "eternalnether:warped_nether_brick_slab",
+    "eternalnether:chiseled_warped_nether_bricks",
+    "#eternalnether:withered"
+  ]
+}

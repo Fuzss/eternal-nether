@@ -1,0 +1,23 @@
+accessWidener   v2  named
+accessible  method  net/minecraft/world/entity/monster/piglin/PiglinBruteAi setAngerTarget  (Lnet/minecraft/world/entity/monster/piglin/PiglinBrute;Lnet/minecraft/world/entity/LivingEntity;)V
+accessible  field   net/minecraft/world/level/levelgen/feature/BasaltColumnsFeature CANNOT_PLACE_ON Lcom/google/common/collect/ImmutableList;
+mutable field   net/minecraft/world/level/levelgen/feature/BasaltColumnsFeature CANNOT_PLACE_ON Lcom/google/common/collect/ImmutableList;
+accessible  field   net/minecraft/world/level/levelgen/feature/DeltaFeature CANNOT_REPLACE  Lcom/google/common/collect/ImmutableList;
+mutable field   net/minecraft/world/level/levelgen/feature/DeltaFeature CANNOT_REPLACE  Lcom/google/common/collect/ImmutableList;
+accessible  field   net/minecraft/world/entity/monster/piglin/PiglinBrute   SENSOR_TYPES    Lcom/google/common/collect/ImmutableList;
+mutable field   net/minecraft/world/entity/monster/piglin/PiglinBrute   SENSOR_TYPES    Lcom/google/common/collect/ImmutableList;
+accessible  field   net/minecraft/world/entity/monster/piglin/PiglinBrute   MEMORY_TYPES    Lcom/google/common/collect/ImmutableList;
+mutable field   net/minecraft/world/entity/monster/piglin/PiglinBrute   MEMORY_TYPES    Lcom/google/common/collect/ImmutableList;
+accessible  method  net/minecraft/client/renderer/ItemInHandRenderer    applyItemArmTransform   (Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/entity/HumanoidArm;F)V
+transitive-accessible   method  net/minecraft/data/models/BlockModelGenerators$BlockFamilyProvider  fullBlockVariant    (Lnet/minecraft/world/level/block/Block;)Lnet/minecraft/data/models/BlockModelGenerators$BlockFamilyProvider;
+transitive-accessible   method  net/minecraft/data/models/BlockModelGenerators$BlockFamilyProvider  door    (Lnet/minecraft/world/level/block/Block;)Lnet/minecraft/data/models/BlockModelGenerators$BlockFamilyProvider;
+transitive-accessible   method  net/minecraft/data/models/BlockModelGenerators$BlockFamilyProvider  trapdoor    (Lnet/minecraft/world/level/block/Block;)V
+transitive-accessible   field   net/minecraft/data/models/BlockModelGenerators  nonOrientableTrapdoor   Ljava/util/List;
+transitive-mutable  field   net/minecraft/data/models/BlockModelGenerators  nonOrientableTrapdoor   Ljava/util/List;
+transitive-accessible   field   net/minecraft/data/models/BlockModelGenerators  fullBlockModelCustomGenerators  Ljava/util/Map;
+transitive-mutable  field   net/minecraft/data/models/BlockModelGenerators  fullBlockModelCustomGenerators  Ljava/util/Map;
+transitive-accessible   field   net/minecraft/data/models/BlockModelGenerators  texturedModels  Ljava/util/Map;
+transitive-mutable  field   net/minecraft/data/models/BlockModelGenerators  texturedModels  Ljava/util/Map;
+transitive-accessible   field   net/minecraft/data/models/BlockModelGenerators  SHAPE_CONSUMERS Ljava/util/Map;
+accessible  field   net/minecraft/data/registries/RegistriesDatapackGenerator   registries  Ljava/util/concurrent/CompletableFuture;
+mutable field   net/minecraft/data/registries/RegistriesDatapackGenerator   registries  Ljava/util/concurrent/CompletableFuture;
