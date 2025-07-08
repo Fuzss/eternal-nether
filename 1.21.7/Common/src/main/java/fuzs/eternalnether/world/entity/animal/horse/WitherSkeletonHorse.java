@@ -3,6 +3,7 @@ package fuzs.eternalnether.world.entity.animal.horse;
 import fuzs.eternalnether.world.entity.monster.piglin.PiglinPrisonerAi;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
@@ -32,7 +33,15 @@ public class WitherSkeletonHorse extends SkeletonHorse {
     }
 
     @Override
+    protected void randomizeAttributes(RandomSource random) {
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(35.0);
+        this.getAttribute(Attributes.JUMP_STRENGTH).setBaseValue(1.0);
+        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.35);
+    }
+
+    @Override
     public void aiStep() {
+        super.aiStep();
         if (this.level().isClientSide && this.random.nextInt(3) == 0) {
             this.level()
                     .addParticle(ParticleTypes.SOUL_FIRE_FLAME,
@@ -43,31 +52,35 @@ public class WitherSkeletonHorse extends SkeletonHorse {
                             this.random.nextDouble() * -0.05,
                             0.0);
         }
-
-        super.aiStep();
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
         this.floatHorse();
     }
 
-    @Override
-    protected void randomizeAttributes(RandomSource random) {
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(35.0D);
-        this.getAttribute(Attributes.JUMP_STRENGTH).setBaseValue(1.0D);
-        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.35D);
+    private void floatHorse() {
+        if (this.isInLava()) {
+            CollisionContext collisioncontext = CollisionContext.of(this);
+            if (collisioncontext.isAbove(LiquidBlock.SHAPE_STABLE, this.blockPosition(), true) && !this.level()
+                    .getFluidState(this.blockPosition().above())
+                    .is(FluidTags.LAVA)) {
+                this.setOnGround(true);
+            } else {
+                this.setDeltaMovement(this.getDeltaMovement().scale(0.5D).add(0.0D, 0.05D, 0.0D));
+            }
+        }
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
-        this.getPassengers().forEach((Entity passenger) -> {
-            if (passenger instanceof AbstractPiglin piglin && source.getEntity() instanceof LivingEntity target) {
-                PiglinPrisonerAi.setAngerTarget(piglin, target);
-            }
-        });
-        return super.hurt(source, amount);
+    public boolean hurtServer(ServerLevel serverLevel, DamageSource damageSource, float damageAmount) {
+        if (super.hurtServer(serverLevel, damageSource, damageAmount)) {
+            this.getPassengers().forEach((Entity entity) -> {
+                if (entity instanceof AbstractPiglin piglin
+                        && damageSource.getEntity() instanceof LivingEntity target) {
+                    PiglinPrisonerAi.setAngerTarget(piglin, target);
+                }
+            });
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -91,18 +104,6 @@ public class WitherSkeletonHorse extends SkeletonHorse {
                 } else if (this.gallopSoundCounter <= 5) {
                     this.playSound(SoundEvents.HORSE_STEP_WOOD, soundtype.getVolume() * 0.15F, soundtype.getPitch());
                 }
-            }
-        }
-    }
-
-    private void floatHorse() {
-        if (this.isInLava()) {
-            CollisionContext collisioncontext = CollisionContext.of(this);
-            if (collisioncontext.isAbove(LiquidBlock.STABLE_SHAPE, this.blockPosition(), true) &&
-                    !this.level().getFluidState(this.blockPosition().above()).is(FluidTags.LAVA)) {
-                this.setOnGround(true);
-            } else {
-                this.setDeltaMovement(this.getDeltaMovement().scale(0.5D).add(0.0D, 0.05D, 0.0D));
             }
         }
     }

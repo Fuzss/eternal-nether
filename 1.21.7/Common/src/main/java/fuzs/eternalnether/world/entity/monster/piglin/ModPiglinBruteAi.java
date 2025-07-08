@@ -1,6 +1,10 @@
 package fuzs.eternalnether.world.entity.monster.piglin;
 
+import fuzs.eternalnether.init.ModRegistry;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.Brain;
@@ -12,11 +16,8 @@ import net.minecraft.world.entity.monster.piglin.Piglin;
 import net.minecraft.world.entity.monster.piglin.PiglinBrute;
 import net.minecraft.world.entity.monster.piglin.PiglinBruteAi;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.armortrim.ArmorTrim;
-import net.minecraft.world.item.armortrim.TrimMaterials;
+import net.minecraft.world.item.equipment.trim.ArmorTrim;
 
 import java.util.Optional;
 
@@ -26,11 +27,13 @@ public class ModPiglinBruteAi extends PiglinBruteAi {
      * Copied from {@link net.minecraft.world.entity.monster.piglin.PiglinAi#findNearestValidAttackTarget(Piglin)}, but
      * no longer restricted to {@link Piglin} and removed check for zombified piglins.
      */
-    public static Optional<? extends LivingEntity> findNearestValidAttackTarget(AbstractPiglin abstractPiglin) {
+    public static Optional<? extends LivingEntity> findNearestValidAttackTarget(ServerLevel serverLevel, AbstractPiglin abstractPiglin) {
         Brain<?> brain = abstractPiglin.getBrain();
         Optional<LivingEntity> optional = BehaviorUtils.getLivingEntityFromUUIDMemory(abstractPiglin,
                 MemoryModuleType.ANGRY_AT);
-        if (optional.isPresent() && Sensor.isEntityAttackableIgnoringLineOfSight(abstractPiglin, optional.get())) {
+        if (optional.isPresent() && Sensor.isEntityAttackableIgnoringLineOfSight(serverLevel,
+                abstractPiglin,
+                optional.get())) {
             return optional;
         } else {
             if (brain.hasMemoryValue(MemoryModuleType.UNIVERSAL_ANGER)) {
@@ -45,8 +48,9 @@ public class ModPiglinBruteAi extends PiglinBruteAi {
                 return optional2;
             } else {
                 Optional<Player> optional3 = brain.getMemory(MemoryModuleType.NEAREST_TARGETABLE_PLAYER_NOT_WEARING_GOLD);
-                return optional3.isPresent() && Sensor.isEntityAttackable(abstractPiglin, optional3.get()) ? optional3 :
-                        Optional.empty();
+                return optional3.isPresent() && Sensor.isEntityAttackable(serverLevel,
+                        abstractPiglin,
+                        optional3.get()) ? optional3 : Optional.empty();
             }
         }
     }
@@ -59,9 +63,9 @@ public class ModPiglinBruteAi extends PiglinBruteAi {
         PiglinBruteAi.setAngerTarget(piglinBrute, optional.isPresent() ? optional.get() : defaultEntity);
     }
 
-    public static boolean isWearingGold(LivingEntity livingEntity) {
-        for (ItemStack itemStack : livingEntity.getArmorSlots()) {
-            if (makesPiglinBrutesNeutral(itemStack)) {
+    public static boolean isWearingSafeArmor(LivingEntity livingEntity) {
+        for (EquipmentSlot equipmentSlot : EquipmentSlotGroup.ARMOR) {
+            if (makesPiglinBrutesNeutral(livingEntity.getItemBySlot(equipmentSlot))) {
                 return true;
             }
         }
@@ -70,12 +74,11 @@ public class ModPiglinBruteAi extends PiglinBruteAi {
     }
 
     private static boolean makesPiglinBrutesNeutral(ItemStack itemStack) {
-        return itemStack.getItem() instanceof ArmorItem armorItem &&
-                armorItem.getMaterial() == ArmorMaterials.NETHERITE && makesPiglinsNeutral(itemStack);
+        return itemStack.is(ModRegistry.PIGLIN_BRUTE_SAFE_ARMOR_ITEM_TAG_KEY) && makesPiglinsNeutral(itemStack);
     }
 
     public static boolean makesPiglinsNeutral(ItemStack itemStack) {
         ArmorTrim armorTrim = itemStack.get(DataComponents.TRIM);
-        return armorTrim != null && armorTrim.material().is(TrimMaterials.GOLD);
+        return armorTrim != null && armorTrim.material().is(ModRegistry.PIGLIN_SAFE_TRIM_MATERIAL_TAG_KEY);
     }
 }

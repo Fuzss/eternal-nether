@@ -6,17 +6,15 @@ import fuzs.eternalnether.init.ModBlockFamilies;
 import fuzs.eternalnether.init.ModBlocks;
 import fuzs.eternalnether.init.ModItems;
 import fuzs.puzzleslib.api.client.data.v2.AbstractModelProvider;
-import fuzs.puzzleslib.api.client.data.v2.ItemModelProperties;
+import fuzs.puzzleslib.api.client.data.v2.models.ItemModelGenerationHelper;
 import fuzs.puzzleslib.api.data.v2.core.DataProviderContext;
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.ItemModelGenerators;
+import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
+import net.minecraft.client.data.models.blockstates.PropertyDispatch;
+import net.minecraft.client.data.models.model.*;
 import net.minecraft.core.Direction;
 import net.minecraft.data.BlockFamily;
-import net.minecraft.data.models.BlockModelGenerators;
-import net.minecraft.data.models.ItemModelGenerators;
-import net.minecraft.data.models.blockstates.MultiVariantGenerator;
-import net.minecraft.data.models.blockstates.PropertyDispatch;
-import net.minecraft.data.models.blockstates.Variant;
-import net.minecraft.data.models.blockstates.VariantProperties;
-import net.minecraft.data.models.model.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -24,7 +22,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BellAttachType;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-import java.util.HashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
@@ -53,56 +50,58 @@ public class ModModelProvider extends AbstractModelProvider {
     }
 
     @Override
-    public void addBlockModels(BlockModelGenerators builder) {
-        builder.texturedModels = new HashMap<>(builder.texturedModels);
-        builder.texturedModels.put(ModBlocks.WITHERED_BLACKSTONE.value(),
+    public void addBlockModels(BlockModelGenerators blockModelGenerators) {
+        BlockModelGenerators.TEXTURED_MODELS.put(ModBlocks.WITHERED_BLACKSTONE.value(),
                 TexturedModel.COLUMN_WITH_WALL.get(ModBlocks.WITHERED_BLACKSTONE.value())
                         .updateTextures(map -> map.put(TextureSlot.SIDE,
                                 TextureMapping.getBlockTexture(ModBlocks.WITHERED_BLACKSTONE.value()))));
-        builder.texturedModels.put(ModBlocks.CHISELED_WITHERED_BLACKSTONE.value(),
+        BlockModelGenerators.TEXTURED_MODELS.put(ModBlocks.CHISELED_WITHERED_BLACKSTONE.value(),
                 TexturedModel.COLUMN.get(ModBlocks.CHISELED_WITHERED_BLACKSTONE.value())
                         .updateTextures(map -> map.put(TextureSlot.SIDE,
                                 TextureMapping.getBlockTexture(ModBlocks.CHISELED_WITHERED_BLACKSTONE.value()))));
         ModBlockFamilies.getAllFamilies()
                 .filter(BlockFamily::shouldGenerateModel)
-                .forEach(blockFamily -> builder.family(blockFamily.getBaseBlock()).generateFor(blockFamily));
-        builder.family(ModBlocks.WITHERED_BLACKSTONE.value())
+                .forEach(blockFamily -> blockModelGenerators.family(blockFamily.getBaseBlock())
+                        .generateFor(blockFamily));
+        blockModelGenerators.family(ModBlocks.WITHERED_BLACKSTONE.value())
                 .slab(ModBlocks.WITHERED_BLACKSTONE_SLAB.value())
                 .stairs(ModBlocks.WITHERED_BLACKSTONE_STAIRS.value())
                 .wall(ModBlocks.WITHERED_BLACKSTONE_WALL.value())
                 .fullBlockVariant(ModBlocks.CHISELED_WITHERED_BLACKSTONE.value());
-        builder.createTrivialCube(ModBlocks.COBBLED_BLACKSTONE.value());
-        builder.createTrivialCube(ModBlocks.WITHERED_BASALT.value());
-        builder.createTrivialCube(ModBlocks.WITHERED_COAL_BLOCK.value());
-        builder.createTrivialCube(ModBlocks.WITHERED_QUARTZ_BLOCK.value());
-        builder.createTrivialBlock(ModBlocks.WITHERED_DEBRIS.value(), TexturedModel.COLUMN);
-        builder.createTrivialCube(ModBlocks.SOUL_STONE.value());
-        builder.createAxisAlignedPillarBlock(ModBlocks.WITHERED_BONE_BLOCK.value(), TexturedModel.COLUMN);
+        blockModelGenerators.createTrivialCube(ModBlocks.COBBLED_BLACKSTONE.value());
+        blockModelGenerators.createTrivialCube(ModBlocks.WITHERED_BASALT.value());
+        blockModelGenerators.createTrivialCube(ModBlocks.WITHERED_COAL_BLOCK.value());
+        blockModelGenerators.createTrivialCube(ModBlocks.WITHERED_QUARTZ_BLOCK.value());
+        blockModelGenerators.createTrivialBlock(ModBlocks.WITHERED_DEBRIS.value(), TexturedModel.COLUMN);
+        blockModelGenerators.createTrivialCube(ModBlocks.SOUL_STONE.value());
+        blockModelGenerators.createAxisAlignedPillarBlock(ModBlocks.WITHERED_BONE_BLOCK.value(), TexturedModel.COLUMN);
         TextureMapping textureMapping = bell(ModBlocks.NETHERITE_BELL.value(),
                 Blocks.CRIMSON_PLANKS,
                 Blocks.BLACKSTONE);
-        this.createBell(ModBlocks.NETHERITE_BELL.value(), textureMapping, builder);
+        this.createBell(ModBlocks.NETHERITE_BELL.value(), textureMapping, blockModelGenerators);
     }
 
     @Override
-    public void addItemModels(ItemModelGenerators builder) {
-        builder.generateFlatItem(ModItems.PIGLIN_PRISONER_SPAWN_EGG.value(), SPAWN_EGG);
-        builder.generateFlatItem(ModItems.PIGLIN_HUNTER_SPAWN_EGG.value(), SPAWN_EGG);
-        builder.generateFlatItem(ModItems.WEX_SPAWN_EGG.value(), SPAWN_EGG);
-        builder.generateFlatItem(ModItems.WARPED_ENDERMAN_SPAWN_EGG.value(), SPAWN_EGG);
-        builder.generateFlatItem(ModItems.WRAITHER_SPAWN_EGG.value(), SPAWN_EGG);
-        builder.generateFlatItem(ModItems.CORPOR_SPAWN_EGG.value(), SPAWN_EGG);
-        builder.generateFlatItem(ModItems.WITHER_SKELETON_KNIGHT_SPAWN_EGG.value(), SPAWN_EGG);
-        builder.generateFlatItem(ModItems.WITHER_SKELETON_HORSE_SPAWN_EGG.value(), SPAWN_EGG);
-        builder.generateFlatItem(ModItems.WITHER_WALTZ_MUSIC_DISC.value(), ModelTemplates.FLAT_ITEM);
-        builder.generateFlatItem(ModItems.WARPED_ENDER_PEARL.value(), ModelTemplates.FLAT_ITEM);
-        builder.generateFlatItem(ModItems.WITHERED_BONE.value(), ModelTemplates.FLAT_ITEM);
-        builder.generateFlatItem(ModItems.WITHERED_BONE_MEAL.value(), ModelTemplates.FLAT_ITEM);
-        builder.generateFlatItem(ModItems.CUTLASS.value(), ModelTemplates.FLAT_HANDHELD_ITEM);
+    public void addItemModels(ItemModelGenerators itemModelGenerators) {
+        ItemModelGenerationHelper.generateSpawnEgg(ModItems.PIGLIN_PRISONER_SPAWN_EGG.value(), itemModelGenerators);
+        ItemModelGenerationHelper.generateSpawnEgg(ModItems.PIGLIN_HUNTER_SPAWN_EGG.value(), itemModelGenerators);
+        ItemModelGenerationHelper.generateSpawnEgg(ModItems.WEX_SPAWN_EGG.value(), itemModelGenerators);
+        ItemModelGenerationHelper.generateSpawnEgg(ModItems.WARPED_ENDERMAN_SPAWN_EGG.value(), itemModelGenerators);
+        ItemModelGenerationHelper.generateSpawnEgg(ModItems.WRAITHER_SPAWN_EGG.value(), itemModelGenerators);
+        ItemModelGenerationHelper.generateSpawnEgg(ModItems.CORPOR_SPAWN_EGG.value(), itemModelGenerators);
+        ItemModelGenerationHelper.generateSpawnEgg(ModItems.WITHER_SKELETON_KNIGHT_SPAWN_EGG.value(),
+                itemModelGenerators);
+        ItemModelGenerationHelper.generateSpawnEgg(ModItems.WITHER_SKELETON_HORSE_SPAWN_EGG.value(),
+                itemModelGenerators);
+        itemModelGenerators.generateFlatItem(ModItems.WITHER_WALTZ_MUSIC_DISC.value(), ModelTemplates.FLAT_ITEM);
+        itemModelGenerators.generateFlatItem(ModItems.WARPED_ENDER_PEARL.value(), ModelTemplates.FLAT_ITEM);
+        itemModelGenerators.generateFlatItem(ModItems.WITHERED_BONE.value(), ModelTemplates.FLAT_ITEM);
+        itemModelGenerators.generateFlatItem(ModItems.WITHERED_BONE_MEAL.value(), ModelTemplates.FLAT_ITEM);
+        itemModelGenerators.generateFlatItem(ModItems.CUTLASS.value(), ModelTemplates.FLAT_HANDHELD_ITEM);
         generateShieldItem(ModItems.GILDED_NETHERITE_SHIELD.value(),
                 Blocks.CRIMSON_PLANKS,
                 ShieldItemRenderer.BLOCKING_ITEM_MODEL_PROPERTY,
-                builder.output);
+                itemModelGenerators.output);
     }
 
     public static void generateShieldItem(Item item, Block particleBlock, ResourceLocation propertyResourceLocation, BiConsumer<ResourceLocation, Supplier<JsonElement>> modelOutput) {
@@ -123,7 +122,7 @@ public class ModModelProvider extends AbstractModelProvider {
                 .put(POST_TEXTURE_SLOT, TextureMapping.getBlockTexture(postBlock));
     }
 
-    private void createBell(Block block, TextureMapping textureMapping, BlockModelGenerators builder) {
+    public final void createBell(Block block, TextureMapping textureMapping, BlockModelGenerators builder) {
         ResourceLocation resourceLocation = ModelLocationUtils.getModelLocation(block, "_floor");
         BELL_FLOOR_MODEL_TEMPLATE.create(resourceLocation, textureMapping, builder.modelOutput);
         ResourceLocation resourceLocation2 = ModelLocationUtils.getModelLocation(block, "_ceiling");

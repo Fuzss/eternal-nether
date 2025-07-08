@@ -1,10 +1,10 @@
 package fuzs.eternalnether.world.item;
 
+import fuzs.puzzleslib.api.util.v1.InteractionResultHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BoneMealItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
-public class WitheredBoneMealItem extends Item {
+public class WitheredBoneMealItem extends BoneMealItem {
     private static final int GROWTH_BONUS_COUNT = 3;
 
     public WitheredBoneMealItem(Properties properties) {
@@ -31,7 +31,7 @@ public class WitheredBoneMealItem extends Item {
                 level.levelEvent(LevelEvent.PARTICLES_AND_SOUND_PLANT_GROWTH, blockPos, 15);
             }
 
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return InteractionResultHelper.sidedSuccess(level.isClientSide);
         } else {
             BlockState blockState = level.getBlockState(blockPos);
             if (blockState.isFaceSturdy(level, blockPos, context.getClickedFace())) {
@@ -41,7 +41,7 @@ public class WitheredBoneMealItem extends Item {
                         level.levelEvent(LevelEvent.PARTICLES_AND_SOUND_PLANT_GROWTH, blockPos2, 15);
                     }
 
-                    return InteractionResult.sidedSuccess(level.isClientSide);
+                    return InteractionResultHelper.sidedSuccess(level.isClientSide);
                 }
             }
 

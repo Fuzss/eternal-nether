@@ -23,6 +23,6 @@ public class ModStopHoldingItemIfNoLongerAdmiring<E extends PiglinPrisoner> exte
 
     @Override
     protected void start(ServerLevel serverLevel, E piglinPrisoner, long gameTime) {
-        PiglinPrisonerAi.stopHoldingOffHandItem(piglinPrisoner, true);
+        PiglinPrisonerAi.stopHoldingOffHandItem(serverLevel, piglinPrisoner, true);
     }
 }

@@ -5,6 +5,7 @@ import net.minecraft.sounds.SoundEvent;
 
 public final class ModSoundEvents {
     public static final Holder.Reference<SoundEvent> WITHER_WALTZ = register("wither_waltz");
+    public static final Holder.Reference<SoundEvent> ITEM_SWORD_BLOCK_SOUND_EVENT = register("item.sword.block");
     public static final Holder.Reference<SoundEvent> WEX_CHARGE = register("entity.wex.charge");
     public static final Holder.Reference<SoundEvent> WEX_DEATH = register("entity.wex.death");
     public static final Holder.Reference<SoundEvent> WEX_HURT = register("entity.wex.hurt");

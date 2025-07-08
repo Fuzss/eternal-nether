@@ -4,8 +4,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
 import fuzs.eternalnether.init.ModEntityTypes;
-import fuzs.eternalnether.services.CommonAbstractions;
 import fuzs.eternalnether.world.entity.ai.behavior.*;
+import fuzs.puzzleslib.api.util.v1.EntityHelper;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.ItemTags;
@@ -45,14 +46,13 @@ public class PiglinPrisonerAi extends PiglinAi {
     private static final UniformInt AVOID_ZOMBIFIED_DURATION = TimeUtil.rangeOfSeconds(5, 7);
     private static final int CELEBRATION_TIME = 200;
 
-    private static final Predicate<PathfinderMob> isDistracted = (mob) -> {
+    private static final Predicate<PathfinderMob> isDistracted = (PathfinderMob mob) -> {
         if (mob instanceof PiglinPrisoner piglinPrisoner) {
             Brain<PiglinPrisoner> brain = piglinPrisoner.getBrain();
-            return brain.hasMemoryValue(MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM) ||
-                    brain.hasMemoryValue(MemoryModuleType.NEAREST_VISIBLE_NEMESIS) ||
-                    brain.hasMemoryValue(MemoryModuleType.AVOID_TARGET) ||
-                    brain.getMemory(MemoryModuleType.DANCING).orElse(false) ||
-                    !brain.getMemory(MemoryModuleType.IS_TEMPTED).orElse(false);
+            return brain.hasMemoryValue(MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM) || brain.hasMemoryValue(
+                    MemoryModuleType.NEAREST_VISIBLE_NEMESIS) || brain.hasMemoryValue(MemoryModuleType.AVOID_TARGET)
+                    || brain.getMemory(MemoryModuleType.DANCING).orElse(false)
+                    || !brain.getMemory(MemoryModuleType.IS_TEMPTED).orElse(false);
         } else {
             return false;
         }
@@ -87,7 +87,9 @@ public class PiglinPrisonerAi extends PiglinAi {
         brain.addActivity(Activity.IDLE,
                 10,
                 ImmutableList.of(SetEntityLookTarget.create(PiglinPrisonerAi::isPlayerHoldingLovedItem, 14.0F),
-                        StartAttacking.create(AbstractPiglin::isAdult, PiglinPrisonerAi::findNearestValidAttackTarget),
+                        StartAttacking.create((ServerLevel serverLevel, PiglinPrisoner piglinPrisoner) -> {
+                            return piglinPrisoner.isAdult();
+                        }, PiglinPrisonerAi::findNearestValidAttackTarget),
                         avoidRepellent(),
                         createIdleLookBehaviors(),
                         createIdleMovementBehaviors(),
@@ -97,9 +99,9 @@ public class PiglinPrisonerAi extends PiglinAi {
     private static void initFightActivity(PiglinPrisoner piglinPrisoner, Brain<PiglinPrisoner> brain) {
         brain.addActivityAndRemoveMemoryWhenStopped(Activity.FIGHT,
                 10,
-                ImmutableList.<BehaviorControl<? super PiglinPrisoner>>of(StopAttackingIfTargetInvalid.create((target) -> !isNearestValidAttackTarget(
-                                piglinPrisoner,
-                                target)),
+                ImmutableList.<BehaviorControl<? super PiglinPrisoner>>of(StopAttackingIfTargetInvalid.create((ServerLevel serverLevel, LivingEntity target) -> {
+                            return !isNearestValidAttackTarget(serverLevel, piglinPrisoner, target);
+                        }),
                         BehaviorBuilder.triggerIf(PiglinPrisonerAi::hasCrossbow, BackUpIfTooClose.create(5, 0.75F)),
                         SetWalkTargetFromAttackTargetIfTargetOutOfReach.create(1.0F),
                         MeleeAttack.create(20),
@@ -113,7 +115,9 @@ public class PiglinPrisonerAi extends PiglinAi {
                 10,
                 ImmutableList.of(avoidRepellent(),
                         SetEntityLookTarget.create(PiglinPrisonerAi::isPlayerHoldingLovedItem, 14.0F),
-                        StartAttacking.create(AbstractPiglin::isAdult, PiglinPrisonerAi::findNearestValidAttackTarget),
+                        StartAttacking.create((ServerLevel serverLevel, PiglinPrisoner piglinPrisoner) -> {
+                            return piglinPrisoner.isAdult();
+                        }, PiglinPrisonerAi::findNearestValidAttackTarget),
                         BehaviorBuilder.triggerIf(PiglinPrisoner::isDancing,
                                 GoToTargetLocation.create(MemoryModuleType.CELEBRATE_LOCATION, 2, 1.0F)),
                         BehaviorBuilder.triggerIf(PiglinPrisoner::isDancing,
@@ -184,7 +188,7 @@ public class PiglinPrisonerAi extends PiglinAi {
         piglinPrisoner.setDancing(brain.hasMemoryValue(MemoryModuleType.DANCING));
     }
 
-    public static void pickUpItem(PiglinPrisoner piglinPrisoner, ItemEntity itemEntity) {
+    public static void pickUpItem(ServerLevel serverLevel, PiglinPrisoner piglinPrisoner, ItemEntity itemEntity) {
         stopWalking(piglinPrisoner);
         ItemStack itemstack;
 
@@ -199,18 +203,18 @@ public class PiglinPrisonerAi extends PiglinAi {
 
         if (isLovedItem(itemstack)) {
             piglinPrisoner.getBrain().eraseMemory(MemoryModuleType.TIME_TRYING_TO_REACH_ADMIRE_ITEM);
-            holdInOffhand(piglinPrisoner, itemstack);
+            holdInOffhand(serverLevel, piglinPrisoner, itemstack);
             admireGoldItem(piglinPrisoner);
         } else if (isFood(itemstack) && !hasEatenRecently(piglinPrisoner)) {
             eat(piglinPrisoner);
-        } else if (piglinPrisoner.equipItemIfPossible(itemstack).isEmpty()) {
+        } else if (piglinPrisoner.equipItemIfPossible(serverLevel, itemstack).isEmpty()) {
             putInInventory(piglinPrisoner, itemstack);
         }
     }
 
-    public static void holdInOffhand(PiglinPrisoner piglinPrisoner, ItemStack stack) {
+    public static void holdInOffhand(ServerLevel serverLevel, PiglinPrisoner piglinPrisoner, ItemStack stack) {
         if (isHoldingItemInOffHand(piglinPrisoner)) {
-            piglinPrisoner.spawnAtLocation(piglinPrisoner.getItemInHand(InteractionHand.OFF_HAND));
+            piglinPrisoner.spawnAtLocation(serverLevel, piglinPrisoner.getItemInHand(InteractionHand.OFF_HAND));
         }
         piglinPrisoner.holdInOffHand(stack);
     }
@@ -226,14 +230,14 @@ public class PiglinPrisonerAi extends PiglinAi {
         return itemstack1;
     }
 
-    public static void stopHoldingOffHandItem(PiglinPrisoner piglinPrisoner, boolean shouldThrowItems) {
+    public static void stopHoldingOffHandItem(ServerLevel serverLevel, PiglinPrisoner piglinPrisoner, boolean shouldThrowItems) {
         ItemStack itemstack = piglinPrisoner.getItemInHand(InteractionHand.OFF_HAND);
         piglinPrisoner.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
-        boolean isPiglinCurrency = CommonAbstractions.INSTANCE.isPiglinCurrency(itemstack);
+        boolean isPiglinCurrency = EntityHelper.isPiglinCurrency(itemstack);
         if (shouldThrowItems && isPiglinCurrency) {
             putInInventory(piglinPrisoner, itemstack);
         } else if (!isPiglinCurrency) {
-            boolean flag1 = !piglinPrisoner.equipItemIfPossible(itemstack).isEmpty();
+            boolean flag1 = !piglinPrisoner.equipItemIfPossible(serverLevel, itemstack).isEmpty();
             if (!flag1) {
                 throwItems(piglinPrisoner, Collections.singletonList(itemstack));
             }
@@ -274,9 +278,9 @@ public class PiglinPrisonerAi extends PiglinAi {
         return vec3 == null ? piglinPrisoner.position() : vec3;
     }
 
-    public static void cancelAdmiring(PiglinPrisoner piglinPrisoner) {
+    public static void cancelAdmiring(ServerLevel serverLevel, PiglinPrisoner piglinPrisoner) {
         if (isAdmiringItem(piglinPrisoner) && !piglinPrisoner.getOffhandItem().isEmpty()) {
-            piglinPrisoner.spawnAtLocation(piglinPrisoner.getOffhandItem());
+            piglinPrisoner.spawnAtLocation(serverLevel, piglinPrisoner.getOffhandItem());
             piglinPrisoner.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
         }
     }
@@ -284,10 +288,10 @@ public class PiglinPrisonerAi extends PiglinAi {
     public static boolean wantsToPickup(PiglinPrisoner piglinPrisoner, ItemStack itemStack) {
         if (itemStack.is(ItemTags.PIGLIN_REPELLENTS)) {
             return false;
-        } else if (isAdmiringDisabled(piglinPrisoner) &&
-                piglinPrisoner.getBrain().hasMemoryValue(MemoryModuleType.ATTACK_TARGET)) {
+        } else if (isAdmiringDisabled(piglinPrisoner) && piglinPrisoner.getBrain()
+                .hasMemoryValue(MemoryModuleType.ATTACK_TARGET)) {
             return false;
-        } else if (CommonAbstractions.INSTANCE.isPiglinCurrency(itemStack) || isLovedItem(itemStack)) {
+        } else if (EntityHelper.isPiglinCurrency(itemStack) || isLovedItem(itemStack)) {
             return isNotHoldingLovedItemInOffHand(piglinPrisoner);
         } else {
             boolean flag = piglinPrisoner.canAddToInventory(itemStack);
@@ -305,9 +309,10 @@ public class PiglinPrisonerAi extends PiglinAi {
         return stack.is(ItemTags.PIGLIN_LOVED);
     }
 
-    private static boolean isNearestValidAttackTarget(PiglinPrisoner piglinPrisoner, LivingEntity target) {
-        return findNearestValidAttackTarget(piglinPrisoner).filter((potentialTarget) -> potentialTarget == target)
-                .isPresent();
+    private static boolean isNearestValidAttackTarget(ServerLevel serverLevel, PiglinPrisoner piglinPrisoner, LivingEntity target) {
+        return findNearestValidAttackTarget(serverLevel, piglinPrisoner).filter((potentialTarget) -> {
+            return potentialTarget == target;
+        }).isPresent();
     }
 
 
@@ -321,14 +326,16 @@ public class PiglinPrisonerAi extends PiglinAi {
         }
     }
 
-    private static Optional<? extends LivingEntity> findNearestValidAttackTarget(PiglinPrisoner piglinPrisoner) {
+    private static Optional<? extends LivingEntity> findNearestValidAttackTarget(ServerLevel serverLevel, PiglinPrisoner piglinPrisoner) {
         Brain<PiglinPrisoner> brain = piglinPrisoner.getBrain();
         if (isNearZombified(piglinPrisoner)) {
             return Optional.empty();
         } else {
             Optional<LivingEntity> optional = BehaviorUtils.getLivingEntityFromUUIDMemory(piglinPrisoner,
                     MemoryModuleType.ANGRY_AT);
-            if (optional.isPresent() && Sensor.isEntityAttackableIgnoringLineOfSight(piglinPrisoner, optional.get())) {
+            if (optional.isPresent() && Sensor.isEntityAttackableIgnoringLineOfSight(serverLevel,
+                    piglinPrisoner,
+                    optional.get())) {
                 return optional;
             } else {
                 Optional<Mob> optional1 = brain.getMemory(MemoryModuleType.NEAREST_VISIBLE_NEMESIS);
@@ -340,11 +347,11 @@ public class PiglinPrisonerAi extends PiglinAi {
         return Optional.empty();
     }
 
-    public static InteractionResult mobInteract(PiglinPrisoner piglinPrisoner, Player player, InteractionHand hand) {
+    public static InteractionResult mobInteract(ServerLevel serverLevel, PiglinPrisoner piglinPrisoner, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         if (canAdmire(piglinPrisoner, itemstack)) {
             ItemStack itemstack1 = itemstack.split(1);
-            holdInOffhand(piglinPrisoner, itemstack1);
+            holdInOffhand(serverLevel, piglinPrisoner, itemstack1);
             if (!player.equals(piglinPrisoner.getTempter())) {
                 newTemptingPlayer(piglinPrisoner, player);
             }
@@ -357,44 +364,43 @@ public class PiglinPrisonerAi extends PiglinAi {
     }
 
     public static boolean canAdmire(PiglinPrisoner piglinPrisoner, ItemStack itemStack) {
-        return !isAdmiringDisabled(piglinPrisoner) && !isAdmiringItem(piglinPrisoner) &&
-                (CommonAbstractions.INSTANCE.isPiglinCurrency(itemStack) || isLovedItem(itemStack));
+        return !isAdmiringDisabled(piglinPrisoner) && !isAdmiringItem(piglinPrisoner) && (
+                EntityHelper.isPiglinCurrency(itemStack) || isLovedItem(itemStack));
     }
 
-    public static void wasHurtBy(PiglinPrisoner piglin, LivingEntity attacker) {
-        if (attacker instanceof Piglin) {
-            return;
+    public static void wasHurtBy(ServerLevel serverLevel, PiglinPrisoner piglin, LivingEntity attacker) {
+        if (!(attacker instanceof Piglin)) {
+            if (isHoldingItemInOffHand(piglin)) {
+                stopHoldingOffHandItem(serverLevel, piglin, false);
+            }
+            Brain<PiglinPrisoner> brain = piglin.getBrain();
+            brain.eraseMemory(MemoryModuleType.CELEBRATE_LOCATION);
+            brain.eraseMemory(MemoryModuleType.DANCING);
+            brain.eraseMemory(MemoryModuleType.ADMIRING_ITEM);
+            if (attacker instanceof Player) {
+                brain.setMemoryWithExpiry(MemoryModuleType.ADMIRING_DISABLED, true, 400L);
+            }
+            getAvoidTarget(piglin).ifPresent((LivingEntity target) -> {
+                if (target.getType() != attacker.getType()) brain.eraseMemory(MemoryModuleType.AVOID_TARGET);
+            });
+            maybeRetaliate(serverLevel, piglin, attacker);
         }
-        if (isHoldingItemInOffHand(piglin)) {
-            stopHoldingOffHandItem(piglin, false);
-        }
-        Brain<PiglinPrisoner> brain = piglin.getBrain();
-        brain.eraseMemory(MemoryModuleType.CELEBRATE_LOCATION);
-        brain.eraseMemory(MemoryModuleType.DANCING);
-        brain.eraseMemory(MemoryModuleType.ADMIRING_ITEM);
-        if (attacker instanceof Player) {
-            brain.setMemoryWithExpiry(MemoryModuleType.ADMIRING_DISABLED, true, 400L);
-        }
-        getAvoidTarget(piglin).ifPresent((target) -> {
-            if (target.getType() != attacker.getType()) brain.eraseMemory(MemoryModuleType.AVOID_TARGET);
-        });
-        maybeRetaliate(piglin, attacker);
     }
 
-    protected static void maybeRetaliate(AbstractPiglin piglin, LivingEntity target) {
-        if (!piglin.getBrain().isActive(Activity.AVOID) &&
-                Sensor.isEntityAttackableIgnoringLineOfSight(piglin, target) &&
-                !BehaviorUtils.isOtherTargetMuchFurtherAwayThanCurrentAttackTarget(piglin, target, 4.0D) &&
-                target.getType() != EntityType.PLAYER) {
-            setAngerTarget(piglin, target);
-            broadcastAngerTarget(piglin, target);
+    protected static void maybeRetaliate(ServerLevel serverLevel, AbstractPiglin piglin, LivingEntity target) {
+        if (!piglin.getBrain().isActive(Activity.AVOID) && Sensor.isEntityAttackableIgnoringLineOfSight(serverLevel,
+                piglin,
+                target) && !BehaviorUtils.isOtherTargetMuchFurtherAwayThanCurrentAttackTarget(piglin, target, 4.0D)
+                && target.getType() != EntityType.PLAYER) {
+            setAngerTarget(serverLevel, piglin, target);
+            broadcastAngerTarget(serverLevel, piglin, target);
         }
     }
 
     public static Optional<SoundEvent> getSoundForCurrentActivity(PiglinPrisoner piglinPrisoner) {
-        return piglinPrisoner.getBrain()
-                .getActiveNonCoreActivity()
-                .map((activity) -> getSoundForActivity(piglinPrisoner, activity));
+        return piglinPrisoner.getBrain().getActiveNonCoreActivity().map((Activity activity) -> {
+            return getSoundForActivity(piglinPrisoner, activity);
+        });
     }
 
     private static SoundEvent getSoundForActivity(PiglinPrisoner piglinPrisoner, Activity activity) {
@@ -417,8 +423,9 @@ public class PiglinPrisonerAi extends PiglinAi {
 
     private static boolean isNearAvoidTarget(PiglinPrisoner piglinPrisoner) {
         Brain<PiglinPrisoner> brain = piglinPrisoner.getBrain();
-        return brain.hasMemoryValue(MemoryModuleType.AVOID_TARGET) &&
-                brain.getMemory(MemoryModuleType.AVOID_TARGET).get().closerThan(piglinPrisoner, 12.0D);
+        return brain.hasMemoryValue(MemoryModuleType.AVOID_TARGET) && brain.getMemory(MemoryModuleType.AVOID_TARGET)
+                .get()
+                .closerThan(piglinPrisoner, 12.0D);
     }
 
     private static void stopWalking(PiglinPrisoner piglinPrisoner) {
@@ -426,8 +433,8 @@ public class PiglinPrisonerAi extends PiglinAi {
         piglinPrisoner.getNavigation().stop();
     }
 
-    public static void setAngerTarget(AbstractPiglin piglin, LivingEntity target) {
-        if (Sensor.isEntityAttackableIgnoringLineOfSight(piglin, target)) {
+    public static void setAngerTarget(ServerLevel serverLevel, AbstractPiglin piglin, LivingEntity target) {
+        if (Sensor.isEntityAttackableIgnoringLineOfSight(serverLevel, piglin, target)) {
             piglin.getBrain().eraseMemory(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE);
             piglin.getBrain().setMemoryWithExpiry(MemoryModuleType.ANGRY_AT, target.getUUID(), 600L);
         }
@@ -440,10 +447,9 @@ public class PiglinPrisonerAi extends PiglinAi {
     public static void exciteNearbyPiglins(Player player, boolean requireVisibility) {
         List<PiglinPrisoner> list = player.level()
                 .getEntitiesOfClass(PiglinPrisoner.class, player.getBoundingBox().inflate(16.0D));
-        list.stream()
-                .filter(PiglinAi::isIdle)
-                .filter((piglin) -> !requireVisibility || BehaviorUtils.canSee(piglin, player))
-                .forEach(PiglinPrisonerAi::startDancing);
+        list.stream().filter(PiglinAi::isIdle).filter((PiglinPrisoner piglin) -> {
+            return !requireVisibility || BehaviorUtils.canSee(piglin, player);
+        }).forEach(PiglinPrisonerAi::startDancing);
     }
 
     public static void startDancing(PiglinPrisoner piglinPrisoner) {
@@ -479,12 +485,15 @@ public class PiglinPrisonerAi extends PiglinAi {
     }
 
     private static boolean hasCrossbow(LivingEntity livingentity) {
-        return livingentity.isHolding(is -> is.getItem() instanceof CrossbowItem);
+        return livingentity.isHolding((ItemStack is) -> {
+            return is.getItem() instanceof CrossbowItem;
+        });
     }
 
-    protected static void broadcastAngerTarget(AbstractPiglin piglin, LivingEntity target) {
-        getAdultAbstractPiglins(piglin).forEach((adultPiglin) -> setAngerTargetIfCloserThanCurrent(adultPiglin,
-                target));
+    protected static void broadcastAngerTarget(ServerLevel serverLevel, AbstractPiglin piglin, LivingEntity target) {
+        getAdultAbstractPiglins(piglin).forEach((AbstractPiglin adultPiglin) -> {
+            setAngerTargetIfCloserThanCurrent(serverLevel, adultPiglin, target);
+        });
     }
 
     public static void broadcastBeingRescued(AbstractPiglin piglin) {
@@ -500,16 +509,20 @@ public class PiglinPrisonerAi extends PiglinAi {
                 .getMemory(MemoryModuleType.NEARBY_ADULT_PIGLINS)
                 .orElse(ImmutableList.of())
                 .stream()
-                .filter((abstractPiglin) -> abstractPiglin instanceof Piglin)
-                .map((abstractPiglin -> (Piglin) abstractPiglin))
+                .filter((AbstractPiglin abstractPiglin) -> {
+                    return abstractPiglin instanceof Piglin;
+                })
+                .map(((AbstractPiglin abstractPiglin) -> {
+                    return (Piglin) abstractPiglin;
+                }))
                 .toList();
     }
 
-    private static void setAngerTargetIfCloserThanCurrent(AbstractPiglin piglin, LivingEntity target) {
+    private static void setAngerTargetIfCloserThanCurrent(ServerLevel serverLevel, AbstractPiglin piglin, LivingEntity target) {
         Optional<LivingEntity> optional = getAngerTarget(piglin);
         LivingEntity livingentity = BehaviorUtils.getNearestTarget(piglin, optional, target);
         if (optional.isEmpty() || optional.get() != livingentity) {
-            setAngerTarget(piglin, livingentity);
+            setAngerTarget(serverLevel, piglin, livingentity);
         }
     }
 

@@ -1,7 +1,7 @@
 package fuzs.eternalnether.client.model;
 
-import fuzs.eternalnether.world.entity.monster.WitherSkeletonKnight;
 import com.mojang.blaze3d.vertex.PoseStack;
+import fuzs.eternalnether.world.entity.monster.WitherSkeletonKnight;
 import net.minecraft.client.model.AnimationUtils;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -110,10 +110,11 @@ public class WitherSkeletonKnightModel extends HumanoidModel<WitherSkeletonKnigh
         }
 
         if (witherSkeletonKnight.isAlive() && witherSkeletonKnight.isUsingShield()) {
-            boolean flag = witherSkeletonKnight.getMainArm() == HumanoidArm.RIGHT;
-            if ((witherSkeletonKnight.getShieldHand() == InteractionHand.MAIN_HAND) == flag) {
+            boolean isMainArmRight = witherSkeletonKnight.getMainArm() == HumanoidArm.RIGHT;
+            InteractionHand shieldHoldingHand = witherSkeletonKnight.getShieldHoldingHand();
+            if ((shieldHoldingHand == InteractionHand.MAIN_HAND) == isMainArmRight) {
                 this.poseRightArmShield();
-            } else if ((witherSkeletonKnight.getShieldHand() == InteractionHand.OFF_HAND) == flag) {
+            } else if ((shieldHoldingHand == InteractionHand.OFF_HAND) == isMainArmRight) {
                 this.poseLeftArmShield();
             }
         }

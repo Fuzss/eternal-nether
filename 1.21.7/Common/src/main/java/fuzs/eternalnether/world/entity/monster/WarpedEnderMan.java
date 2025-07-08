@@ -1,24 +1,27 @@
 package fuzs.eternalnether.world.entity.monster;
 
 import com.google.common.collect.ImmutableMap;
+import com.mojang.serialization.Codec;
+import fuzs.eternalnether.init.ModRegistry;
 import fuzs.eternalnether.init.ModSoundEvents;
-import fuzs.puzzleslib.api.item.v2.ItemHelper;
-import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.nbt.CompoundTag;
+import fuzs.puzzleslib.api.network.v4.codec.ExtraStreamCodecs;
+import fuzs.puzzleslib.api.util.v1.CodecExtras;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.behavior.BehaviorUtils;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
@@ -28,14 +31,16 @@ import net.minecraft.world.entity.monster.Endermite;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
-public class WarpedEnderMan extends EnderMan {
+public class WarpedEnderMan extends EnderMan implements Shearable {
     private static final Map<SoundEvent, SoundEvent> SOUND_EVENTS = ImmutableMap.of(SoundEvents.ENDERMAN_AMBIENT,
             ModSoundEvents.WARPED_ENDERMAN_AMBIENT.value(),
             SoundEvents.ENDERMAN_DEATH,
@@ -49,17 +54,27 @@ public class WarpedEnderMan extends EnderMan {
             SoundEvents.ENDERMAN_TELEPORT,
             ModSoundEvents.WARPED_ENDERMAN_TELEPORT.value());
     private static final int SHEAR_COOLDOWN = 20;
-    private static final WarpedEnderManVariant[] VARIANTS = WarpedEnderManVariant.values();
-    private static final EntityDataAccessor<Integer> VARIANT_ID = SynchedEntityData.defineId(WarpedEnderMan.class,
-            EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Variant> VARIANT_ID = SynchedEntityData.defineId(WarpedEnderMan.class,
+            ModRegistry.WARPED_ENDER_MAN_VARIANT_ENTITY_DATA_SERIALIZER.value());
 
-    private WarpedEnderManVariant variant;
-    private int shearCooldownCounter = 0;
-    private boolean toConvertToEnderman = false;
+    private int shearCooldownCounter;
 
-    public WarpedEnderMan(EntityType<? extends EnderMan> entityType, Level world) {
-        super(entityType, world);
-        this.setVariant(randomVariant(this.getRandom()));
+    public WarpedEnderMan(EntityType<? extends EnderMan> entityType, Level level) {
+        super(entityType, level);
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return Monster.createMonsterAttributes()
+                .add(Attributes.MAX_HEALTH, 55.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.3D)
+                .add(Attributes.ATTACK_DAMAGE, 8.5D)
+                .add(Attributes.FOLLOW_RANGE, 64.0D);
+    }
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(VARIANT_ID, Variant.LONG_VINE);
     }
 
     @Override
@@ -75,29 +90,21 @@ public class WarpedEnderMan extends EnderMan {
         this.targetSelector.addGoal(4, new ResetUniversalAngerTargetGoal<>(this, false));
     }
 
-    public static AttributeSupplier.Builder createAttributes() {
-        return Monster.createMonsterAttributes()
-                .add(Attributes.MAX_HEALTH, 55.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.3D)
-                .add(Attributes.ATTACK_DAMAGE, 8.5D)
-                .add(Attributes.FOLLOW_RANGE, 64.0D);
+    @Override
+    public void aiStep() {
+        super.aiStep();
+        if (this.level() instanceof ServerLevel) {
+            if (this.shearCooldownCounter > 0) {
+                this.shearCooldownCounter--;
+            }
+        }
     }
 
     @Override
-    public void tick() {
-        super.tick();
-        if (!this.level().isClientSide) {
-            if (this.shearCooldownCounter > 0) {
-                this.shearCooldownCounter--;
-            } else if (this.shearCooldownCounter < 0) {
-                this.shearCooldownCounter = 0;
-            }
-
-            if (this.toConvertToEnderman) {
-                EnderMan enderman = this.convertTo(EntityType.ENDERMAN, false);
-                this.playShearSound(enderman);
-            }
-        }
+    public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason spawnReason, @Nullable SpawnGroupData spawnGroupData) {
+        SpawnGroupData spawnGroupData1 = super.finalizeSpawn(level, difficulty, spawnReason, spawnGroupData);
+        this.setVariant(Variant.random(random));
+        return spawnGroupData1;
     }
 
     @Override
@@ -105,88 +112,97 @@ public class WarpedEnderMan extends EnderMan {
         super.playSound(SOUND_EVENTS.getOrDefault(event, event), volume, pitch);
     }
 
-    private void playShearSound(EnderMan enderman) {
-        this.level().playSound(null, enderman, SoundEvents.SHEEP_SHEAR, SoundSource.PLAYERS, 1.0F, 1.0F);
+    @Override
+    protected void addAdditionalSaveData(ValueOutput valueOutput) {
+        super.addAdditionalSaveData(valueOutput);
+        valueOutput.store("Variant", Variant.CODEC, this.getVariant());
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(VARIANT_ID, 2);
+    protected void readAdditionalSaveData(ValueInput valueInput) {
+        super.readAdditionalSaveData(valueInput);
+        valueInput.read("Variant", Variant.CODEC).ifPresent(this::setVariant);
+    }
+
+    public Variant getVariant() {
+        return this.entityData.get(VARIANT_ID);
+    }
+
+    public void setVariant(Variant variant) {
+        this.entityData.set(VARIANT_ID, variant);
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
-        super.addAdditionalSaveData(tag);
-        tag.putInt("Variant", this.variant.ordinal());
-    }
-
-    @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
-        super.readAdditionalSaveData(tag);
-        this.setVariant(VARIANTS[tag.getInt("Variant")]);
-    }
-
-    public WarpedEnderManVariant getVariant() {
-        WarpedEnderManVariant ret = VARIANTS[this.entityData.get(VARIANT_ID)];
-        this.variant = ret;
-        return ret;
-    }
-
-    public void setVariant(WarpedEnderManVariant variant) {
-        this.variant = variant;
-        this.entityData.set(VARIANT_ID, variant.ordinal());
-    }
-
-    @Override
-    public InteractionResult mobInteract(Player player, InteractionHand interactionHand) {
-        ItemStack itemInHand = player.getItemInHand(interactionHand);
-        if (itemInHand.is(Items.SHEARS)) {
-            if (this.isReadyForShearing() && !this.level().isClientSide) {
-                boolean flag = this.toConvertToEnderman;
-                this.shearWarp();
+    protected InteractionResult mobInteract(Player player, InteractionHand interactionResult) {
+        ItemStack itemStack = player.getItemInHand(interactionResult);
+        if (itemStack.is(ModRegistry.SHEAR_TOOLS_ITEM_TAG_KEY) && this.readyForShearing()) {
+            if (this.level() instanceof ServerLevel serverLevel) {
+                this.shear(serverLevel, SoundSource.PLAYERS, itemStack);
                 this.gameEvent(GameEvent.SHEAR, player);
-                ItemHelper.hurtAndBreak(itemInHand, 1, player, interactionHand);
-                if (this.toConvertToEnderman && !flag && player instanceof ServerPlayer serverPlayer) {
-                    CriteriaTriggers.SUMMONED_ENTITY.trigger(serverPlayer, this);
-                }
-                return InteractionResult.SUCCESS;
-            } else {
-                return InteractionResult.CONSUME;
+                itemStack.hurtAndBreak(1, player, getSlotForHand(interactionResult));
             }
+
+            return InteractionResult.SUCCESS;
+        } else {
+            return super.mobInteract(player, interactionResult);
         }
-        return super.mobInteract(player, interactionHand);
     }
 
-    private boolean isReadyForShearing() {
-        return this.shearCooldownCounter == 0;
-    }
-
-    private void shearWarp() {
-        ItemStack itemstack = new ItemStack(Items.TWISTING_VINES, this.getRandom().nextInt(2) + 1);
-        BehaviorUtils.throwItem(this, itemstack, Vec3.ZERO.add(0.0D, 1.0D, 0.0D));
+    @Override
+    public void shear(ServerLevel level, SoundSource soundSource, ItemStack shears) {
+        level.playSound(null, this, SoundEvents.SHEEP_SHEAR, soundSource, 1.0F, 1.0F);
+        this.dropFromShearingLootTable(level,
+                ModRegistry.SHEARING_WARPED_ENDER_MAN_LOOT_TABLE,
+                shears,
+                (ServerLevel serverLevel, ItemStack itemStack) -> {
+                    this.spawnAtLocation(serverLevel, itemStack, this.getEyeHeight());
+                });
         this.shearCooldownCounter = SHEAR_COOLDOWN;
-        switch (this.variant) {
-            case FRESH -> this.toConvertToEnderman = true;
+        this.shearWarp(level);
+    }
+
+    private void shearWarp(ServerLevel level) {
+        switch (this.getVariant()) {
+            case FRESH -> {
+                this.convertTo(EntityType.ENDERMAN,
+                        ConversionParams.single(this, false, false),
+                        (EnderMan enderMan) -> {
+                            level.sendParticles(ParticleTypes.EXPLOSION,
+                                    this.getX(),
+                                    this.getY(0.5),
+                                    this.getZ(),
+                                    1,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0);
+                        });
+            }
             case SHORT_VINE -> {
-                this.setVariant(WarpedEnderManVariant.FRESH);
-                this.playShearSound(this);
+                this.setVariant(Variant.FRESH);
             }
             case LONG_VINE -> {
-                this.setVariant(WarpedEnderManVariant.SHORT_VINE);
-                this.playShearSound(this);
+                this.setVariant(Variant.SHORT_VINE);
             }
         }
     }
 
-    private static WarpedEnderManVariant randomVariant(RandomSource random) {
-        return VARIANTS[random.nextInt(VARIANTS.length)];
+    @Override
+    public boolean readyForShearing() {
+        return this.isAlive() && this.shearCooldownCounter == 0;
     }
 
-    public enum WarpedEnderManVariant {
+    public enum Variant {
         FRESH,
         SHORT_VINE,
-        LONG_VINE
-    }
+        LONG_VINE;
 
+        public static final Codec<Variant> CODEC = CodecExtras.fromEnum(Variant.class);
+        public static final StreamCodec<ByteBuf, Variant> STREAM_CODEC = ExtraStreamCodecs.fromEnum(Variant.class);
+        private static final Variant[] VALUES = values();
+
+        public static Variant random(RandomSource random) {
+            return VALUES[random.nextInt(VALUES.length)];
+        }
+    }
 }

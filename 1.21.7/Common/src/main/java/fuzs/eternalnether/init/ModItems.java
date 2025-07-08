@@ -1,17 +1,19 @@
 package fuzs.eternalnether.init;
 
-import fuzs.eternalnether.util.HSV;
-import fuzs.eternalnether.world.item.CutlassItem;
-import fuzs.eternalnether.world.item.UnrepairableShieldItem;
 import fuzs.eternalnether.world.item.WarpedEnderpearlItem;
 import fuzs.eternalnether.world.item.WitheredBoneMealItem;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.util.FastColor;
-import net.minecraft.util.Mth;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.BlocksAttacks;
+
+import java.util.List;
+import java.util.Optional;
 
 public final class ModItems {
     public static final Holder.Reference<Item> COBBLED_BLACKSTONE = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.COBBLED_BLACKSTONE);
@@ -58,29 +60,46 @@ public final class ModItems {
             "wither_waltz");
     public static final Holder.Reference<Item> WITHER_WALTZ_MUSIC_DISC = ModRegistry.REGISTRIES.registerItem(
             "wither_waltz_music_disc",
-            () -> new Item(new Item.Properties().stacksTo(1)
-                    .rarity(Rarity.RARE)
-                    .jukeboxPlayable(WITHER_WALTZ_JUKEBOX_SONG)));
+            () -> new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(WITHER_WALTZ_JUKEBOX_SONG));
     public static final Holder.Reference<Item> WARPED_ENDER_PEARL = ModRegistry.REGISTRIES.registerItem(
             "warped_ender_pearl",
-            () -> new WarpedEnderpearlItem(new Item.Properties().stacksTo(16).rarity(Rarity.RARE)));
-    public static final Holder.Reference<Item> WITHERED_BONE = ModRegistry.REGISTRIES.registerItem("withered_bone",
-            () -> new Item(new Item.Properties()));
+            WarpedEnderpearlItem::new,
+            () -> new Item.Properties().stacksTo(16).useCooldown(1.0F).rarity(Rarity.RARE));
+    public static final Holder.Reference<Item> WITHERED_BONE = ModRegistry.REGISTRIES.registerItem("withered_bone");
     public static final Holder.Reference<Item> WITHERED_BONE_MEAL = ModRegistry.REGISTRIES.registerItem(
             "withered_bone_meal",
-            () -> new WitheredBoneMealItem(new Item.Properties()));
+            WitheredBoneMealItem::new);
 
     public static final Holder.Reference<Item> NETHERITE_BELL = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.NETHERITE_BELL,
             () -> new Item.Properties().rarity(Rarity.EPIC).fireResistant());
     public static final Holder.Reference<Item> GILDED_NETHERITE_SHIELD = ModRegistry.REGISTRIES.registerItem(
             "gilded_netherite_shield",
-            () -> new UnrepairableShieldItem(new Item.Properties().durability(1512)
+            ShieldItem::new,
+            () -> new Item.Properties().durability(1512)
                     .rarity(Rarity.RARE)
-                    .fireResistant()));
+                    .fireResistant()
+                    .equippableUnswappable(EquipmentSlot.OFFHAND)
+                    .component(DataComponents.BLOCKS_ATTACKS,
+                            new BlocksAttacks(0.25F,
+                                    0.0F,
+                                    List.of(new BlocksAttacks.DamageReduction(90.0F, Optional.empty(), 0.0F, 1.0F)),
+                                    new BlocksAttacks.ItemDamageFunction(3.0F, 1.0F, 1.0F),
+                                    Optional.of(DamageTypeTags.BYPASSES_SHIELD),
+                                    Optional.of(SoundEvents.SHIELD_BLOCK),
+                                    Optional.of(SoundEvents.SHIELD_BREAK)))
+                    .component(DataComponents.BREAK_SOUND, SoundEvents.SHIELD_BREAK));
     public static final Holder.Reference<Item> CUTLASS = ModRegistry.REGISTRIES.registerItem("cutlass",
-            () -> new CutlassItem(new Item.Properties().durability(312)
-                    .component(DataComponents.TOOL, CutlassItem.createToolProperties())
-                    .attributes(SwordItem.createAttributes(Tiers.IRON, 3, -1.6F))));
+            () -> new Item.Properties().sword(ToolMaterial.IRON, 3.0F, -1.6F)
+                    .durability(312)
+                    .enchantable(1)
+                    .component(DataComponents.BLOCKS_ATTACKS,
+                            new BlocksAttacks(0.0F,
+                                    0.0F,
+                                    List.of(new BlocksAttacks.DamageReduction(180.0F, Optional.empty(), 0.0F, 0.5F)),
+                                    BlocksAttacks.ItemDamageFunction.DEFAULT,
+                                    Optional.of(ModRegistry.BYPASSES_CUTLASS_DAMAGE_TYPE_TAG_KEY),
+                                    Optional.of(ModSoundEvents.ITEM_SWORD_BLOCK_SOUND_EVENT),
+                                    Optional.empty())));
 
     public static final Holder.Reference<Item> PIGLIN_PRISONER_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
             ModEntityTypes.PIGLIN_PRISONER,
@@ -92,46 +111,24 @@ public final class ModItems {
             0XF9F3A4);
     public static final Holder.Reference<Item> WEX_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
             ModEntityTypes.WEX,
-            0X7198C8,
-            generateHighlightColor(0X7198C8));
+            0X7198C8);
     public static final Holder.Reference<Item> WARPED_ENDERMAN_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
             ModEntityTypes.WARPED_ENDERMAN,
-            0X0E8281,
-            generateHighlightColor(0X0E8281));
+            0X0E8281);
     public static final Holder.Reference<Item> WRAITHER_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
             ModEntityTypes.WRAITHER,
-            0X474D4D,
-            generateHighlightColor(0X474D4D));
+            0X474D4D);
     public static final Holder.Reference<Item> CORPOR_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
             ModEntityTypes.CORPOR,
-            0X4A5757,
-            generateHighlightColor(0X4A5757));
+            0X4A5757);
     public static final Holder.Reference<Item> WITHER_SKELETON_KNIGHT_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
             ModEntityTypes.WITHER_SKELETON_KNIGHT,
-            0X4E5252,
-            generateHighlightColor(0X4E5252));
+            0X4E5252);
     public static final Holder.Reference<Item> WITHER_SKELETON_HORSE_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
             ModEntityTypes.WITHER_SKELETON_HORSE,
-            0X4D4747,
-            generateHighlightColor(0X4D4747));
+            0X4D4747);
 
     public static void boostrap() {
         // NO-OP
-    }
-
-    /**
-     * @author ChatGPT
-     */
-    @Deprecated
-    public static int generateHighlightColor(int backgroundColor) {
-        // Convert base color to HSB
-        int hsv = HSV.rgbToHsv(HSV.from8BitChannel(FastColor.ARGB32.red(backgroundColor)),
-                HSV.from8BitChannel(FastColor.ARGB32.green(backgroundColor)),
-                HSV.from8BitChannel(FastColor.ARGB32.blue(backgroundColor)));
-        // Modify saturation and brightness
-        float saturation = Math.min(1.0F, HSV.saturationFloat(hsv) * 1.2F);
-        float value = Math.max(0.0F, HSV.valueFloat(hsv) * 0.75F);
-        // Convert back to RGB
-        return Mth.hsvToRgb(HSV.hueFloat(hsv), saturation, value);
     }
 }

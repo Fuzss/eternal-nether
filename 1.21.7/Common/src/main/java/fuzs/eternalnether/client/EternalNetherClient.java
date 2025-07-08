@@ -1,6 +1,6 @@
 package fuzs.eternalnether.client;
 
-import fuzs.eternalnether.client.handler.FirstPersonRenderingHandler;
+import fuzs.eternalnether.client.model.geom.ModModelLayers;
 import fuzs.eternalnether.client.renderer.ShieldItemRenderer;
 import fuzs.eternalnether.client.renderer.blockentity.NetheriteBellRenderer;
 import fuzs.eternalnether.client.renderer.entity.*;
@@ -8,28 +8,16 @@ import fuzs.eternalnether.init.ModBlocks;
 import fuzs.eternalnether.init.ModEntityTypes;
 import fuzs.eternalnether.init.ModItems;
 import fuzs.puzzleslib.api.client.core.v1.ClientModConstructor;
-import fuzs.puzzleslib.api.client.core.v1.context.*;
-import fuzs.puzzleslib.api.client.event.v1.renderer.RenderHandEvents;
-import fuzs.puzzleslib.api.core.v1.ContentRegistrationFlags;
-import net.minecraft.client.color.block.BlockColor;
+import fuzs.puzzleslib.api.client.core.v1.context.BlockEntityRenderersContext;
+import fuzs.puzzleslib.api.client.core.v1.context.EntityRenderersContext;
+import fuzs.puzzleslib.api.client.core.v1.context.LayerDefinitionsContext;
+import net.minecraft.client.model.BellModel;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
 
 public class EternalNetherClient implements ClientModConstructor {
-
-    @Override
-    public void onConstructMod() {
-        registerEventHandlers();
-    }
-
-    private static void registerEventHandlers() {
-        RenderHandEvents.MAIN_HAND.register(FirstPersonRenderingHandler.renderMainHand(InteractionHand.MAIN_HAND));
-        RenderHandEvents.OFF_HAND.register(FirstPersonRenderingHandler.renderMainHand(InteractionHand.OFF_HAND)::onRenderMainHand);
-    }
 
     @Override
     public void onRegisterEntityRenderers(EntityRenderersContext context) {
@@ -43,11 +31,6 @@ public class EternalNetherClient implements ClientModConstructor {
         context.registerEntityRenderer(ModEntityTypes.CORPOR.value(), CorporRenderer::new);
         context.registerEntityRenderer(ModEntityTypes.WITHER_SKELETON_HORSE.value(), WitherSkeletonHorseRenderer::new);
         context.registerEntityRenderer(ModEntityTypes.WARPED_ENDER_PEARL.value(), ThrownItemRenderer::new);
-    }
-
-    @Override
-    public void onRegisterBlockColorProviders(ColorProvidersContext<Block, BlockColor> context) {
-        ClientModConstructor.super.onRegisterBlockColorProviders(context);
     }
 
     @Override
@@ -65,19 +48,14 @@ public class EternalNetherClient implements ClientModConstructor {
     public void onRegisterItemModelProperties(ItemModelPropertiesContext context) {
         context.registerItemProperty(ShieldItemRenderer.BLOCKING_ITEM_MODEL_PROPERTY,
                 (ItemStack itemStack, ClientLevel clientLevel, LivingEntity livingEntity, int seed) -> {
-                    return livingEntity != null && livingEntity.isUsingItem() &&
-                            livingEntity.getUseItem() == itemStack ? 1.0F : 0.0F;
+                    return livingEntity != null && livingEntity.isUsingItem()
+                            && livingEntity.getUseItem() == itemStack ? 1.0F : 0.0F;
                 },
                 ModItems.GILDED_NETHERITE_SHIELD.value());
     }
 
     @Override
-    public ContentRegistrationFlags[] getContentRegistrationFlags() {
-        return new ContentRegistrationFlags[]{ContentRegistrationFlags.DYNAMIC_RENDERERS};
-    }
-
-    @Override
     public void onRegisterLayerDefinitions(LayerDefinitionsContext context) {
-        // TODO set this up, models are currently unable to reload
+        context.registerLayerDefinition(ModModelLayers.NETHERITE_BELL, BellModel::createBodyLayer);
     }
 }

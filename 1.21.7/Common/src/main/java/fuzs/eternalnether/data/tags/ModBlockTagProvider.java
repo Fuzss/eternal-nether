@@ -17,7 +17,7 @@ public class ModBlockTagProvider extends AbstractTagProvider<Block> {
 
     @Override
     public void addTags(HolderLookup.Provider provider) {
-        this.add(ModRegistry.WITHERED_BLOCK_TAG_KEY)
+        this.tag(ModRegistry.WITHERED_BLOCK_TAG_KEY)
                 .add(ModBlocks.WITHERED_BLACKSTONE.value(),
                         ModBlocks.WITHERED_BLACKSTONE_STAIRS.value(),
                         ModBlocks.WITHERED_BLACKSTONE_SLAB.value(),
@@ -31,7 +31,7 @@ public class ModBlockTagProvider extends AbstractTagProvider<Block> {
                         ModBlocks.WITHERED_COAL_BLOCK.value(),
                         ModBlocks.WITHERED_QUARTZ_BLOCK.value(),
                         ModBlocks.WITHERED_DEBRIS.value());
-        this.add(BlockTags.MINEABLE_WITH_PICKAXE)
+        this.tag(BlockTags.MINEABLE_WITH_PICKAXE)
                 .add(ModBlocks.COBBLED_BLACKSTONE.value(),
                         ModBlocks.SOUL_STONE.value(),
                         ModBlocks.WITHERED_BONE_BLOCK.value(),
@@ -40,7 +40,7 @@ public class ModBlockTagProvider extends AbstractTagProvider<Block> {
                         ModBlocks.WARPED_NETHER_BRICK_SLAB.value(),
                         ModBlocks.CHISELED_WARPED_NETHER_BRICKS.value())
                 .addTag(ModRegistry.WITHERED_BLOCK_TAG_KEY);
-        this.add(BlockTags.NEEDS_DIAMOND_TOOL).addTag(ModRegistry.WITHERED_BLOCK_TAG_KEY);
-        this.add(BlockTags.WITHER_SUMMON_BASE_BLOCKS).add(ModBlocks.SOUL_STONE);
+        this.tag(BlockTags.NEEDS_DIAMOND_TOOL).addTag(ModRegistry.WITHERED_BLOCK_TAG_KEY);
+        this.tag(BlockTags.WITHER_SUMMON_BASE_BLOCKS).add(ModBlocks.SOUL_STONE);
     }
 }

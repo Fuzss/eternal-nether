@@ -2,9 +2,9 @@ package fuzs.eternalnether.world.level.levelgen.feature;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
@@ -36,11 +36,11 @@ public class MobPassengerFeature extends Feature<NoneFeatureConfiguration> {
     @Nullable
     private Mob createMob(FeaturePlaceContext<NoneFeatureConfiguration> context, Holder<? extends EntityType<? extends Mob>> entityType) {
         BlockPos blockPos = context.origin().below();
-        Mob mob = entityType.value().create(context.level().getLevel());
+        Mob mob = entityType.value().create(context.level().getLevel(), EntitySpawnReason.SPAWNER);
         if (mob != null) {
             mob.finalizeSpawn(context.level(),
                     context.level().getCurrentDifficultyAt(blockPos),
-                    MobSpawnType.SPAWNER,
+                    EntitySpawnReason.SPAWNER,
                     null);
             mob.setPos(blockPos.getX(), blockPos.getY(), blockPos.getZ());
             mob.setPersistenceRequired();

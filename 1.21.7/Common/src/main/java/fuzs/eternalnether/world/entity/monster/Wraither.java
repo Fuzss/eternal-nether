@@ -4,7 +4,6 @@ import fuzs.eternalnether.EternalNether;
 import fuzs.eternalnether.init.ModEntityTypes;
 import fuzs.eternalnether.init.ModItems;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -13,9 +12,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -24,6 +23,8 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.WitherSkeleton;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.scores.PlayerTeam;
 
 public class Wraither extends WitherSkeleton {
@@ -45,21 +46,21 @@ public class Wraither extends WitherSkeleton {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
-        super.addAdditionalSaveData(tag);
-        tag.putBoolean("Possessed", this.isPossessed());
-    }
-
-    @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
-        super.readAdditionalSaveData(tag);
-        this.setPossessed(tag.getBoolean("Possessed"));
-    }
-
-    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DATA_IS_POSSESSED, true);
+    }
+
+    @Override
+    protected void addAdditionalSaveData(ValueOutput valueOutput) {
+        super.addAdditionalSaveData(valueOutput);
+        valueOutput.putBoolean("Possessed", this.isPossessed());
+    }
+
+    @Override
+    protected void readAdditionalSaveData(ValueInput valueInput) {
+        super.readAdditionalSaveData(valueInput);
+        this.setPossessed(valueInput.getBooleanOr("Possessed", false));
     }
 
     @Override
@@ -76,8 +77,8 @@ public class Wraither extends WitherSkeleton {
     }
 
     @Override
-    public boolean hurt(DamageSource damageSource, float damageAmount) {
-        if (super.hurt(damageSource, damageAmount)) {
+    public boolean hurtServer(ServerLevel serverLevel, DamageSource damageSource, float damageAmount) {
+        if (super.hurtServer(serverLevel, damageSource, damageAmount)) {
             if (this.isPossessed() && this.getHealth() / this.getMaxHealth() < DISPOSSESS_HEALTH_PERCENT) {
                 this.dispossess();
             }
@@ -94,13 +95,13 @@ public class Wraither extends WitherSkeleton {
         this.setPossessed(false);
         this.getAttribute(Attributes.MOVEMENT_SPEED).addOrReplacePermanentModifier(SPEED_MODIFIER_DISPOSSESSED);
         if (this.level() instanceof ServerLevel serverLevel) {
-            Wex wex = ModEntityTypes.WEX.value().create(serverLevel);
+            Wex wex = ModEntityTypes.WEX.value().create(serverLevel, EntitySpawnReason.MOB_SUMMONED);
             if (wex != null) {
                 BlockPos blockPos = this.blockPosition().above();
-                wex.moveTo(blockPos, this.yBodyRot, this.xRotO);
+                wex.snapTo(blockPos, this.yBodyRot, this.xRotO);
                 wex.finalizeSpawn(serverLevel,
                         serverLevel.getCurrentDifficultyAt(this.blockPosition()),
-                        MobSpawnType.MOB_SUMMONED,
+                        EntitySpawnReason.MOB_SUMMONED,
                         null);
                 wex.setOwner(this);
                 wex.setBoundOrigin(blockPos);

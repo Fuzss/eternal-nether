@@ -12,6 +12,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ThrownEnderpearl;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.HitResult;
@@ -23,10 +24,11 @@ public class ThrownWarpedEnderpearl extends ThrownEnderpearl {
         super(entityType, level);
     }
 
-    public ThrownWarpedEnderpearl(Level level, LivingEntity entity) {
+    public ThrownWarpedEnderpearl(Level level, LivingEntity entity, ItemStack itemStack) {
         this(ModEntityTypes.WARPED_ENDER_PEARL.value(), level);
         // copied from vanilla super
         this.setOwner(entity);
+        this.setItem(itemStack);
         this.setPos(entity.getX(), entity.getEyeY() - 0.1F, entity.getZ());
     }
 
@@ -38,11 +40,11 @@ public class ThrownWarpedEnderpearl extends ThrownEnderpearl {
     public static EventResult onEnderPearlTeleport(ServerPlayer serverPlayer, Vec3 targetPosition, ThrownEnderpearl thrownEnderpearl, MutableFloat damageAmount, HitResult hitResult) {
         if (thrownEnderpearl instanceof ThrownWarpedEnderpearl) {
             damageAmount.accept(0.0F);
-            ServerLevel serverLevel = serverPlayer.serverLevel();
+            ServerLevel serverLevel = serverPlayer.level();
             if (serverLevel.getBlockState(thrownEnderpearl.blockPosition()).is(Blocks.WATER)) {
                 serverPlayer.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 300));
-            } else if (serverPlayer.isInLava() ||
-                    serverLevel.getBlockState(thrownEnderpearl.blockPosition()).is(Blocks.LAVA)) {
+            } else if (serverPlayer.isInLava() || serverLevel.getBlockState(thrownEnderpearl.blockPosition())
+                    .is(Blocks.LAVA)) {
                 serverPlayer.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 900));
             } else if (!thrownEnderpearl.onGround()) {
                 serverPlayer.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 160));

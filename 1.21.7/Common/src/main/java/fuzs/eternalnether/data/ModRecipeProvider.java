@@ -54,22 +54,21 @@ public class ModRecipeProvider extends AbstractRecipeProvider {
 
     @Override
     public void addRecipes(RecipeOutput recipeOutput) {
-        generateForEnabledBlockFamilies(recipeOutput, FeatureFlags.DEFAULT_FLAGS);
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.WARPED_NETHER_BRICKS.value())
+        this.generateForEnabledBlockFamilies(FeatureFlags.DEFAULT_FLAGS);
+        ShapedRecipeBuilder.shaped(this.items(), RecipeCategory.BUILDING_BLOCKS, ModBlocks.WARPED_NETHER_BRICKS.value())
                 .define('W', Items.WARPED_ROOTS)
                 .define('N', Items.NETHER_BRICK)
                 .pattern("NW")
                 .pattern("WN")
-                .unlockedBy(getHasName(Items.WARPED_ROOTS), has(Items.WARPED_ROOTS))
+                .unlockedBy(getHasName(Items.WARPED_ROOTS), this.has(Items.WARPED_ROOTS))
                 .save(recipeOutput);
-        smeltingResultFromBase(recipeOutput, Blocks.BLACKSTONE, ModBlocks.COBBLED_BLACKSTONE.value());
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.WITHERED_BONE_MEAL.value(), 3)
+        this.smeltingResultFromBase(Blocks.BLACKSTONE, ModBlocks.COBBLED_BLACKSTONE.value());
+        ShapelessRecipeBuilder.shapeless(this.items(), RecipeCategory.MISC, ModItems.WITHERED_BONE_MEAL.value(), 3)
                 .requires(ModItems.WITHERED_BONE.value())
                 .group(getItemName(ModItems.WITHERED_BONE_MEAL.value()))
-                .unlockedBy(getHasName(ModItems.WITHERED_BONE.value()), has(ModItems.WITHERED_BONE.value()))
+                .unlockedBy(getHasName(ModItems.WITHERED_BONE.value()), this.has(ModItems.WITHERED_BONE.value()))
                 .save(recipeOutput);
-        nineBlockStorageRecipesRecipesWithCustomUnpacking(recipeOutput,
-                RecipeCategory.MISC,
+        this.nineBlockStorageRecipesRecipesWithCustomUnpacking(RecipeCategory.MISC,
                 ModItems.WITHERED_BONE_MEAL.value(),
                 RecipeCategory.BUILDING_BLOCKS,
                 ModItems.WITHERED_BONE_BLOCK.value(),
@@ -77,31 +76,26 @@ public class ModRecipeProvider extends AbstractRecipeProvider {
                 getItemName(ModItems.WITHERED_BONE_MEAL.value()));
     }
 
-    public static void generateForEnabledBlockFamilies(RecipeOutput recipeOutput, FeatureFlagSet enabledFeatures) {
+    public void generateForEnabledBlockFamilies(FeatureFlagSet enabledFeatures) {
         ModBlockFamilies.getAllFamilies()
                 .filter(BlockFamily::shouldGenerateRecipe)
-                .forEach(blockFamily -> generateRecipes(recipeOutput, blockFamily, enabledFeatures));
+                .forEach(blockFamily -> this.generateRecipes(blockFamily, enabledFeatures));
     }
 
-    public static void generateRecipes(RecipeOutput recipeOutput, BlockFamily blockFamily, FeatureFlagSet requiredFeatures) {
-        RecipeProvider.generateRecipes(recipeOutput, blockFamily, requiredFeatures);
+    public void generateRecipes(RecipeOutput recipeOutput, BlockFamily blockFamily, FeatureFlagSet requiredFeatures) {
+        this.generateRecipes(blockFamily, requiredFeatures);
         // also automatically generate stone-cutting recipes
         blockFamily.getVariants().forEach((BlockFamily.Variant variant, Block block) -> {
             if (block.requiredFeatures().isSubsetOf(requiredFeatures)) {
                 BiFunction<ItemLike, ItemLike, RecipeBuilder> biFunction = STONECUTTING_BUILDERS.get(variant);
-                ItemLike itemLike = getBaseBlock(blockFamily, variant);
+                ItemLike itemLike = this.getBaseBlock(blockFamily, variant);
                 if (biFunction != null) {
                     RecipeBuilder recipeBuilder = biFunction.apply(block, itemLike);
                     recipeBuilder.unlockedBy(blockFamily.getRecipeUnlockedBy().orElseGet(() -> getHasName(itemLike)),
-                            has(itemLike));
+                            this.has(itemLike));
                     recipeBuilder.save(recipeOutput, getStonecuttingRecipeName(block, itemLike));
                 }
             }
         });
-    }
-
-    @Deprecated(forRemoval = true)
-    public static String getStonecuttingRecipeName(ItemLike result, ItemLike material) {
-        return getConversionRecipeName(result, material) + "_stonecutting";
     }
 }

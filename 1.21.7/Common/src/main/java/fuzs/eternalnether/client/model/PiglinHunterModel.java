@@ -1,8 +1,8 @@
 package fuzs.eternalnether.client.model;
 
-import fuzs.eternalnether.world.entity.monster.piglin.PiglinHunter;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import fuzs.eternalnether.world.entity.monster.piglin.PiglinHunter;
 import net.minecraft.client.model.PiglinModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -44,10 +44,11 @@ public class PiglinHunterModel extends PiglinModel<PiglinHunter> {
         }
 
         if (piglinHunter.isAlive() && piglinHunter.isUsingShield()) {
-            boolean flag = piglinHunter.getMainArm() == HumanoidArm.RIGHT;
-            if ((piglinHunter.getShieldHand() == InteractionHand.MAIN_HAND) == flag) {
+            boolean isMainArmRight = piglinHunter.getMainArm() == HumanoidArm.RIGHT;
+            InteractionHand shieldHoldingHand = piglinHunter.getShieldHoldingHand();
+            if ((shieldHoldingHand == InteractionHand.MAIN_HAND) == isMainArmRight) {
                 this.poseRightArmShield();
-            } else if ((piglinHunter.getShieldHand() == InteractionHand.OFF_HAND) == flag) {
+            } else if ((shieldHoldingHand == InteractionHand.OFF_HAND) == isMainArmRight) {
                 this.poseLeftArmShield();
             }
         }

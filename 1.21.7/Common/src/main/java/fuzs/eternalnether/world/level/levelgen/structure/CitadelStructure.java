@@ -1,6 +1,6 @@
 package fuzs.eternalnether.world.level.levelgen.structure;
 
-import fuzs.eternalnether.init.ModStructures;
+import fuzs.eternalnether.init.ModRegistry;
 import fuzs.eternalnether.util.ModStructureUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -108,6 +108,6 @@ public class CitadelStructure extends Structure {
 
     @Override
     public StructureType<?> type() {
-        return ModStructures.CITADEL_STRUCTURE_TYPE.value();
+        return ModRegistry.CITADEL_STRUCTURE_TYPE.value();
     }
 }

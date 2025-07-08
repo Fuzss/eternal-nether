@@ -19,12 +19,12 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Map;
 
 public class WarpedEnderManRenderer extends MobRenderer<WarpedEnderMan, WarpedEndermanModel> {
-    private static final Map<WarpedEnderMan.WarpedEnderManVariant, ResourceLocation> TEXTURE_LOCATIONS = Maps.immutableEnumMap(
-            ImmutableMap.of(WarpedEnderMan.WarpedEnderManVariant.FRESH,
+    private static final Map<WarpedEnderMan.Variant, ResourceLocation> TEXTURE_LOCATIONS = Maps.immutableEnumMap(
+            ImmutableMap.of(WarpedEnderMan.Variant.FRESH,
                     EternalNether.id("textures/entity/enderman/warped_enderman_fresh.png"),
-                    WarpedEnderMan.WarpedEnderManVariant.SHORT_VINE,
+                    WarpedEnderMan.Variant.SHORT_VINE,
                     EternalNether.id("textures/entity/enderman/warped_enderman_short_vine.png"),
-                    WarpedEnderMan.WarpedEnderManVariant.LONG_VINE,
+                    WarpedEnderMan.Variant.LONG_VINE,
                     EternalNether.id("textures/entity/enderman/warped_enderman_long_vine.png")));
 
     private final RandomSource random = RandomSource.create();

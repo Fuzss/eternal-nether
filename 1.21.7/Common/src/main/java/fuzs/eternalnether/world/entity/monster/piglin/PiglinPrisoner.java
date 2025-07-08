@@ -5,7 +5,7 @@ import com.mojang.serialization.Dynamic;
 import fuzs.eternalnether.init.ModFeatures;
 import fuzs.eternalnether.init.ModItems;
 import fuzs.eternalnether.init.ModSensorTypes;
-import fuzs.eternalnether.services.CommonAbstractions;
+import fuzs.puzzleslib.api.util.v1.EntityHelper;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -19,7 +19,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
-import net.minecraft.util.random.WeightedEntry;
+import net.minecraft.util.profiling.Profiler;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleContainer;
@@ -103,26 +103,25 @@ public class PiglinPrisoner extends AbstractPiglin implements CrossbowAttackMob,
             MemoryModuleType.NEAREST_REPELLENT,
             MemoryModuleType.TEMPTING_PLAYER,
             MemoryModuleType.IS_TEMPTED);
-
     protected static final int RESCUE_TIME = 75;
+
+    private final SimpleContainer inventory = new SimpleContainer(8);
     protected int timeBeingRescued;
     protected boolean isBeingRescued;
     protected boolean hasTempter;
-
-    private final SimpleContainer inventory = new SimpleContainer(8);
 
     public PiglinPrisoner(EntityType<? extends AbstractPiglin> entityType, Level level) {
         super(entityType, level);
     }
 
-    public static boolean checkPiglinSpawnRules(EntityType<? extends AbstractPiglin> piglin, LevelAccessor level, MobSpawnType spawnType, BlockPos pos, RandomSource random) {
+    public static boolean checkPiglinSpawnRules(EntityType<? extends AbstractPiglin> piglin, LevelAccessor level, EntitySpawnReason entitySpawnReason, BlockPos pos, RandomSource random) {
         return !level.getBlockState(pos.below()).is(Blocks.NETHER_WART_BLOCK);
     }
 
     @Override
-    public void tick() {
-        super.tick();
-        if (this.level().isClientSide && !this.hasTempter && this.getTempter() != null) {
+    public void aiStep() {
+        super.aiStep();
+        if (this.level() instanceof ServerLevel && !this.hasTempter && this.getTempter() != null) {
             this.hasTempter = true;
             this.spawnHeartParticles();
         }
@@ -153,10 +152,11 @@ public class PiglinPrisoner extends AbstractPiglin implements CrossbowAttackMob,
     }
 
     @Override
-    protected void customServerAiStep() {
-        this.level().getProfiler().push("piglinBrain");
-        this.getBrain().tick((ServerLevel) this.level(), this);
-        this.level().getProfiler().pop();
+    protected void customServerAiStep(ServerLevel serverLevel) {
+        super.customServerAiStep(serverLevel);
+        Profiler.get().push("piglinBrain");
+        this.getBrain().tick(serverLevel, this);
+        Profiler.get().pop();
         PiglinPrisonerAi.updateActivity(this);
         if (this.isBeingRescued) {
             this.timeBeingRescued++;
@@ -166,15 +166,14 @@ public class PiglinPrisoner extends AbstractPiglin implements CrossbowAttackMob,
 
         if (this.timeBeingRescued > RESCUE_TIME) {
             this.playConvertedSound();
-            this.finishRescue();
+            this.finishRescue(serverLevel);
         }
-        super.customServerAiStep();
     }
 
     @Override
     protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
         super.dropCustomDeathLoot(level, damageSource, recentlyHit);
-        this.inventory.removeAllItems().forEach(this::spawnAtLocation);
+        this.inventory.removeAllItems().forEach(itemStackx -> this.spawnAtLocation(level, itemStackx));
     }
 
     public void addToInventory(ItemStack stack) {
@@ -226,15 +225,15 @@ public class PiglinPrisoner extends AbstractPiglin implements CrossbowAttackMob,
     }
 
     @Override
-    public InteractionResult mobInteract(Player player, InteractionHand hand) {
-        InteractionResult interactionresult = super.mobInteract(player, hand);
+    public InteractionResult mobInteract(Player player, InteractionHand interactionHand) {
+        InteractionResult interactionresult = super.mobInteract(player, interactionHand);
         if (interactionresult.consumesAction()) {
             return interactionresult;
-        } else if (!this.level().isClientSide) {
-            return PiglinPrisonerAi.mobInteract(this, player, hand);
+        } else if (this.level() instanceof ServerLevel serverLevel) {
+            return PiglinPrisonerAi.mobInteract(serverLevel, this, player, interactionHand);
         } else {
-            boolean flag = PiglinPrisonerAi.canAdmire(this, player.getItemInHand(hand)) &&
-                    this.getArmPose() != PiglinArmPose.ADMIRING_ITEM;
+            boolean flag = PiglinPrisonerAi.canAdmire(this, player.getItemInHand(interactionHand))
+                    && this.getArmPose() != PiglinArmPose.ADMIRING_ITEM;
             return flag ? InteractionResult.SUCCESS : InteractionResult.PASS;
         }
     }
@@ -246,7 +245,7 @@ public class PiglinPrisoner extends AbstractPiglin implements CrossbowAttackMob,
 
     @Override
     protected void finishConversion(ServerLevel serverlevel) {
-        PiglinPrisonerAi.cancelAdmiring(this);
+        PiglinPrisonerAi.cancelAdmiring(serverlevel, this);
         this.inventory.removeAllItems().forEach(this::spawnAtLocation);
         super.finishConversion(serverlevel);
     }
@@ -310,20 +309,19 @@ public class PiglinPrisoner extends AbstractPiglin implements CrossbowAttackMob,
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
-        boolean isHurt = super.hurt(source, amount);
-        if (this.level().isClientSide) {
-            return false;
-        } else {
-            if (isHurt && source.getEntity() instanceof LivingEntity) {
-                PiglinPrisonerAi.wasHurtBy(this, (LivingEntity) source.getEntity());
+    public boolean hurtServer(ServerLevel serverLevel, DamageSource damageSource, float damageAmount) {
+        if (super.hurtServer(serverLevel, damageSource, damageAmount)) {
+            if (damageSource.getEntity() instanceof LivingEntity livingEntity) {
+                PiglinPrisonerAi.wasHurtBy(serverLevel, this, livingEntity);
             }
-            return isHurt;
+            return true;
+        } else {
+            return false;
         }
     }
 
     public void holdInOffHand(ItemStack itemStack) {
-        if (CommonAbstractions.INSTANCE.isPiglinCurrency(itemStack)) {
+        if (EntityHelper.isPiglinCurrency(itemStack)) {
             this.setItemSlot(EquipmentSlot.OFFHAND, itemStack);
             this.setGuaranteedDrop(EquipmentSlot.OFFHAND);
         } else {
@@ -332,9 +330,9 @@ public class PiglinPrisoner extends AbstractPiglin implements CrossbowAttackMob,
     }
 
     @Override
-    public boolean wantsToPickUp(ItemStack itemstack) {
-        return fuzs.puzzleslib.api.core.v1.CommonAbstractions.INSTANCE.getMobGriefingRule(this.level(), this) &&
-                this.canPickUpLoot() && PiglinPrisonerAi.wantsToPickup(this, itemstack);
+    public boolean wantsToPickUp(ServerLevel serverLevel, ItemStack itemstack) {
+        return EntityHelper.isMobGriefingAllowed(serverLevel, this) && this.canPickUpLoot()
+                && PiglinPrisonerAi.wantsToPickup(this, itemstack);
     }
 
     public boolean canReplaceCurrentItem(ItemStack itemStack) {
@@ -355,16 +353,16 @@ public class PiglinPrisoner extends AbstractPiglin implements CrossbowAttackMob,
             } else if (!bl && bl2) {
                 return false;
             } else {
-                return (!this.isAdult() || candidate.is(Items.CROSSBOW) || !existing.is(Items.CROSSBOW)) &&
-                        super.canReplaceCurrentItem(candidate, existing);
+                return (!this.isAdult() || candidate.is(Items.CROSSBOW) || !existing.is(Items.CROSSBOW))
+                        && super.canReplaceCurrentItem(candidate, existing);
             }
         }
     }
 
     @Override
-    protected void pickUpItem(ItemEntity itemEntity) {
+    protected void pickUpItem(ServerLevel serverLevel, ItemEntity itemEntity) {
         this.onItemPickup(itemEntity);
-        PiglinPrisonerAi.pickUpItem(this, itemEntity);
+        PiglinPrisonerAi.pickUpItem(serverLevel, this, itemEntity);
     }
 
     @Override
@@ -439,18 +437,19 @@ public class PiglinPrisoner extends AbstractPiglin implements CrossbowAttackMob,
         this.isBeingRescued = true;
     }
 
-    protected void finishRescue() {
-        PiglinPrisonerAi.throwItems(this,
-                Collections.singletonList(new ItemStack(ModItems.GILDED_NETHERITE_SHIELD.value())));
-        EntityType<? extends Mob> entityType = ModFeatures.PIGLIN_PRISONER_CONVERSIONS.getRandom(this.random)
-                .map(WeightedEntry.Wrapper::data)
-                .map(Holder::value)
-                .orElse(null);
-        if (entityType != null) {
-            Mob mob = this.convertTo(entityType, true);
-            if (mob != null) {
-                mob.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 200));
-            }
+    protected void finishRescue(ServerLevel serverLevel) {
+        PiglinPrisonerAi.throwItems(this, Collections.singletonList(new ItemStack(ModItems.GILDED_NETHERITE_SHIELD)));
+        Optional<Holder<? extends EntityType<? extends Mob>>> optional = ModFeatures.PIGLIN_PRISONER_CONVERSIONS.getRandom(
+                this.random);
+        if (optional.isPresent()) {
+            this.convertTo(optional.get().value(), ConversionParams.single(this, false, false), mob -> {
+                mob.finalizeSpawn(serverLevel,
+                        serverLevel.getCurrentDifficultyAt(mob.blockPosition()),
+                        EntitySpawnReason.CONVERSION,
+                        null);
+                mob.setPersistenceRequired();
+                mob.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 200));
+            });
         }
     }
 }

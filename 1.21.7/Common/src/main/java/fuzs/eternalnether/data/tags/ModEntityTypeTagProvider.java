@@ -16,11 +16,11 @@ public class ModEntityTypeTagProvider extends AbstractTagProvider<EntityType<?>>
 
     @Override
     public void addTags(HolderLookup.Provider registries) {
-        this.add(EntityTypeTags.SKELETONS)
+        this.tag(EntityTypeTags.SKELETONS)
                 .add(ModEntityTypes.CORPOR.value(),
                         ModEntityTypes.WITHER_SKELETON_HORSE.value(),
                         ModEntityTypes.WITHER_SKELETON_KNIGHT.value(),
                         ModEntityTypes.WRAITHER.value());
-        this.add("enderzoology:concussion_immune").add(ModEntityTypes.WARPED_ENDERMAN.value());
+        this.tag("enderzoology:concussion_immune").add(ModEntityTypes.WARPED_ENDERMAN.value());
     }
 }

@@ -41,7 +41,7 @@ public class ModLanguageProvider extends AbstractLanguageProvider {
 
     @Override
     public void addTranslations(TranslationBuilder builder) {
-        builder.addCreativeModeTab(EternalNether.MOD_ID, EternalNether.MOD_NAME);
+        builder.addCreativeModeTab(ModRegistry.CREATIVE_MODE_TAB, EternalNether.MOD_NAME);
 
         builder.addBlock(ModBlocks.COBBLED_BLACKSTONE, "Cobbled Blackstone");
         blockFamily(builder, "Withered Blackstone").baseBlock(ModBlocks.WITHERED_BLACKSTONE.value())
@@ -70,7 +70,7 @@ public class ModLanguageProvider extends AbstractLanguageProvider {
         builder.addSpawnEgg(ModItems.WITHER_SKELETON_KNIGHT_SPAWN_EGG.value(), "Wither Skeleton Knight");
         builder.addSpawnEgg(ModItems.CORPOR_SPAWN_EGG.value(), "Corpor");
         builder.addSpawnEgg(ModItems.WITHER_SKELETON_HORSE_SPAWN_EGG.value(), "Withered Skeleton Horse");
-        builder.add(ResourceKeyHelper.getComponent(ModItems.WITHER_WALTZ_JUKEBOX_SONG), "Izofar - Wither Waltz");
+        builder.add(ModItems.WITHER_WALTZ_JUKEBOX_SONG, "Izofar - Wither Waltz");
         builder.add(ModItems.WITHER_WALTZ_MUSIC_DISC.value(), "Music Disc");
         builder.add(ModItems.WARPED_ENDER_PEARL.value(), "Warped Ender Pearl");
         builder.add(ModItems.WITHERED_BONE.value(), "Withered Bone");
@@ -88,6 +88,7 @@ public class ModLanguageProvider extends AbstractLanguageProvider {
         builder.add(ModEntityTypes.WITHER_SKELETON_HORSE.value(), "Withered Skeleton Horse");
         builder.add(ModEntityTypes.WARPED_ENDER_PEARL.value(), "Warped Ender Pearl");
 
+        builder.add(ModSoundEvents.ITEM_SWORD_BLOCK_SOUND_EVENT.value(), "Sword blocks");
         builder.add(ModSoundEvents.WEX_CHARGE.value(), "Wex shrieks");
         builder.add(ModSoundEvents.WEX_DEATH.value(), "Wex dies");
         builder.add(ModSoundEvents.WEX_HURT.value(), "Wex hurts");
