@@ -1,6 +1,6 @@
 package fuzs.eternalnether.world.entity.monster;
 
-import fuzs.eternalnether.world.entity.ai.goal.UseShieldGoal;
+import fuzs.eternalnether.world.entity.ai.goal.ShieldDefenseGoal;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -10,7 +10,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -69,7 +68,7 @@ public class WitherSkeletonKnight extends WitherSkeleton implements ShieldedMob 
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(1, new UseShieldGoal<>(this, Player.class));
+        this.goalSelector.addGoal(1, new ShieldDefenseGoal<>(this, Player.class));
     }
 
     @Override

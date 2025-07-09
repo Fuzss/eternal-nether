@@ -1,7 +1,7 @@
 package fuzs.eternalnether.world.entity.monster.piglin;
 
 import fuzs.eternalnether.init.ModItems;
-import fuzs.eternalnether.world.entity.ai.goal.UseShieldGoal;
+import fuzs.eternalnether.world.entity.ai.goal.ShieldDefenseGoal;
 import fuzs.eternalnether.world.entity.monster.ShieldedMob;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -41,7 +41,7 @@ public class PiglinHunter extends CrossbowAttackPiglin implements ShieldedMob {
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(2, new UseShieldGoal<>(this, Player.class));
+        this.goalSelector.addGoal(2, new ShieldDefenseGoal<>(this, Player.class));
     }
 
     @Override

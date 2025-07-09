@@ -96,7 +96,7 @@ public class NetheriteBellBlockEntity extends BellBlockEntity implements Ticking
 
     private boolean isRescuedPiglinPrisoner(LivingEntity livingEntity) {
         return livingEntity.getType() == ModEntityTypes.PIGLIN_PRISONER.value()
-                && ((PiglinPrisoner) livingEntity).getTempter() != null;
+                && ((PiglinPrisoner) livingEntity).getOwner() != null;
     }
 
     /**

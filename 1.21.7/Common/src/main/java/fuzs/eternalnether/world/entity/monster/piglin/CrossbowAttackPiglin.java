@@ -43,12 +43,12 @@ public abstract class CrossbowAttackPiglin extends GoalBasedPiglin implements Cr
         this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0, false) {
             @Override
             public boolean canUse() {
-                return super.canUse() && !MeleeAttack.isHoldingUsableProjectileWeapon(this.mob);
+                return !MeleeAttack.isHoldingUsableProjectileWeapon(this.mob) && super.canUse();
             }
 
             @Override
             public boolean canContinueToUse() {
-                return super.canContinueToUse() && !MeleeAttack.isHoldingUsableProjectileWeapon(this.mob);
+                return !MeleeAttack.isHoldingUsableProjectileWeapon(this.mob) && super.canContinueToUse();
             }
 
             @Override

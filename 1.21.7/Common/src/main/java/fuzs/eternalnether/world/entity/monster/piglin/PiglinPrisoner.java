@@ -2,6 +2,7 @@ package fuzs.eternalnether.world.entity.monster.piglin;
 
 import fuzs.eternalnether.init.ModFeatures;
 import fuzs.eternalnether.init.ModItems;
+import fuzs.eternalnether.world.entity.ai.goal.FollowOwnerGoal;
 import fuzs.puzzleslib.api.util.v1.EntityHelper;
 import net.minecraft.core.Holder;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -34,7 +35,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class PiglinPrisoner extends GoalBasedPiglin {
+public class PiglinPrisoner extends GoalBasedPiglin implements OwnableEntity {
     private static final EntityDataAccessor<Optional<EntityReference<LivingEntity>>> DATA_OWNERUUID_ID = SynchedEntityData.defineId(
             PiglinPrisoner.class,
             EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE);
@@ -64,6 +65,7 @@ public class PiglinPrisoner extends GoalBasedPiglin {
     @Override
     protected void registerGoals() {
         super.registerGoals();
+        this.goalSelector.addGoal(6, new FollowOwnerGoal<>(this, 1.0, 10.0F, 2.0F));
         this.goalSelector.addGoal(8, new InteractGoal(this, Player.class, 3.0F, 1.0F));
     }
 
@@ -72,7 +74,7 @@ public class PiglinPrisoner extends GoalBasedPiglin {
         super.addAdditionalSaveData(valueOutput);
         valueOutput.putInt("TimeBeingRescued", this.timeBeingRescued);
         valueOutput.putBoolean("IsBeingRescued", this.isBeingRescued);
-        EntityReference.store(this.getTempterReference(), valueOutput, "Tempter");
+        EntityReference.store(this.getOwnerReference(), valueOutput, "Owner");
     }
 
     @Override
@@ -80,7 +82,7 @@ public class PiglinPrisoner extends GoalBasedPiglin {
         super.readAdditionalSaveData(valueInput);
         this.timeBeingRescued = valueInput.getIntOr("TimeBeingRescued", 0);
         this.isBeingRescued = valueInput.getBooleanOr("IsBeingRescued", false);
-        this.setTempterReference(EntityReference.read(valueInput, "Tempter"));
+        this.setOwnerReference(EntityReference.read(valueInput, "Owner"));
     }
 
     @Override
@@ -129,7 +131,7 @@ public class PiglinPrisoner extends GoalBasedPiglin {
     }
 
     private void throwItems(List<ItemStack> stacks) {
-        Player player = this.getTempter();
+        Player player = this.getOwner();
         if (player != null) {
             this.throwItemsTowardPlayer(player, stacks);
         } else {
@@ -170,7 +172,7 @@ public class PiglinPrisoner extends GoalBasedPiglin {
             if (this.level() instanceof ServerLevel serverLevel) {
                 if (this.canAdmire(itemInHand)) {
                     this.holdInOffhand(serverLevel, itemInHand.split(1));
-                    this.setTempter(player);
+                    this.setOwner(player);
                     this.admireGoldItem();
                     this.stopWalking();
                     return InteractionResult.CONSUME;
@@ -238,21 +240,21 @@ public class PiglinPrisoner extends GoalBasedPiglin {
         return itemStack.is(ItemTags.PIGLIN_LOVED);
     }
 
-    @Nullable
-    public Player getTempter() {
-        return (Player) EntityReference.get(this.getTempterReference(), this.level(), LivingEntity.class);
+    @Override
+    public @Nullable Player getOwner() {
+        return (Player) OwnableEntity.super.getOwner();
     }
 
-    @Nullable
-    public EntityReference<LivingEntity> getTempterReference() {
+    @Override
+    public @Nullable EntityReference<LivingEntity> getOwnerReference() {
         return this.entityData.get(DATA_OWNERUUID_ID).orElse(null);
     }
 
-    public void setTempter(@Nullable Player player) {
+    public void setOwner(@Nullable Player player) {
         this.entityData.set(DATA_OWNERUUID_ID, Optional.ofNullable(player).map(EntityReference::new));
     }
 
-    public void setTempterReference(@Nullable EntityReference<LivingEntity> owner) {
+    private void setOwnerReference(@Nullable EntityReference<LivingEntity> owner) {
         this.entityData.set(DATA_OWNERUUID_ID, Optional.ofNullable(owner));
     }
 }
