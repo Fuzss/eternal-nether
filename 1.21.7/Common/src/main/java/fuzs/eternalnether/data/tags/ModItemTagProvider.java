@@ -1,7 +1,7 @@
 package fuzs.eternalnether.data.tags;
 
 import fuzs.eternalnether.init.ModItems;
-import fuzs.eternalnether.init.ModRegistry;
+import fuzs.eternalnether.init.ModTags;
 import fuzs.puzzleslib.api.data.v2.core.DataProviderContext;
 import fuzs.puzzleslib.api.data.v2.tags.AbstractTagProvider;
 import net.minecraft.core.HolderLookup;
@@ -27,7 +27,7 @@ public class ModItemTagProvider extends AbstractTagProvider<Item> {
         this.tag("c:tools/shield").add(ModItems.GILDED_NETHERITE_SHIELD.value());
         this.tag(ItemTags.SWORDS).add(ModItems.CUTLASS.value());
         this.tag("c:tools/melee_weapon").add(ModItems.CUTLASS.value());
-        this.tag(ModRegistry.PIGLIN_BRUTE_SAFE_ARMOR_ITEM_TAG_KEY)
+        this.tag(ModTags.PIGLIN_BRUTE_SAFE_ARMOR_ITEM_TAG_KEY)
                 .add(Items.NETHERITE_HELMET,
                         Items.NETHERITE_CHESTPLATE,
                         Items.NETHERITE_LEGGINGS,

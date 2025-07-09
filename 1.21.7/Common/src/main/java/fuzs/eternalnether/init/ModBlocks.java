@@ -21,7 +21,8 @@ public final class ModBlocks {
                     .sound(SoundType.DEEPSLATE));
     public static final Holder.Reference<Block> WITHERED_BLACKSTONE_STAIRS = ModRegistry.REGISTRIES.registerBlock(
             "withered_blackstone_stairs",
-            (properties) -> new StairBlock(WITHERED_BLACKSTONE.value().defaultBlockState(), properties),
+            (BlockBehaviour.Properties properties) -> new StairBlock(WITHERED_BLACKSTONE.value().defaultBlockState(),
+                    properties),
             () -> BlockBehaviour.Properties.ofLegacyCopy(WITHERED_BLACKSTONE.value()));
     public static final Holder.Reference<Block> WITHERED_BLACKSTONE_SLAB = ModRegistry.REGISTRIES.registerBlock(
             "withered_blackstone_slab",
@@ -36,7 +37,8 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.ofFullCopy(WITHERED_BLACKSTONE.value()));
     public static final Holder.Reference<Block> CRACKED_WITHERED_BLACKSTONE_STAIRS = ModRegistry.REGISTRIES.registerBlock(
             "cracked_withered_blackstone_stairs",
-            (properties) -> new StairBlock(WITHERED_BLACKSTONE.value().defaultBlockState(), properties),
+            (BlockBehaviour.Properties properties) -> new StairBlock(WITHERED_BLACKSTONE.value().defaultBlockState(),
+                    properties),
             () -> BlockBehaviour.Properties.ofLegacyCopy(WITHERED_BLACKSTONE.value()));
     public static final Holder.Reference<Block> CRACKED_WITHERED_BLACKSTONE_SLAB = ModRegistry.REGISTRIES.registerBlock(
             "cracked_withered_blackstone_slab",
@@ -76,7 +78,8 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.NETHER_BRICKS).mapColor(MapColor.WARPED_STEM));
     public static final Holder.Reference<Block> WARPED_NETHER_BRICK_STAIRS = ModRegistry.REGISTRIES.registerBlock(
             "warped_nether_brick_stairs",
-            (properties) -> new StairBlock(WARPED_NETHER_BRICKS.value().defaultBlockState(), properties),
+            (BlockBehaviour.Properties properties) -> new StairBlock(WARPED_NETHER_BRICKS.value().defaultBlockState(),
+                    properties),
             () -> BlockBehaviour.Properties.ofFullCopy(WARPED_NETHER_BRICKS.value()));
     public static final Holder.Reference<Block> WARPED_NETHER_BRICK_SLAB = ModRegistry.REGISTRIES.registerBlock(
             "warped_nether_brick_slab",

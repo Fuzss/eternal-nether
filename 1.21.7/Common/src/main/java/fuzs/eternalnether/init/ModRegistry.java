@@ -1,27 +1,20 @@
 package fuzs.eternalnether.init;
 
 import fuzs.eternalnether.EternalNether;
-import fuzs.eternalnether.world.entity.monster.WarpedEnderMan;
+import fuzs.eternalnether.world.entity.monster.WarpedEnderman;
 import fuzs.eternalnether.world.level.levelgen.structure.CatacombStructure;
 import fuzs.eternalnether.world.level.levelgen.structure.CitadelStructure;
 import fuzs.eternalnether.world.level.levelgen.structure.PiglinManorStructure;
 import fuzs.puzzleslib.api.data.v2.AbstractDatapackRegistriesProvider;
 import fuzs.puzzleslib.api.init.v3.registry.RegistryManager;
-import fuzs.puzzleslib.api.init.v3.tags.TagFactory;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.JukeboxSong;
-import net.minecraft.world.item.equipment.trim.TrimMaterial;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -44,9 +37,9 @@ public final class ModRegistry {
             Registries.STRUCTURE_TYPE,
             "catacomb",
             () -> () -> CatacombStructure.CODEC);
-    public static final Holder.Reference<EntityDataSerializer<WarpedEnderMan.Variant>> WARPED_ENDER_MAN_VARIANT_ENTITY_DATA_SERIALIZER = REGISTRIES.registerEntityDataSerializer(
+    public static final Holder.Reference<EntityDataSerializer<WarpedEnderman.Variant>> WARPED_ENDER_MAN_VARIANT_ENTITY_DATA_SERIALIZER = REGISTRIES.registerEntityDataSerializer(
             "warped_ender_man_variant",
-            () -> EntityDataSerializer.forValueType(WarpedEnderMan.Variant.STREAM_CODEC));
+            () -> EntityDataSerializer.forValueType(WarpedEnderman.Variant.STREAM_CODEC));
     public static final Holder.Reference<CreativeModeTab> CREATIVE_MODE_TAB = REGISTRIES.registerCreativeModeTab(
             ModItems.WITHERED_DEBRIS);
     public static final ResourceKey<PlacedFeature> SOUL_STONE_BLOBS_PLACED_FEATURE = REGISTRIES.makeResourceKey(
@@ -59,21 +52,6 @@ public final class ModRegistry {
     public static final ResourceKey<LootTable> SHEARING_WARPED_ENDER_MAN_LOOT_TABLE = REGISTRIES.makeResourceKey(
             Registries.LOOT_TABLE,
             "shearing/warped_ender_man");
-
-    static final TagFactory TAGS = TagFactory.make(EternalNether.MOD_ID);
-    public static final TagKey<Block> WITHERED_BLOCK_TAG_KEY = TAGS.registerBlockTag("withered");
-    public static final TagKey<Item> PIGLIN_BRUTE_SAFE_ARMOR_ITEM_TAG_KEY = TAGS.registerItemTag(
-            "piglin_brute_safe_armor");
-    public static final TagKey<TrimMaterial> PIGLIN_SAFE_TRIM_MATERIAL_TAG_KEY = TAGS.registerTagKey(Registries.TRIM_MATERIAL,
-            "piglin_safe");
-    public static final TagKey<DamageType> BYPASSES_CUTLASS_DAMAGE_TYPE_TAG_KEY = TAGS.registerTagKey(Registries.DAMAGE_TYPE,
-            "bypasses_cutlass");
-    public static final TagKey<Biome> HAS_CATACOMB_BIOME_TAG_KEY = TAGS.registerBiomeTag("has_structure/catacomb");
-    public static final TagKey<Biome> HAS_CITADEL_BIOME_TAG_KEY = TAGS.registerBiomeTag("has_structure/citadel");
-    public static final TagKey<Biome> HAS_PIGLIN_MANOR_BIOME_TAG_KEY = TAGS.registerBiomeTag(
-            "has_structure/piglin_manor");
-    public static final TagKey<Item> SHEAR_TOOLS_ITEM_TAG_KEY = TagFactory.COMMON.registerItemTag("tools/shear");
-    public static final TagKey<Item> SHIELD_TOOLS_ITEM_TAG_KEY = TagFactory.COMMON.registerItemTag("tools/shield");
 
     public static void boostrap() {
         ModBlocks.boostrap();

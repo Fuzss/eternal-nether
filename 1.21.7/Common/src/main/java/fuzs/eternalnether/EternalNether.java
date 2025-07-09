@@ -79,7 +79,7 @@ public class EternalNether implements ModConstructor {
         context.registerAttributes(ModEntityTypes.PIGLIN_PRISONER.value(), PiglinPrisoner.createAttributes());
         context.registerAttributes(ModEntityTypes.PIGLIN_HUNTER.value(), PiglinBrute.createAttributes());
         context.registerAttributes(ModEntityTypes.WEX.value(), Wex.createAttributes());
-        context.registerAttributes(ModEntityTypes.WARPED_ENDERMAN.value(), WarpedEnderMan.createAttributes());
+        context.registerAttributes(ModEntityTypes.WARPED_ENDERMAN.value(), WarpedEnderman.createAttributes());
         context.registerAttributes(ModEntityTypes.WRAITHER.value(), Wraither.createAttributes());
         context.registerAttributes(ModEntityTypes.WITHER_SKELETON_KNIGHT.value(),
                 WitherSkeletonKnight.createAttributes());

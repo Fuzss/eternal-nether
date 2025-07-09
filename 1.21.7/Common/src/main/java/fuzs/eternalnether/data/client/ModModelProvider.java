@@ -1,18 +1,22 @@
 package fuzs.eternalnether.data.client;
 
-import com.google.gson.JsonElement;
-import fuzs.eternalnether.client.renderer.ShieldItemRenderer;
+import fuzs.eternalnether.client.renderer.special.GildedNetheriteShieldSpecialRenderer;
 import fuzs.eternalnether.init.ModBlockFamilies;
 import fuzs.eternalnether.init.ModBlocks;
 import fuzs.eternalnether.init.ModItems;
 import fuzs.puzzleslib.api.client.data.v2.AbstractModelProvider;
 import fuzs.puzzleslib.api.client.data.v2.models.ItemModelGenerationHelper;
+import fuzs.puzzleslib.api.client.data.v2.models.ModelLocationHelper;
+import fuzs.puzzleslib.api.client.data.v2.models.ModelTemplateHelper;
+import fuzs.puzzleslib.api.core.v1.utility.ResourceLocationHelper;
 import fuzs.puzzleslib.api.data.v2.core.DataProviderContext;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
+import net.minecraft.client.data.models.MultiVariant;
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
 import net.minecraft.client.data.models.model.*;
+import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.core.Direction;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.resources.ResourceLocation;
@@ -22,12 +26,12 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BellAttachType;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
-
 public class ModModelProvider extends AbstractModelProvider {
-    public static final ModelTemplate SHIELD_MODEL_TEMPLATE = ModelTemplates.createItem("shield", TextureSlot.PARTICLE);
-    public static final ModelTemplate SHIELD_BLOCKING_MODEL_TEMPLATE = ModelTemplates.createItem("shield_blocking",
+    public static final ModelTemplate SHIELD_MODEL_TEMPLATE = ModelTemplateHelper.createItemModelTemplate(
+            ResourceLocationHelper.withDefaultNamespace("shield"),
+            TextureSlot.PARTICLE);
+    public static final ModelTemplate SHIELD_BLOCKING_MODEL_TEMPLATE = ModelTemplateHelper.createItemModelTemplate(
+            ResourceLocationHelper.withDefaultNamespace("shield_blocking"),
             TextureSlot.PARTICLE);
     public static final TextureSlot BAR_TEXTURE_SLOT = TextureSlot.create("bar");
     public static final TextureSlot POST_TEXTURE_SLOT = TextureSlot.create("post");
@@ -98,22 +102,23 @@ public class ModModelProvider extends AbstractModelProvider {
         itemModelGenerators.generateFlatItem(ModItems.WITHERED_BONE.value(), ModelTemplates.FLAT_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.WITHERED_BONE_MEAL.value(), ModelTemplates.FLAT_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.CUTLASS.value(), ModelTemplates.FLAT_HANDHELD_ITEM);
-        generateShieldItem(ModItems.GILDED_NETHERITE_SHIELD.value(),
-                Blocks.CRIMSON_PLANKS,
-                ShieldItemRenderer.BLOCKING_ITEM_MODEL_PROPERTY,
-                itemModelGenerators.output);
+        this.generateShield(ModItems.GILDED_NETHERITE_SHIELD.value(), Blocks.CRIMSON_PLANKS, itemModelGenerators);
     }
 
-    public static void generateShieldItem(Item item, Block particleBlock, ResourceLocation propertyResourceLocation, BiConsumer<ResourceLocation, Supplier<JsonElement>> modelOutput) {
-        ResourceLocation overrideResourceLocation = ModelLocationUtils.getModelLocation(item, "_blocking");
-        SHIELD_MODEL_TEMPLATE.create(ModelLocationUtils.getModelLocation(item),
+    /**
+     * @see ItemModelGenerators#generateShield(Item)
+     */
+    public final void generateShield(Item item, Block particleBlock, ItemModelGenerators itemModelGenerators) {
+        ResourceLocation resourceLocation = SHIELD_MODEL_TEMPLATE.create(ModelLocationHelper.getItemModel(item),
                 TextureMapping.particle(particleBlock),
-                modelOutput,
-                ItemModelProperties.overridesFactory(SHIELD_MODEL_TEMPLATE,
-                        ItemModelProperties.singleOverride(overrideResourceLocation, propertyResourceLocation, 1.0F)));
-        SHIELD_BLOCKING_MODEL_TEMPLATE.create(overrideResourceLocation,
-                TextureMapping.particle(particleBlock),
-                modelOutput);
+                itemModelGenerators.modelOutput);
+        ResourceLocation resourceLocation2 = SHIELD_BLOCKING_MODEL_TEMPLATE.create(ModelLocationHelper.getItemModel(item,
+                "_blocking"), TextureMapping.particle(particleBlock), itemModelGenerators.modelOutput);
+        ItemModel.Unbaked unbaked = ItemModelUtils.specialModel(resourceLocation,
+                new GildedNetheriteShieldSpecialRenderer.Unbaked());
+        ItemModel.Unbaked unbaked2 = ItemModelUtils.specialModel(resourceLocation2,
+                new GildedNetheriteShieldSpecialRenderer.Unbaked());
+        itemModelGenerators.generateBooleanDispatch(item, ItemModelUtils.isUsingItem(), unbaked2, unbaked);
     }
 
     public static TextureMapping bell(Block bellBlock, Block barBlock, Block postBlock) {
@@ -122,90 +127,62 @@ public class ModModelProvider extends AbstractModelProvider {
                 .put(POST_TEXTURE_SLOT, TextureMapping.getBlockTexture(postBlock));
     }
 
-    public final void createBell(Block block, TextureMapping textureMapping, BlockModelGenerators builder) {
-        ResourceLocation resourceLocation = ModelLocationUtils.getModelLocation(block, "_floor");
-        BELL_FLOOR_MODEL_TEMPLATE.create(resourceLocation, textureMapping, builder.modelOutput);
-        ResourceLocation resourceLocation2 = ModelLocationUtils.getModelLocation(block, "_ceiling");
-        BELL_CEILING_MODEL_TEMPLATE.create(resourceLocation2, textureMapping, builder.modelOutput);
-        ResourceLocation resourceLocation3 = ModelLocationUtils.getModelLocation(block, "_wall");
-        BELL_WALL_MODEL_TEMPLATE.create(resourceLocation3, textureMapping, builder.modelOutput);
-        ResourceLocation resourceLocation4 = ModelLocationUtils.getModelLocation(block, "_between_walls");
-        BELL_BETWEEN_WALLS_MODEL_TEMPLATE.create(resourceLocation4, textureMapping, builder.modelOutput);
-        builder.createSimpleFlatItemModel(block.asItem());
-        builder.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block)
-                .with(PropertyDispatch.properties(BlockStateProperties.HORIZONTAL_FACING,
+    /**
+     * @see BlockModelGenerators#createBell()
+     */
+    public final void createBell(Block block, TextureMapping textureMapping, BlockModelGenerators blockModelGenerators) {
+        ResourceLocation resourceLocation = BELL_FLOOR_MODEL_TEMPLATE.create(ModelLocationHelper.getBlockModel(block,
+                "_floor"), textureMapping, blockModelGenerators.modelOutput);
+        ResourceLocation resourceLocation2 = BELL_CEILING_MODEL_TEMPLATE.create(ModelLocationHelper.getBlockModel(block,
+                "_ceiling"), textureMapping, blockModelGenerators.modelOutput);
+        ResourceLocation resourceLocation3 = BELL_WALL_MODEL_TEMPLATE.create(ModelLocationHelper.getBlockModel(block,
+                "_wall"), textureMapping, blockModelGenerators.modelOutput);
+        ResourceLocation resourceLocation4 = BELL_BETWEEN_WALLS_MODEL_TEMPLATE.create(ModelLocationHelper.getBlockModel(
+                block,
+                "_between_walls"), textureMapping, blockModelGenerators.modelOutput);
+        MultiVariant multiVariant = BlockModelGenerators.plainVariant(resourceLocation);
+        MultiVariant multiVariant2 = BlockModelGenerators.plainVariant(resourceLocation2);
+        MultiVariant multiVariant3 = BlockModelGenerators.plainVariant(resourceLocation3);
+        MultiVariant multiVariant4 = BlockModelGenerators.plainVariant(resourceLocation4);
+        blockModelGenerators.registerSimpleFlatItemModel(block.asItem());
+        blockModelGenerators.blockStateOutput.accept(MultiVariantGenerator.dispatch(block)
+                .with(PropertyDispatch.initial(BlockStateProperties.HORIZONTAL_FACING,
                                 BlockStateProperties.BELL_ATTACHMENT)
-                        .select(Direction.NORTH,
-                                BellAttachType.FLOOR,
-                                Variant.variant().with(VariantProperties.MODEL, resourceLocation))
+                        .select(Direction.NORTH, BellAttachType.FLOOR, multiVariant)
                         .select(Direction.SOUTH,
                                 BellAttachType.FLOOR,
-                                Variant.variant()
-                                        .with(VariantProperties.MODEL, resourceLocation)
-                                        .with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180))
-                        .select(Direction.EAST,
-                                BellAttachType.FLOOR,
-                                Variant.variant()
-                                        .with(VariantProperties.MODEL, resourceLocation)
-                                        .with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90))
-                        .select(Direction.WEST,
-                                BellAttachType.FLOOR,
-                                Variant.variant()
-                                        .with(VariantProperties.MODEL, resourceLocation)
-                                        .with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270))
-                        .select(Direction.NORTH,
-                                BellAttachType.CEILING,
-                                Variant.variant().with(VariantProperties.MODEL, resourceLocation2))
+                                multiVariant.with(BlockModelGenerators.Y_ROT_180))
+                        .select(Direction.EAST, BellAttachType.FLOOR, multiVariant.with(BlockModelGenerators.Y_ROT_90))
+                        .select(Direction.WEST, BellAttachType.FLOOR, multiVariant.with(BlockModelGenerators.Y_ROT_270))
+                        .select(Direction.NORTH, BellAttachType.CEILING, multiVariant2)
                         .select(Direction.SOUTH,
                                 BellAttachType.CEILING,
-                                Variant.variant()
-                                        .with(VariantProperties.MODEL, resourceLocation2)
-                                        .with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180))
+                                multiVariant2.with(BlockModelGenerators.Y_ROT_180))
                         .select(Direction.EAST,
                                 BellAttachType.CEILING,
-                                Variant.variant()
-                                        .with(VariantProperties.MODEL, resourceLocation2)
-                                        .with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90))
+                                multiVariant2.with(BlockModelGenerators.Y_ROT_90))
                         .select(Direction.WEST,
                                 BellAttachType.CEILING,
-                                Variant.variant()
-                                        .with(VariantProperties.MODEL, resourceLocation2)
-                                        .with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270))
+                                multiVariant2.with(BlockModelGenerators.Y_ROT_270))
                         .select(Direction.NORTH,
                                 BellAttachType.SINGLE_WALL,
-                                Variant.variant()
-                                        .with(VariantProperties.MODEL, resourceLocation3)
-                                        .with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270))
+                                multiVariant3.with(BlockModelGenerators.Y_ROT_270))
                         .select(Direction.SOUTH,
                                 BellAttachType.SINGLE_WALL,
-                                Variant.variant()
-                                        .with(VariantProperties.MODEL, resourceLocation3)
-                                        .with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90))
-                        .select(Direction.EAST,
-                                BellAttachType.SINGLE_WALL,
-                                Variant.variant().with(VariantProperties.MODEL, resourceLocation3))
+                                multiVariant3.with(BlockModelGenerators.Y_ROT_90))
+                        .select(Direction.EAST, BellAttachType.SINGLE_WALL, multiVariant3)
                         .select(Direction.WEST,
                                 BellAttachType.SINGLE_WALL,
-                                Variant.variant()
-                                        .with(VariantProperties.MODEL, resourceLocation3)
-                                        .with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180))
+                                multiVariant3.with(BlockModelGenerators.Y_ROT_180))
                         .select(Direction.SOUTH,
                                 BellAttachType.DOUBLE_WALL,
-                                Variant.variant()
-                                        .with(VariantProperties.MODEL, resourceLocation4)
-                                        .with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90))
+                                multiVariant4.with(BlockModelGenerators.Y_ROT_90))
                         .select(Direction.NORTH,
                                 BellAttachType.DOUBLE_WALL,
-                                Variant.variant()
-                                        .with(VariantProperties.MODEL, resourceLocation4)
-                                        .with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270))
-                        .select(Direction.EAST,
-                                BellAttachType.DOUBLE_WALL,
-                                Variant.variant().with(VariantProperties.MODEL, resourceLocation4))
+                                multiVariant4.with(BlockModelGenerators.Y_ROT_270))
+                        .select(Direction.EAST, BellAttachType.DOUBLE_WALL, multiVariant4)
                         .select(Direction.WEST,
                                 BellAttachType.DOUBLE_WALL,
-                                Variant.variant()
-                                        .with(VariantProperties.MODEL, resourceLocation4)
-                                        .with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180))));
+                                multiVariant4.with(BlockModelGenerators.Y_ROT_180))));
     }
 }

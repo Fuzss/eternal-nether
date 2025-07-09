@@ -1,7 +1,7 @@
 package fuzs.eternalnether.world.entity.monster;
 
 import fuzs.eternalnether.EternalNether;
-import fuzs.eternalnether.init.ModRegistry;
+import fuzs.eternalnether.init.ModTags;
 import fuzs.eternalnether.world.entity.ai.goal.UseShieldGoal;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -173,7 +173,7 @@ public class WitherSkeletonKnight extends WitherSkeleton implements ShieldedMob 
     public void startUsingShield() {
         if (!this.isUsingShield() && !this.isShieldDisabled()) {
             for (InteractionHand interactionHand : InteractionHand.values()) {
-                if (this.getItemInHand(interactionHand).is(ModRegistry.SHIELD_TOOLS_ITEM_TAG_KEY)) {
+                if (this.getItemInHand(interactionHand).is(ModTags.SHIELD_TOOLS_ITEM_TAG_KEY)) {
                     this.startUsingItem(interactionHand);
                     this.setUsingShield(true);
                     AttributeInstance attributeInstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
@@ -189,7 +189,7 @@ public class WitherSkeletonKnight extends WitherSkeleton implements ShieldedMob 
     public void stopUsingShield() {
         if (this.isUsingShield()) {
             for (InteractionHand interactionHand : InteractionHand.values()) {
-                if (this.getItemInHand(interactionHand).is(ModRegistry.SHIELD_TOOLS_ITEM_TAG_KEY)) {
+                if (this.getItemInHand(interactionHand).is(ModTags.SHIELD_TOOLS_ITEM_TAG_KEY)) {
                     this.stopUsingItem();
                     this.setUsingShield(false);
                     AttributeInstance attributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);

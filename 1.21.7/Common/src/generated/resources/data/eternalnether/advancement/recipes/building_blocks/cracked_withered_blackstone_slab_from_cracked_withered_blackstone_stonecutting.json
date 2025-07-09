@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "eternalnether:cracked_withered_blackstone_slab_from_cracked_withered_blackstone_stonecutting"
+        "recipe": "minecraft:cracked_withered_blackstone_slab_from_cracked_withered_blackstone_stonecutting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "eternalnether:cracked_withered_blackstone_slab_from_cracked_withered_blackstone_stonecutting"
+      "minecraft:cracked_withered_blackstone_slab_from_cracked_withered_blackstone_stonecutting"
     ]
   }
 }

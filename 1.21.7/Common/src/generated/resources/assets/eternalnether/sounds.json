@@ -77,10 +77,23 @@
     ],
     "subtitle": "subtitles.entity.wex.hurt"
   },
+  "item.sword.block": {
+    "sounds": [
+      {
+        "name": "eternalnether:item/sword/block1",
+        "volume": 0.8
+      },
+      {
+        "name": "eternalnether:item/sword/block2",
+        "volume": 0.8
+      }
+    ],
+    "subtitle": "subtitles.item.sword.block"
+  },
   "wither_waltz": {
     "sounds": [
       {
-        "name": "eternalnether:wither_waltz",
+        "name": "eternalnether:records/wither_waltz",
         "stream": true
       }
     ]

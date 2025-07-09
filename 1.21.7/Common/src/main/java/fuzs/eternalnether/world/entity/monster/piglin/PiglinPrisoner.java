@@ -10,7 +10,6 @@ import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -18,6 +17,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.profiling.Profiler;
 import net.minecraft.world.InteractionHand;
@@ -40,31 +40,32 @@ import net.minecraft.world.entity.monster.piglin.AbstractPiglin;
 import net.minecraft.world.entity.monster.piglin.PiglinArmPose;
 import net.minecraft.world.entity.npc.InventoryCarrier;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CrossbowItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.ProjectileWeaponItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.Optional;
-import java.util.UUID;
 
+/**
+ * TODO this is mostly a copy of {@link net.minecraft.world.entity.monster.piglin.Piglin}, instead extend that class
+ */
 public class PiglinPrisoner extends AbstractPiglin implements CrossbowAttackMob, InventoryCarrier {
     private static final EntityDataAccessor<Boolean> DATA_IS_CHARGING_CROSSBOW = SynchedEntityData.defineId(
             PiglinPrisoner.class,
             EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> DATA_IS_DANCING = SynchedEntityData.defineId(PiglinPrisoner.class,
             EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Optional<UUID>> DATA_OWNERUUID_ID = SynchedEntityData.defineId(
+    protected static final EntityDataAccessor<Optional<EntityReference<LivingEntity>>> DATA_OWNERUUID_ID = SynchedEntityData.defineId(
             PiglinPrisoner.class,
-            EntityDataSerializers.OPTIONAL_UUID);
+            EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE);
     protected static final ImmutableList<SensorType<? extends Sensor<? super PiglinPrisoner>>> SENSOR_TYPES = ImmutableList.of(
             SensorType.NEAREST_LIVING_ENTITIES,
             SensorType.NEAREST_PLAYERS,
@@ -108,10 +109,16 @@ public class PiglinPrisoner extends AbstractPiglin implements CrossbowAttackMob,
     private final SimpleContainer inventory = new SimpleContainer(8);
     protected int timeBeingRescued;
     protected boolean isBeingRescued;
-    protected boolean hasTempter;
 
     public PiglinPrisoner(EntityType<? extends AbstractPiglin> entityType, Level level) {
         super(entityType, level);
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return Monster.createMonsterAttributes()
+                .add(Attributes.MAX_HEALTH, 24.0)
+                .add(Attributes.MOVEMENT_SPEED, 0.35)
+                .add(Attributes.ATTACK_DAMAGE, 6.0);
     }
 
     public static boolean checkPiglinSpawnRules(EntityType<? extends AbstractPiglin> piglin, LevelAccessor level, EntitySpawnReason entitySpawnReason, BlockPos pos, RandomSource random) {
@@ -119,36 +126,33 @@ public class PiglinPrisoner extends AbstractPiglin implements CrossbowAttackMob,
     }
 
     @Override
-    public void aiStep() {
-        super.aiStep();
-        if (this.level() instanceof ServerLevel && !this.hasTempter && this.getTempter() != null) {
-            this.hasTempter = true;
-            this.spawnHeartParticles();
-        }
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_IS_CHARGING_CROSSBOW, false);
+        builder.define(DATA_IS_DANCING, false);
+        builder.define(DATA_OWNERUUID_ID, Optional.empty());
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compoundTag) {
-        super.addAdditionalSaveData(compoundTag);
-        compoundTag.putInt("TimeBeingRescued", this.timeBeingRescued);
-        compoundTag.putBoolean("IsBeingRescued", this.isBeingRescued);
-        if (this.getTempterUUID() != null) {
-            compoundTag.putUUID("Tempter", this.getTempterUUID());
-        }
-        this.writeInventoryToTag(compoundTag, this.registryAccess());
+    public void addAdditionalSaveData(ValueOutput valueOutput) {
+        super.addAdditionalSaveData(valueOutput);
+        valueOutput.putInt("TimeBeingRescued", this.timeBeingRescued);
+        valueOutput.putBoolean("IsBeingRescued", this.isBeingRescued);
+        EntityReference.store(this.getTempterReference(), valueOutput, "Tempter");
+        this.writeInventoryToTag(valueOutput);
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compoundTag) {
-        super.readAdditionalSaveData(compoundTag);
-        this.timeBeingRescued = compoundTag.getInt("TimeBeingRescued");
-        this.isBeingRescued = compoundTag.getBoolean("IsBeingRescued");
-        if (compoundTag.hasUUID("Tempter")) {
-            this.setTempterUUID(compoundTag.getUUID("Tempter"));
-            this.hasTempter = true;
+    public void readAdditionalSaveData(ValueInput valueInput) {
+        super.readAdditionalSaveData(valueInput);
+        this.timeBeingRescued = valueInput.getIntOr("TimeBeingRescued", 0);
+        this.isBeingRescued = valueInput.getBooleanOr("IsBeingRescued", false);
+        EntityReference<LivingEntity> entityReference = EntityReference.read(valueInput, "Tempter");
+        if (entityReference != null) {
+            this.entityData.set(DATA_OWNERUUID_ID, Optional.of(entityReference));
             PiglinPrisonerAi.reloadAllegiance(this, this.getTempter());
         }
-        this.readInventoryFromTag(compoundTag, this.registryAccess());
+        this.readInventoryFromTag(valueInput);
     }
 
     @Override
@@ -182,21 +186,6 @@ public class PiglinPrisoner extends AbstractPiglin implements CrossbowAttackMob,
 
     public boolean canAddToInventory(ItemStack stack) {
         return this.inventory.canAddItem(stack);
-    }
-
-    @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(DATA_IS_CHARGING_CROSSBOW, false);
-        builder.define(DATA_IS_DANCING, false);
-        builder.define(DATA_OWNERUUID_ID, Optional.empty());
-    }
-
-    public static AttributeSupplier.Builder createAttributes() {
-        return Monster.createMonsterAttributes()
-                .add(Attributes.MAX_HEALTH, 24.0)
-                .add(Attributes.MOVEMENT_SPEED, 0.35)
-                .add(Attributes.ATTACK_DAMAGE, 6.0);
     }
 
     @Override
@@ -239,15 +228,15 @@ public class PiglinPrisoner extends AbstractPiglin implements CrossbowAttackMob,
     }
 
     @Override
-    public int getBaseExperienceReward() {
+    public int getBaseExperienceReward(ServerLevel serverLevel) {
         return this.xpReward;
     }
 
     @Override
-    protected void finishConversion(ServerLevel serverlevel) {
-        PiglinPrisonerAi.cancelAdmiring(serverlevel, this);
-        this.inventory.removeAllItems().forEach(this::spawnAtLocation);
-        super.finishConversion(serverlevel);
+    protected void finishConversion(ServerLevel serverLevel) {
+        PiglinPrisonerAi.cancelAdmiring(serverLevel, this);
+        this.inventory.removeAllItems().forEach(itemStack -> this.spawnAtLocation(serverLevel, itemStack));
+        super.finishConversion(serverLevel);
     }
 
     public boolean isChargingCrossbow() {
@@ -335,26 +324,24 @@ public class PiglinPrisoner extends AbstractPiglin implements CrossbowAttackMob,
                 && PiglinPrisonerAi.wantsToPickup(this, itemstack);
     }
 
-    public boolean canReplaceCurrentItem(ItemStack itemStack) {
-        EquipmentSlot equipmentSlot = this.getEquipmentSlotForItem(itemStack);
-        ItemStack itemInSlot = this.getItemBySlot(equipmentSlot);
-        return this.canReplaceCurrentItem(itemStack, itemInSlot);
+    protected boolean canReplaceCurrentItem(ItemStack candidate) {
+        EquipmentSlot equipmentSlot = this.getEquipmentSlotForItem(candidate);
+        ItemStack itemStack = this.getItemBySlot(equipmentSlot);
+        return this.canReplaceCurrentItem(candidate, itemStack, equipmentSlot);
     }
 
     @Override
-    protected boolean canReplaceCurrentItem(ItemStack candidate, ItemStack existing) {
-        if (EnchantmentHelper.has(existing, EnchantmentEffectComponents.PREVENT_ARMOR_CHANGE)) {
+    protected boolean canReplaceCurrentItem(ItemStack newItem, ItemStack currentItem, EquipmentSlot slot) {
+        if (EnchantmentHelper.has(currentItem, EnchantmentEffectComponents.PREVENT_ARMOR_CHANGE)) {
             return false;
         } else {
-            boolean bl = PiglinPrisonerAi.isLovedItem(candidate) || candidate.is(Items.CROSSBOW);
-            boolean bl2 = PiglinPrisonerAi.isLovedItem(existing) || existing.is(Items.CROSSBOW);
+            TagKey<Item> tagKey = this.getPreferredWeaponType();
+            boolean bl = PiglinPrisonerAi.isLovedItem(newItem) || tagKey != null && newItem.is(tagKey);
+            boolean bl2 = PiglinPrisonerAi.isLovedItem(currentItem) || tagKey != null && currentItem.is(tagKey);
             if (bl && !bl2) {
                 return true;
-            } else if (!bl && bl2) {
-                return false;
             } else {
-                return (!this.isAdult() || candidate.is(Items.CROSSBOW) || !existing.is(Items.CROSSBOW))
-                        && super.canReplaceCurrentItem(candidate, existing);
+                return (bl || !bl2) && super.canReplaceCurrentItem(newItem, currentItem, slot);
             }
         }
     }
@@ -397,36 +384,40 @@ public class PiglinPrisoner extends AbstractPiglin implements CrossbowAttackMob,
 
     @Nullable
     public Player getTempter() {
-        try {
-            UUID uuid = this.getTempterUUID();
-            return uuid == null ? null : this.level().getPlayerByUUID(uuid);
-        } catch (IllegalArgumentException illegalargumentexception) {
-            return null;
-        }
+        return (Player) EntityReference.get(this.getTempterReference(), this.level(), LivingEntity.class);
     }
 
     @Nullable
-    public UUID getTempterUUID() {
+    public EntityReference<LivingEntity> getTempterReference() {
         return this.entityData.get(DATA_OWNERUUID_ID).orElse(null);
     }
 
-    public void setTempterUUID(@Nullable UUID uuid) {
-        this.entityData.set(DATA_OWNERUUID_ID, Optional.ofNullable(uuid));
+    public void setTempter(@Nullable LivingEntity owner) {
+        this.entityData.set(DATA_OWNERUUID_ID, Optional.ofNullable(owner).map(EntityReference::new));
     }
 
-    public void spawnHeartParticles() {
-        for (int i = 0; i < 5; ++i) {
-            double d0 = this.random.nextGaussian() * 0.02D;
-            double d1 = this.random.nextGaussian() * 0.02D;
-            double d2 = this.random.nextGaussian() * 0.02D;
-            this.level()
-                    .addParticle(ParticleTypes.HEART,
-                            this.getRandomX(1.0D),
-                            this.getRandomY() + 1.0D,
-                            this.getRandomZ(1.0D),
-                            d0,
-                            d1,
-                            d2);
+    public void setTempterReference(@Nullable EntityReference<LivingEntity> owner) {
+        this.entityData.set(DATA_OWNERUUID_ID, Optional.ofNullable(owner));
+    }
+
+    @Override
+    public void handleEntityEvent(byte id) {
+        if (id == 18) {
+            for (int i = 0; i < 7; i++) {
+                double d = this.random.nextGaussian() * 0.02;
+                double e = this.random.nextGaussian() * 0.02;
+                double f = this.random.nextGaussian() * 0.02;
+                this.level()
+                        .addParticle(ParticleTypes.HEART,
+                                this.getRandomX(1.0),
+                                this.getRandomY() + 0.5,
+                                this.getRandomZ(1.0),
+                                d,
+                                e,
+                                f);
+            }
+        } else {
+            super.handleEntityEvent(id);
         }
     }
 

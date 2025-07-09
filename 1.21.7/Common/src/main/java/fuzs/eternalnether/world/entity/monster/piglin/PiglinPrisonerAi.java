@@ -42,6 +42,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+/**
+ * TODO this is mostly a copy of {@link net.minecraft.world.entity.monster.piglin.PiglinAi}, instead extend that class
+ */
 public class PiglinPrisonerAi extends PiglinAi {
     private static final UniformInt AVOID_ZOMBIFIED_DURATION = TimeUtil.rangeOfSeconds(5, 7);
     private static final int CELEBRATION_TIME = 200;
@@ -352,8 +355,8 @@ public class PiglinPrisonerAi extends PiglinAi {
         if (canAdmire(piglinPrisoner, itemstack)) {
             ItemStack itemstack1 = itemstack.split(1);
             holdInOffhand(serverLevel, piglinPrisoner, itemstack1);
-            if (!player.equals(piglinPrisoner.getTempter())) {
-                newTemptingPlayer(piglinPrisoner, player);
+            if (player != piglinPrisoner.getTempter()) {
+                newTemptingPlayer(serverLevel, piglinPrisoner, player);
             }
             admireGoldItem(piglinPrisoner);
             stopWalking(piglinPrisoner);
@@ -568,10 +571,11 @@ public class PiglinPrisonerAi extends PiglinAi {
         piglinPrisoner.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 60 * 120, 1, false, false));
     }
 
-    private static void newTemptingPlayer(PiglinPrisoner piglinPrisoner, Player player) {
+    private static void newTemptingPlayer(ServerLevel serverLevel, PiglinPrisoner piglinPrisoner, Player player) {
         piglinPrisoner.getBrain().setMemory(MemoryModuleType.TEMPTING_PLAYER, player);
         piglinPrisoner.getBrain().setMemory(MemoryModuleType.IS_TEMPTED, false);
-        piglinPrisoner.setTempterUUID(player.getUUID());
+        piglinPrisoner.setTempter(player);
+        serverLevel.broadcastEntityEvent(piglinPrisoner, (byte) 18);
     }
 
     protected static void pledgeAllegiance(PiglinPrisoner piglinPrisoner) {

@@ -1,7 +1,7 @@
 package fuzs.eternalnether.data.tags;
 
 import fuzs.eternalnether.init.ModBlocks;
-import fuzs.eternalnether.init.ModRegistry;
+import fuzs.eternalnether.init.ModTags;
 import fuzs.puzzleslib.api.data.v2.core.DataProviderContext;
 import fuzs.puzzleslib.api.data.v2.tags.AbstractTagProvider;
 import net.minecraft.core.HolderLookup;
@@ -17,7 +17,7 @@ public class ModBlockTagProvider extends AbstractTagProvider<Block> {
 
     @Override
     public void addTags(HolderLookup.Provider provider) {
-        this.tag(ModRegistry.WITHERED_BLOCK_TAG_KEY)
+        this.tag(ModTags.WITHERED_BLOCK_TAG_KEY)
                 .add(ModBlocks.WITHERED_BLACKSTONE.value(),
                         ModBlocks.WITHERED_BLACKSTONE_STAIRS.value(),
                         ModBlocks.WITHERED_BLACKSTONE_SLAB.value(),
@@ -39,8 +39,8 @@ public class ModBlockTagProvider extends AbstractTagProvider<Block> {
                         ModBlocks.WARPED_NETHER_BRICK_STAIRS.value(),
                         ModBlocks.WARPED_NETHER_BRICK_SLAB.value(),
                         ModBlocks.CHISELED_WARPED_NETHER_BRICKS.value())
-                .addTag(ModRegistry.WITHERED_BLOCK_TAG_KEY);
-        this.tag(BlockTags.NEEDS_DIAMOND_TOOL).addTag(ModRegistry.WITHERED_BLOCK_TAG_KEY);
+                .addTag(ModTags.WITHERED_BLOCK_TAG_KEY);
+        this.tag(BlockTags.NEEDS_DIAMOND_TOOL).addTag(ModTags.WITHERED_BLOCK_TAG_KEY);
         this.tag(BlockTags.WITHER_SUMMON_BASE_BLOCKS).add(ModBlocks.SOUL_STONE);
     }
 }

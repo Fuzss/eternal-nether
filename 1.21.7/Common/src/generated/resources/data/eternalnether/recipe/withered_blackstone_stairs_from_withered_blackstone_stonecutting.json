@@ -1,8 +1,6 @@
 {
   "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "eternalnether:withered_blackstone"
-  },
+  "ingredient": "eternalnether:withered_blackstone",
   "result": {
     "count": 1,
     "id": "eternalnether:withered_blackstone_stairs"

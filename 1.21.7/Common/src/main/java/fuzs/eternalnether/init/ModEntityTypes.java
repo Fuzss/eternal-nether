@@ -24,9 +24,9 @@ public final class ModEntityTypes {
                     .passengerAttachments(0.7375F)
                     .ridingOffset(0.04F)
                     .clientTrackingRange(8));
-    public static final Holder.Reference<EntityType<WarpedEnderMan>> WARPED_ENDERMAN = ModRegistry.REGISTRIES.registerEntityType(
+    public static final Holder.Reference<EntityType<WarpedEnderman>> WARPED_ENDERMAN = ModRegistry.REGISTRIES.registerEntityType(
             "warped_enderman",
-            () -> EntityType.Builder.of(WarpedEnderMan::new, MobCategory.MONSTER)
+            () -> EntityType.Builder.of(WarpedEnderman::new, MobCategory.MONSTER)
                     .fireImmune()
                     .sized(0.6F, 2.9F)
                     .eyeHeight(2.55F)

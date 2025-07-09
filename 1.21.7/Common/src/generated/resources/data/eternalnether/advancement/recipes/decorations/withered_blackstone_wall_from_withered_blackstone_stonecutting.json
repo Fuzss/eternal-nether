@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "eternalnether:withered_blackstone_wall_from_withered_blackstone_stonecutting"
+        "recipe": "minecraft:withered_blackstone_wall_from_withered_blackstone_stonecutting"
       },
       "trigger": "minecraft:recipe_unlocked"
     },
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "eternalnether:withered_blackstone_wall_from_withered_blackstone_stonecutting"
+      "minecraft:withered_blackstone_wall_from_withered_blackstone_stonecutting"
     ]
   }
 }

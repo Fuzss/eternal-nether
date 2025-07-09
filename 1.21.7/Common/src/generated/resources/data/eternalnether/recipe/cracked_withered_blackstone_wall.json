@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": {
-      "item": "eternalnether:cracked_withered_blackstone"
-    }
+    "#": "eternalnether:cracked_withered_blackstone"
   },
   "pattern": [
     "###",

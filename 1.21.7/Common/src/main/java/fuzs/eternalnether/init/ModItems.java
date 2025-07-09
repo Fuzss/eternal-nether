@@ -11,6 +11,7 @@ import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.BlocksAttacks;
+import net.minecraft.world.level.block.entity.BannerPatternLayers;
 
 import java.util.List;
 import java.util.Optional;
@@ -78,6 +79,7 @@ public final class ModItems {
             () -> new Item.Properties().durability(1512)
                     .rarity(Rarity.RARE)
                     .fireResistant()
+                    .component(DataComponents.BANNER_PATTERNS, BannerPatternLayers.EMPTY)
                     .equippableUnswappable(EquipmentSlot.OFFHAND)
                     .component(DataComponents.BLOCKS_ATTACKS,
                             new BlocksAttacks(0.25F,
@@ -97,7 +99,7 @@ public final class ModItems {
                                     0.0F,
                                     List.of(new BlocksAttacks.DamageReduction(180.0F, Optional.empty(), 0.0F, 0.5F)),
                                     BlocksAttacks.ItemDamageFunction.DEFAULT,
-                                    Optional.of(ModRegistry.BYPASSES_CUTLASS_DAMAGE_TYPE_TAG_KEY),
+                                    Optional.of(ModTags.BYPASSES_CUTLASS_DAMAGE_TYPE_TAG_KEY),
                                     Optional.of(ModSoundEvents.ITEM_SWORD_BLOCK_SOUND_EVENT),
                                     Optional.empty())));
 

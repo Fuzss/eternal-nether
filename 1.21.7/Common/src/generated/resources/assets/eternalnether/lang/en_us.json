@@ -73,5 +73,6 @@
   "subtitles.entity.wex.ambient": "Wex wexes",
   "subtitles.entity.wex.charge": "Wex shrieks",
   "subtitles.entity.wex.death": "Wex dies",
-  "subtitles.entity.wex.hurt": "Wex hurts"
+  "subtitles.entity.wex.hurt": "Wex hurts",
+  "subtitles.item.sword.block": "Sword blocks"
 }

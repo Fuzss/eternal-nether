@@ -1,22 +1,26 @@
 package fuzs.eternalnether.world.entity.ai.goal;
 
 import fuzs.eternalnether.world.entity.monster.ShieldedMob;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 
+/**
+ * TODO rework this as an extension of {@link NearestAttackableTargetGoal}
+ */
 public class UseShieldGoal<T extends Mob & ShieldedMob> extends Goal {
     protected final Class<? extends LivingEntity> targetType;
     protected final T mob;
@@ -58,15 +62,16 @@ public class UseShieldGoal<T extends Mob & ShieldedMob> extends Goal {
 
     @Override
     public void start() {
+        super.start();
         this.mob.setTarget(this.target);
         this.shieldDelay = this.adjustedTickDelay(3 + this.mob.getRandom().nextInt(3));
         this.shieldStagger = this.adjustedTickDelay(15 + this.mob.getRandom().nextInt(25));
         this.setDefaultCounters();
-        super.start();
     }
 
     @Override
     public void stop() {
+        super.stop();
         this.target = null;
         this.setDefaultCounters();
         this.mob.stopUsingShield();
@@ -92,47 +97,47 @@ public class UseShieldGoal<T extends Mob & ShieldedMob> extends Goal {
         }
     }
 
-    private static boolean targetDrawnBow(LivingEntity target) {
-        if (target == null) {
-            return false;
-        }
-        for (InteractionHand interactionhand : InteractionHand.values()) {
-            ItemStack itemstack = target.getItemInHand(interactionhand);
-            boolean drawnBow = itemstack.is(Items.BOW) && target.isUsingItem();
-            boolean chargedCrossbow = itemstack.is(Items.CROSSBOW) && CrossbowItem.isCharged(itemstack);
-            if (drawnBow || chargedCrossbow) {
-                return true;
-            }
-        }
-        return false;
+    public static boolean isUsingProjectileWeapon(LivingEntity livingEntity) {
+        return livingEntity.isUsingItem() && livingEntity.isHolding((ItemStack itemStack) -> {
+            return (livingEntity.isUsingItem() || CrossbowItem.isCharged(itemStack))
+                    && itemStack.getItem() instanceof ProjectileWeaponItem projectileWeaponItem && (
+                    !(livingEntity instanceof Mob mob) || mob.canFireProjectileWeapon(projectileWeaponItem));
+        });
     }
 
     protected AABB getTargetSearchArea(double radius) {
         return this.mob.getBoundingBox().inflate(radius, 4.0D, radius);
     }
 
+    /**
+     * @see NearestAttackableTargetGoal#findTarget()
+     */
     protected void findTarget() {
-        LivingEntity potentialTarget;
+        ServerLevel serverLevel = getServerLevel(this.mob);
         if (this.targetType != Player.class && this.targetType != ServerPlayer.class) {
-            potentialTarget = this.mob.level()
-                    .getNearestEntity(this.mob.level()
-                                    .getEntitiesOfClass(this.targetType,
-                                            this.getTargetSearchArea(this.getFollowDistance()),
-                                            (livingEntity) -> true),
-                            this.targetConditions,
-                            this.mob,
-                            this.mob.getX(),
-                            this.mob.getEyeY(),
-                            this.mob.getZ());
+            this.target = serverLevel.getNearestEntity(serverLevel.getEntitiesOfClass(this.targetType,
+                            this.getTargetSearchArea(this.getFollowDistance()),
+                            entity -> true),
+                    this.getTargetConditions(),
+                    this.mob,
+                    this.mob.getX(),
+                    this.mob.getEyeY(),
+                    this.mob.getZ());
         } else {
-            potentialTarget = this.mob.level()
-                    .getNearestPlayer(this.targetConditions,
-                            this.mob,
-                            this.mob.getX(),
-                            this.mob.getEyeY(),
-                            this.mob.getZ());
+            this.target = serverLevel.getNearestPlayer(this.getTargetConditions(),
+                    this.mob,
+                    this.mob.getX(),
+                    this.mob.getEyeY(),
+                    this.mob.getZ());
         }
-        this.target = targetDrawnBow(potentialTarget) ? potentialTarget : null;
+
+        if (this.target != null && !isUsingProjectileWeapon(this.target)) {
+            this.target = null;
+        }
+    }
+
+    private TargetingConditions getTargetConditions() {
+        return this.targetConditions.range(this.getFollowDistance());
     }
 
     protected double getFollowDistance() {
@@ -145,7 +150,7 @@ public class UseShieldGoal<T extends Mob & ShieldedMob> extends Goal {
     }
 
     private ShieldStage getStage() {
-        if (targetDrawnBow(this.target)) {
+        if (this.target != null && isUsingProjectileWeapon(this.target)) {
             if (this.shieldWarmup <= 0) {
                 this.shieldWarmup = 0;
                 return ShieldStage.ACTIVE;

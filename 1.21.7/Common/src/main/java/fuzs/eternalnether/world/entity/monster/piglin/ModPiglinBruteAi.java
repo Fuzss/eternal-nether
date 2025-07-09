@@ -1,6 +1,6 @@
 package fuzs.eternalnether.world.entity.monster.piglin;
 
-import fuzs.eternalnether.init.ModRegistry;
+import fuzs.eternalnether.init.ModTags;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -74,11 +74,11 @@ public class ModPiglinBruteAi extends PiglinBruteAi {
     }
 
     private static boolean makesPiglinBrutesNeutral(ItemStack itemStack) {
-        return itemStack.is(ModRegistry.PIGLIN_BRUTE_SAFE_ARMOR_ITEM_TAG_KEY) && makesPiglinsNeutral(itemStack);
+        return itemStack.is(ModTags.PIGLIN_BRUTE_SAFE_ARMOR_ITEM_TAG_KEY) && makesPiglinsNeutral(itemStack);
     }
 
     public static boolean makesPiglinsNeutral(ItemStack itemStack) {
         ArmorTrim armorTrim = itemStack.get(DataComponents.TRIM);
-        return armorTrim != null && armorTrim.material().is(ModRegistry.PIGLIN_SAFE_TRIM_MATERIAL_TAG_KEY);
+        return armorTrim != null && armorTrim.material().is(ModTags.PIGLIN_SAFE_TRIM_MATERIAL_TAG_KEY);
     }
 }

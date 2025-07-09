@@ -74,7 +74,7 @@ public class WitherSkeletonHorse extends SkeletonHorse {
             this.getPassengers().forEach((Entity entity) -> {
                 if (entity instanceof AbstractPiglin piglin
                         && damageSource.getEntity() instanceof LivingEntity target) {
-                    PiglinPrisonerAi.setAngerTarget(piglin, target);
+                    PiglinPrisonerAi.setAngerTarget(serverLevel, piglin, target);
                 }
             });
             return true;

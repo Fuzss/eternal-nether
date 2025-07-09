@@ -3,9 +3,7 @@
   "category": "misc",
   "group": "withered_bone_meal",
   "ingredients": [
-    {
-      "item": "eternalnether:withered_bone"
-    }
+    "eternalnether:withered_bone"
   ],
   "result": {
     "count": 3,

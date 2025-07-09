@@ -58,7 +58,7 @@ public abstract class DataFixer<T> {
 
     public final void update(File inputDirectory, File outputDirectory, String targetValue, String replacementValue) {
         List<File> files = new ArrayList<>();
-        getAllFilesRecursive(inputDirectory, files::add, s -> s.endsWith("." + this.fileExtension));
+        getAllFilesRecursive(inputDirectory, files::add, (String s) -> s.endsWith("." + this.fileExtension));
         Iterator<File> iterator = files.iterator();
         while (iterator.hasNext()) {
             File inputFile = iterator.next();
@@ -143,17 +143,17 @@ public abstract class DataFixer<T> {
 
         private <T extends Tag> T processTag(T tag, String targetValue, String replacementValue) {
             if (tag != null) {
-                if (tag instanceof StringTag stringTag) {
-                    if (stringTag.getAsString().contains(targetValue)) {
-                        return (T) StringTag.valueOf(stringTag.getAsString().replace(targetValue, replacementValue));
+                if (tag instanceof StringTag(String value)) {
+                    if (value.contains(targetValue)) {
+                        return (T) StringTag.valueOf(value.replace(targetValue, replacementValue));
                     }
                 } else if (tag instanceof ListTag listTag) {
                     for (int i = 0; i < listTag.size(); i++) {
                         listTag.set(i, this.processTag(listTag.get(i), targetValue, replacementValue));
                     }
                 } else if (tag instanceof CompoundTag compoundTag) {
-                    for (String s : compoundTag.getAllKeys()) {
-                        compoundTag.put(s, this.processTag(compoundTag.get(s), targetValue, replacementValue));
+                    for (Map.Entry<String, Tag> entry : compoundTag.entrySet()) {
+                        entry.setValue(this.processTag(entry.getValue(), targetValue, replacementValue));
                     }
                 }
             }

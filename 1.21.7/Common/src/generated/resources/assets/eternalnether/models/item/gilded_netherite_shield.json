@@ -1,13 +1,5 @@
 {
   "parent": "minecraft:item/shield",
-  "overrides": [
-    {
-      "model": "eternalnether:item/gilded_netherite_shield_blocking",
-      "predicate": {
-        "eternalnether:blocking": 1.0
-      }
-    }
-  ],
   "textures": {
     "particle": "minecraft:block/crimson_planks"
   }

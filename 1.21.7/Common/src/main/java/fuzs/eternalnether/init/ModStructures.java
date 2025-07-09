@@ -42,7 +42,7 @@ public final class ModStructures {
     public static void bootstrapStructures(BootstrapContext<Structure> context) {
         context.register(CATACOMB_STRUCTURE,
                 new CatacombStructure(new Structure.StructureSettings.Builder(context.lookup(Registries.BIOME)
-                        .getOrThrow(ModRegistry.HAS_CATACOMB_BIOME_TAG_KEY)).spawnOverrides(Map.of(MobCategory.MONSTER,
+                        .getOrThrow(ModTags.HAS_CATACOMB_BIOME_TAG_KEY)).spawnOverrides(Map.of(MobCategory.MONSTER,
                                 new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.PIECE,
                                         WeightedList.of(new MobSpawnSettings.SpawnerData(EntityType.MAGMA_CUBE, 1, 1)))))
                         .generationStep(GenerationStep.Decoration.UNDERGROUND_DECORATION)
@@ -55,7 +55,7 @@ public final class ModStructures {
                         128));
         context.register(CITADEL_STRUCTURE,
                 new CitadelStructure(new Structure.StructureSettings.Builder(context.lookup(Registries.BIOME)
-                        .getOrThrow(ModRegistry.HAS_CITADEL_BIOME_TAG_KEY)).spawnOverrides(Map.of(MobCategory.MONSTER,
+                        .getOrThrow(ModTags.HAS_CITADEL_BIOME_TAG_KEY)).spawnOverrides(Map.of(MobCategory.MONSTER,
                                 new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.PIECE,
                                         WeightedList.of(new Weighted<>(new MobSpawnSettings.SpawnerData(EntityType.ENDERMAN,
                                                         1,
@@ -74,7 +74,7 @@ public final class ModStructures {
                         116));
         context.register(PIGLIN_MANOR_STRUCTURE,
                 new CitadelStructure(new Structure.StructureSettings.Builder(context.lookup(Registries.BIOME)
-                        .getOrThrow(ModRegistry.HAS_PIGLIN_MANOR_BIOME_TAG_KEY)).spawnOverrides(Map.of(MobCategory.MONSTER,
+                        .getOrThrow(ModTags.HAS_PIGLIN_MANOR_BIOME_TAG_KEY)).spawnOverrides(Map.of(MobCategory.MONSTER,
                                 new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.PIECE,
                                         WeightedList.of(new Weighted<>(new MobSpawnSettings.SpawnerData(EntityType.PIGLIN,
                                                         1,

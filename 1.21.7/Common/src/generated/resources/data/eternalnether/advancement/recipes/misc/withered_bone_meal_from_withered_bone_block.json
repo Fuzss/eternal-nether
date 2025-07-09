@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "eternalnether:withered_bone_meal_from_withered_bone_block"
+        "recipe": "minecraft:withered_bone_meal_from_withered_bone_block"
       },
       "trigger": "minecraft:recipe_unlocked"
     },
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "eternalnether:withered_bone_meal_from_withered_bone_block"
+      "minecraft:withered_bone_meal_from_withered_bone_block"
     ]
   }
 }

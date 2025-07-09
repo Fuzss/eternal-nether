@@ -3,9 +3,7 @@
   "category": "blocks",
   "cookingtime": 200,
   "experience": 0.1,
-  "ingredient": {
-    "item": "eternalnether:cobbled_blackstone"
-  },
+  "ingredient": "eternalnether:cobbled_blackstone",
   "result": {
     "count": 1,
     "id": "minecraft:blackstone"

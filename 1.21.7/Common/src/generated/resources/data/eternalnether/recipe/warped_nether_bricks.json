@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "N": {
-      "item": "minecraft:nether_brick"
-    },
-    "W": {
-      "item": "minecraft:warped_roots"
-    }
+    "N": "minecraft:nether_brick",
+    "W": "minecraft:warped_roots"
   },
   "pattern": [
     "NW",
