@@ -1,4 +1,4 @@
-// 1.21.7	2025-07-09T11:05:07.561264	Block Loot Tables
+// 1.21.7	2025-07-09T23:49:55.345258	Block Loot Tables
 b2c1158e2b6c4e5930eb1d617e9b6c522bbd9939 data/eternalnether/loot_table/blocks/chiseled_warped_nether_bricks.json
 23d4b794bada84e1cada1cec9a3fea8fee22752c data/eternalnether/loot_table/blocks/chiseled_withered_blackstone.json
 d04cdddb6b55ccfb6c0a235360c1a2a5a1582d41 data/eternalnether/loot_table/blocks/cobbled_blackstone.json
@@ -21,4 +21,3 @@ d9866580cf86ba7f6ec8cc2ddb5a89eb5e1dac14 data/eternalnether/loot_table/blocks/wi
 487022cdeddf2abf27b767477d0c013bcb57868c data/eternalnether/loot_table/blocks/withered_coal_block.json
 ec85f39b42f8a5bf83b983c1f2206a32b41009d2 data/eternalnether/loot_table/blocks/withered_debris.json
 75bb5b4a27c5585764a9ffbbede75f043e085a3a data/eternalnether/loot_table/blocks/withered_quartz_block.json
-39b7b5b80afd52e62a4c7db0a4ea798822dfecb3 data/minecraft/loot_table/blocks/blackstone.json

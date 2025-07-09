@@ -62,7 +62,7 @@ public class ModRecipeProvider extends AbstractRecipeProvider {
                 .pattern("WN")
                 .unlockedBy(getHasName(Items.WARPED_ROOTS), this.has(Items.WARPED_ROOTS))
                 .save(recipeOutput);
-        this.smeltingResultFromBase(Blocks.BLACKSTONE, ModBlocks.COBBLED_BLACKSTONE.value());
+        this.smeltingResultFromBase(ModBlocks.COBBLED_BLACKSTONE.value(), Blocks.BLACKSTONE);
         ShapelessRecipeBuilder.shapeless(this.items(), RecipeCategory.MISC, ModItems.WITHERED_BONE_MEAL.value(), 3)
                 .requires(ModItems.WITHERED_BONE.value())
                 .group(getItemName(ModItems.WITHERED_BONE_MEAL.value()))

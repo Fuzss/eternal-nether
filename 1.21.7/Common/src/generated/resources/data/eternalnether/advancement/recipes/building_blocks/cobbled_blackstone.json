@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_cobbled_blackstone": {
+    "has_blackstone": {
       "conditions": {
         "items": [
           {
-            "items": "eternalnether:cobbled_blackstone"
+            "items": "minecraft:blackstone"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:blackstone"
+        "recipe": "eternalnether:cobbled_blackstone"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_cobbled_blackstone"
+      "has_blackstone"
     ]
   ],
   "rewards": {
     "recipes": [
-      "minecraft:blackstone"
+      "eternalnether:cobbled_blackstone"
     ]
   }
 }

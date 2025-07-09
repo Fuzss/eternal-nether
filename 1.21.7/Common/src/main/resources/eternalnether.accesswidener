@@ -17,3 +17,5 @@ accessible  field   net/minecraft/world/level/block/entity/BellBlockEntity  HEAR
 accessible  field   net/minecraft/world/level/block/entity/BellBlockEntity  nearbyEntities  Ljava/util/List;
 accessible  field   net/minecraft/world/level/block/entity/BellBlockEntity  resonating  Z
 accessible  field   net/minecraft/world/level/block/entity/BellBlockEntity  resonationTicks I
+accessible  field   net/minecraft/world/entity/Mob  target  Lnet/minecraft/world/entity/LivingEntity;
+accessible  method  net/minecraft/world/entity/ai/behavior/MeleeAttack  isHoldingUsableProjectileWeapon (Lnet/minecraft/world/entity/Mob;)Z

@@ -1,11 +1,19 @@
 package fuzs.eternalnether.world.entity.monster;
 
-import fuzs.eternalnether.init.ModTags;
+import fuzs.eternalnether.EternalNether;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 
 public interface ShieldedMob {
+    ResourceLocation SPEED_MODIFIER_BLOCKING_ID = EternalNether.id("blocking");
+    AttributeModifier SPEED_MODIFIER_BLOCKING = new AttributeModifier(SPEED_MODIFIER_BLOCKING_ID,
+            -0.10,
+            AttributeModifier.Operation.ADD_VALUE);
 
     boolean isUsingShield();
 
@@ -17,17 +25,33 @@ public interface ShieldedMob {
 
     void stopUsingShield();
 
-    @Deprecated
-    @Nullable
-    default InteractionHand getShieldHoldingHand(ItemStack mainHandItem, ItemStack offHandItem) {
-        if (this.isUsingShield()) {
-            if (mainHandItem.is(ModTags.SHIELD_TOOLS_ITEM_TAG_KEY)) {
-                return InteractionHand.MAIN_HAND;
-            } else if (offHandItem.is(ModTags.SHIELD_TOOLS_ITEM_TAG_KEY)) {
-                return InteractionHand.OFF_HAND;
+    static <T extends Mob & ShieldedMob> void startUsingShield(T mob) {
+        if (!mob.isUsingShield() && !mob.isShieldDisabled()) {
+            for (InteractionHand interactionHand : InteractionHand.values()) {
+                if (mob.getItemInHand(interactionHand).has(DataComponents.BLOCKS_ATTACKS)) {
+                    mob.startUsingItem(interactionHand);
+                    mob.setUsingShield(true);
+                    AttributeInstance attributeInstance = mob.getAttribute(Attributes.MOVEMENT_SPEED);
+                    if (attributeInstance != null && !attributeInstance.hasModifier(SPEED_MODIFIER_BLOCKING_ID)) {
+                        attributeInstance.addTransientModifier(SPEED_MODIFIER_BLOCKING);
+                    }
+                }
             }
         }
+    }
 
-        return null;
+    static <T extends Mob & ShieldedMob> void stopUsingShield(T mob) {
+        if (mob.isUsingShield()) {
+            for (InteractionHand interactionHand : InteractionHand.values()) {
+                if (mob.getItemInHand(interactionHand).has(DataComponents.BLOCKS_ATTACKS)) {
+                    mob.stopUsingItem();
+                    mob.setUsingShield(false);
+                    AttributeInstance attributeinstance = mob.getAttribute(Attributes.MOVEMENT_SPEED);
+                    if (attributeinstance != null) {
+                        attributeinstance.removeModifier(SPEED_MODIFIER_BLOCKING);
+                    }
+                }
+            }
+        }
     }
 }

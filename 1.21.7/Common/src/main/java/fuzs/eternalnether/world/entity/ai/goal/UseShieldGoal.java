@@ -98,7 +98,7 @@ public class UseShieldGoal<T extends Mob & ShieldedMob> extends Goal {
     }
 
     public static boolean isUsingProjectileWeapon(LivingEntity livingEntity) {
-        return livingEntity.isUsingItem() && livingEntity.isHolding((ItemStack itemStack) -> {
+        return livingEntity.isHolding((ItemStack itemStack) -> {
             return (livingEntity.isUsingItem() || CrossbowItem.isCharged(itemStack))
                     && itemStack.getItem() instanceof ProjectileWeaponItem projectileWeaponItem && (
                     !(livingEntity instanceof Mob mob) || mob.canFireProjectileWeapon(projectileWeaponItem));

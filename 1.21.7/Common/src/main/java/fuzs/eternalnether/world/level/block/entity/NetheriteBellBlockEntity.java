@@ -31,11 +31,22 @@ public class NetheriteBellBlockEntity extends BellBlockEntity implements Ticking
         return ModBlocks.NETHERITE_BELL_BLOCK_ENTITY_TYPE.value();
     }
 
+    @Override
+    public void clientTick() {
+        this.tick();
+    }
+
+    @Override
+    public void serverTick() {
+        if (this.tick()) {
+            this.nearbyEntities.stream().filter(this::isPiglinPrisonerWithinRange).forEach(this::rescue);
+        }
+    }
+
     /**
      * @see BellBlockEntity#tick(Level, BlockPos, BlockState, BellBlockEntity, ResonationEndAction)
      */
-    @Override
-    public void serverTick() {
+    private boolean tick() {
         if (this.shaking) {
             ++this.ticks;
         }
@@ -44,7 +55,7 @@ public class NetheriteBellBlockEntity extends BellBlockEntity implements Ticking
             this.ticks = 0;
         }
         if (this.ticks >= TICKS_BEFORE_RESONATION && this.resonationTicks == 0
-                && arePiglinPrisonersNearby(this.getBlockPos(), this.nearbyEntities)) {
+                && this.arePiglinPrisonersNearby(this.getBlockPos(), this.nearbyEntities)) {
             this.resonating = true;
             this.getLevel()
                     .playSound(null, this.getBlockPos(), SoundEvents.BELL_RESONATE, SoundSource.BLOCKS, 1.5F, 0.8F);
@@ -53,10 +64,11 @@ public class NetheriteBellBlockEntity extends BellBlockEntity implements Ticking
             if (this.resonationTicks < MAX_RESONATION_TICKS) {
                 ++this.resonationTicks;
             } else {
-                this.nearbyEntities.stream().filter(this::isPiglinPrisonerWithinRange).forEach(this::rescue);
                 this.resonating = false;
+                return true;
             }
         }
+        return false;
     }
 
     /**
@@ -92,6 +104,6 @@ public class NetheriteBellBlockEntity extends BellBlockEntity implements Ticking
      */
     protected void rescue(LivingEntity livingEntity) {
         livingEntity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 300));
-        ((PiglinPrisoner) livingEntity).rescue();
+        ((PiglinPrisoner) livingEntity).isBeingRescued();
     }
 }

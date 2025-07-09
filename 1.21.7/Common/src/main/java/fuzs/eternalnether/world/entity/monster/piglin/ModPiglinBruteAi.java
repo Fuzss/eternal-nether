@@ -24,7 +24,8 @@ import java.util.Optional;
 public class ModPiglinBruteAi extends PiglinBruteAi {
 
     /**
-     * Copied from {@link net.minecraft.world.entity.monster.piglin.PiglinAi#findNearestValidAttackTarget(Piglin)}, but
+     * Copied from
+     * {@link net.minecraft.world.entity.monster.piglin.PiglinAi#findNearestValidAttackTarget(ServerLevel, Piglin)}, but
      * no longer restricted to {@link Piglin} and removed check for zombified piglins.
      */
     public static Optional<? extends LivingEntity> findNearestValidAttackTarget(ServerLevel serverLevel, AbstractPiglin abstractPiglin) {

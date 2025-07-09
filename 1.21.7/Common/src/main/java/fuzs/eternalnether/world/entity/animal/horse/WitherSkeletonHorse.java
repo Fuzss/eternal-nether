@@ -1,20 +1,14 @@
 package fuzs.eternalnether.world.entity.animal.horse;
 
-import fuzs.eternalnether.world.entity.monster.piglin.PiglinPrisonerAi;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.horse.SkeletonHorse;
-import net.minecraft.world.entity.monster.piglin.AbstractPiglin;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -57,29 +51,14 @@ public class WitherSkeletonHorse extends SkeletonHorse {
 
     private void floatHorse() {
         if (this.isInLava()) {
-            CollisionContext collisioncontext = CollisionContext.of(this);
-            if (collisioncontext.isAbove(LiquidBlock.SHAPE_STABLE, this.blockPosition(), true) && !this.level()
+            CollisionContext collisionContext = CollisionContext.of(this);
+            if (collisionContext.isAbove(LiquidBlock.SHAPE_STABLE, this.blockPosition(), true) && !this.level()
                     .getFluidState(this.blockPosition().above())
                     .is(FluidTags.LAVA)) {
                 this.setOnGround(true);
             } else {
                 this.setDeltaMovement(this.getDeltaMovement().scale(0.5D).add(0.0D, 0.05D, 0.0D));
             }
-        }
-    }
-
-    @Override
-    public boolean hurtServer(ServerLevel serverLevel, DamageSource damageSource, float damageAmount) {
-        if (super.hurtServer(serverLevel, damageSource, damageAmount)) {
-            this.getPassengers().forEach((Entity entity) -> {
-                if (entity instanceof AbstractPiglin piglin
-                        && damageSource.getEntity() instanceof LivingEntity target) {
-                    PiglinPrisonerAi.setAngerTarget(serverLevel, piglin, target);
-                }
-            });
-            return true;
-        } else {
-            return false;
         }
     }
 

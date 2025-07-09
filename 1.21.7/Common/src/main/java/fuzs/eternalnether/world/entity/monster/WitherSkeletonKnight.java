@@ -1,7 +1,5 @@
 package fuzs.eternalnether.world.entity.monster;
 
-import fuzs.eternalnether.EternalNether;
-import fuzs.eternalnether.init.ModTags;
 import fuzs.eternalnether.world.entity.ai.goal.UseShieldGoal;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -30,7 +28,6 @@ import net.minecraft.world.item.component.BlocksAttacks;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import org.jetbrains.annotations.Nullable;
 
 public class WitherSkeletonKnight extends WitherSkeleton implements ShieldedMob {
     private static final EntityDataAccessor<Boolean> DATA_IS_SHIELDED = SynchedEntityData.defineId(WitherSkeletonKnight.class,
@@ -41,10 +38,6 @@ public class WitherSkeletonKnight extends WitherSkeleton implements ShieldedMob 
     private static final EntityDataAccessor<Boolean> DATA_IS_DISARMORED = SynchedEntityData.defineId(
             WitherSkeletonKnight.class,
             EntityDataSerializers.BOOLEAN);
-    private static final ResourceLocation SPEED_MODIFIER_BLOCKING_ID = EternalNether.id("blocking");
-    private static final AttributeModifier SPEED_MODIFIER_BLOCKING = new AttributeModifier(SPEED_MODIFIER_BLOCKING_ID,
-            -0.10,
-            AttributeModifier.Operation.ADD_VALUE);
     private static final ResourceLocation SPEED_MODIFIER_DISARMOURED_ID = ResourceLocation.withDefaultNamespace(
             "disarmoured");
     private static final AttributeModifier SPEED_MODIFIER_DISARMOURED = new AttributeModifier(
@@ -171,34 +164,12 @@ public class WitherSkeletonKnight extends WitherSkeleton implements ShieldedMob 
 
     @Override
     public void startUsingShield() {
-        if (!this.isUsingShield() && !this.isShieldDisabled()) {
-            for (InteractionHand interactionHand : InteractionHand.values()) {
-                if (this.getItemInHand(interactionHand).is(ModTags.SHIELD_TOOLS_ITEM_TAG_KEY)) {
-                    this.startUsingItem(interactionHand);
-                    this.setUsingShield(true);
-                    AttributeInstance attributeInstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
-                    if (attributeInstance != null && !attributeInstance.hasModifier(SPEED_MODIFIER_BLOCKING_ID)) {
-                        attributeInstance.addTransientModifier(SPEED_MODIFIER_BLOCKING);
-                    }
-                }
-            }
-        }
+        ShieldedMob.startUsingShield(this);
     }
 
     @Override
     public void stopUsingShield() {
-        if (this.isUsingShield()) {
-            for (InteractionHand interactionHand : InteractionHand.values()) {
-                if (this.getItemInHand(interactionHand).is(ModTags.SHIELD_TOOLS_ITEM_TAG_KEY)) {
-                    this.stopUsingItem();
-                    this.setUsingShield(false);
-                    AttributeInstance attributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
-                    if (attributeinstance != null) {
-                        attributeinstance.removeModifier(SPEED_MODIFIER_BLOCKING);
-                    }
-                }
-            }
-        }
+        ShieldedMob.stopUsingShield(this);
     }
 
     @Override
@@ -217,10 +188,5 @@ public class WitherSkeletonKnight extends WitherSkeleton implements ShieldedMob 
 
     private void setShieldCooldown(int shieldCooldown) {
         this.entityData.set(DATA_SHIELD_COOLDOWN, Math.max(0, shieldCooldown));
-    }
-
-    @Nullable
-    public InteractionHand getShieldHoldingHand() {
-        return this.getShieldHoldingHand(this.getMainHandItem(), this.getOffhandItem());
     }
 }

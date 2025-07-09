@@ -29,7 +29,8 @@ public final class ModFeatures {
             new Weighted<>(getBuiltInRegistryHolder(EntityType.WITHER_SKELETON), 1));
     public static final WeightedList<Holder<? extends EntityType<? extends Mob>>> PIGLIN_PRISONER_CONVERSIONS = WeightedList.of(
             new Weighted<>(getBuiltInRegistryHolder(EntityType.PIGLIN), 4),
-            new Weighted<>(ModEntityTypes.PIGLIN_HUNTER, 2));
+            new Weighted<>(ModEntityTypes.PIGLIN_HUNTER, 3),
+            new Weighted<>(getBuiltInRegistryHolder(EntityType.PIGLIN_BRUTE), 1));
 
     public static final Holder.Reference<Feature<NoneFeatureConfiguration>> MOB_FEATURE_PIGLIN_PRISONER = ModRegistry.REGISTRIES.register(
             Registries.FEATURE,

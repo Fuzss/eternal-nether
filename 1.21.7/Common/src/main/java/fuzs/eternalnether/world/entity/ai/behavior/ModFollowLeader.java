@@ -14,6 +14,9 @@ import net.minecraft.world.entity.player.Player;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+/**
+ * TODO convert to goal
+ */
 public class ModFollowLeader extends Behavior<PathfinderMob> {
     private static final int TOO_FAR_DIST = 28;
     private static final int TOO_CLOSE_DIST = 3;

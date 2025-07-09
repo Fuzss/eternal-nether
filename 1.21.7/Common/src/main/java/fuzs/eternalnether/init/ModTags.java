@@ -12,7 +12,6 @@ import net.minecraft.world.level.block.Block;
 
 public class ModTags {
     public static final TagKey<Item> SHEAR_TOOLS_ITEM_TAG_KEY = TagFactory.COMMON.registerItemTag("tools/shear");
-    public static final TagKey<Item> SHIELD_TOOLS_ITEM_TAG_KEY = TagFactory.COMMON.registerItemTag("tools/shield");
     static final TagFactory TAGS = TagFactory.make(EternalNether.MOD_ID);
     public static final TagKey<Biome> HAS_PIGLIN_MANOR_BIOME_TAG_KEY = TAGS.registerBiomeTag(
             "has_structure/piglin_manor");

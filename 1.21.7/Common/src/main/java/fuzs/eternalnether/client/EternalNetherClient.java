@@ -5,6 +5,7 @@ import fuzs.eternalnether.client.model.WexModel;
 import fuzs.eternalnether.client.model.geom.ModModelLayers;
 import fuzs.eternalnether.client.renderer.blockentity.NetheriteBellRenderer;
 import fuzs.eternalnether.client.renderer.entity.*;
+import fuzs.eternalnether.client.renderer.entity.layers.HoglinSkullLayer;
 import fuzs.eternalnether.client.renderer.special.GildedNetheriteShieldSpecialRenderer;
 import fuzs.eternalnether.init.ModBlocks;
 import fuzs.eternalnether.init.ModEntityTypes;
@@ -96,6 +97,7 @@ public class EternalNetherClient implements ClientModConstructor {
         context.registerLayerDefinition(ModModelLayers.PIGLIN_PRISONER_BABY_OUTER_ARMOR,
                 () -> largeOuterArmorLayerDefinition.apply(HumanoidModel.BABY_TRANSFORMER));
         context.registerLayerDefinition(ModModelLayers.PIGLIN_HUNTER, () -> piglinLayerDefinition);
+        context.registerLayerDefinition(ModModelLayers.PIGLIN_HUNTER_SKULL, HoglinSkullLayer::createSkullLayer);
         context.registerLayerDefinition(ModModelLayers.PIGLIN_HUNTER_INNER_ARMOR, () -> innerArmorLayerDefinition);
         context.registerLayerDefinition(ModModelLayers.PIGLIN_HUNTER_OUTER_ARMOR, () -> largeOuterArmorLayerDefinition);
         context.registerLayerDefinition(ModModelLayers.PIGLIN_HUNTER_BABY,

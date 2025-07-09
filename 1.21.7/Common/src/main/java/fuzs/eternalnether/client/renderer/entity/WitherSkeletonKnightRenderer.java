@@ -4,13 +4,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import fuzs.eternalnether.EternalNether;
 import fuzs.eternalnether.client.model.geom.ModModelLayers;
 import fuzs.eternalnether.client.renderer.entity.state.WitherSkeletonKnightRenderState;
-import fuzs.eternalnether.init.ModTags;
 import fuzs.eternalnether.world.entity.monster.WitherSkeletonKnight;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.AbstractSkeletonRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.layers.SkeletonClothingLayer;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.ItemStack;
@@ -53,12 +53,14 @@ public class WitherSkeletonKnightRenderer extends AbstractSkeletonRenderer<Withe
     public void extractRenderState(WitherSkeletonKnight witherSkeletonKnight, WitherSkeletonKnightRenderState renderState, float partialTick) {
         super.extractRenderState(witherSkeletonKnight, renderState, partialTick);
         renderState.isDisarmored = witherSkeletonKnight.isDisarmored();
+        // this is a hack to prevent the skeleton model from messing up arms for the shield blocking pose
+        renderState.isAggressive &= !witherSkeletonKnight.isUsingShield();
     }
 
     @Override
     protected HumanoidModel.ArmPose getArmPose(WitherSkeletonKnight witherSkeletonKnight, HumanoidArm humanoidArm) {
         ItemStack itemStack = witherSkeletonKnight.getItemHeldByArm(humanoidArm);
-        return witherSkeletonKnight.getMainArm() == humanoidArm && witherSkeletonKnight.isUsingShield() && itemStack.is(
-                ModTags.SHIELD_TOOLS_ITEM_TAG_KEY) ? HumanoidModel.ArmPose.BLOCK : HumanoidModel.ArmPose.EMPTY;
+        return witherSkeletonKnight.isUsingShield() && itemStack.has(DataComponents.BLOCKS_ATTACKS) ?
+                HumanoidModel.ArmPose.BLOCK : HumanoidModel.ArmPose.EMPTY;
     }
 }
