@@ -12,7 +12,6 @@ import net.minecraft.world.entity.ai.behavior.MeleeAttack;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RangedCrossbowAttackGoal;
 import net.minecraft.world.entity.monster.CrossbowAttackMob;
-import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.piglin.AbstractPiglin;
 import net.minecraft.world.entity.monster.piglin.PiglinArmPose;
 import net.minecraft.world.item.*;
@@ -27,7 +26,6 @@ public abstract class CrossbowAttackPiglin extends GoalBasedPiglin implements Cr
 
     public CrossbowAttackPiglin(EntityType<? extends AbstractPiglin> entityType, Level level) {
         super(entityType, level);
-        this.xpReward = Enemy.XP_REWARD_MEDIUM;
     }
 
     @Override
@@ -75,16 +73,6 @@ public abstract class CrossbowAttackPiglin extends GoalBasedPiglin implements Cr
         this.populateDefaultEquipmentSlots(level.getRandom(), difficulty);
         this.populateDefaultEquipmentEnchantments(level, level.getRandom(), difficulty);
         return super.finalizeSpawn(level, difficulty, spawnReason, spawnGroupData);
-    }
-
-    @Override
-    protected boolean shouldDespawnInPeaceful() {
-        return false;
-    }
-
-    @Override
-    public boolean removeWhenFarAway(double distanceToClosestPlayer) {
-        return !this.isPersistenceRequired();
     }
 
     @Override
