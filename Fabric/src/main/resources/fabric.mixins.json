@@ -5,6 +5,7 @@
   "package": "${modGroup}.fabric.mixin",
   "mixins": [
     "PlayerFabricMixin",
+    "StopHoldingItemIfNoLongerAdmiringFabricMixin",
     "ThrownEnderpearlFabricMixin"
   ],
   "client": [

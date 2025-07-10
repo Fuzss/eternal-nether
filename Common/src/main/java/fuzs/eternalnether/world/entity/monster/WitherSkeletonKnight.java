@@ -2,7 +2,8 @@ package fuzs.eternalnether.world.entity.monster;
 
 import fuzs.eternalnether.EternalNether;
 import fuzs.eternalnether.services.CommonAbstractions;
-import fuzs.eternalnether.world.entity.ai.goal.UseShieldGoal;
+import fuzs.eternalnether.world.entity.ai.goal.ShieldDefenseGoal;
+import fuzs.puzzleslib.api.item.v2.ToolTypeHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -74,7 +75,7 @@ public class WitherSkeletonKnight extends WitherSkeleton implements ShieldedMob 
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(1, new UseShieldGoal<>(this, Player.class));
+        this.goalSelector.addGoal(1, new ShieldDefenseGoal<>(this, Player.class));
     }
 
     @Override
@@ -161,7 +162,7 @@ public class WitherSkeletonKnight extends WitherSkeleton implements ShieldedMob 
     public void startUsingShield() {
         if (!this.isUsingShield() && !this.isShieldDisabled()) {
             for (InteractionHand interactionHand : InteractionHand.values()) {
-                if (this.getItemInHand(interactionHand).is(Items.SHIELD)) {
+                if (ToolTypeHelper.INSTANCE.isShield(this.getItemInHand(interactionHand))) {
                     this.startUsingItem(interactionHand);
                     this.setUsingShield(true);
                     this.setShieldMainHand(interactionHand == InteractionHand.MAIN_HAND);
@@ -178,7 +179,7 @@ public class WitherSkeletonKnight extends WitherSkeleton implements ShieldedMob 
     public void stopUsingShield() {
         if (this.isUsingShield()) {
             for (InteractionHand interactionHand : InteractionHand.values()) {
-                if (this.getItemInHand(interactionHand).is(Items.SHIELD)) {
+                if (ToolTypeHelper.INSTANCE.isShield(this.getItemInHand(interactionHand))) {
                     this.stopUsingItem();
                     this.setUsingShield(false);
                     AttributeInstance attributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);

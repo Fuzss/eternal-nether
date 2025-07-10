@@ -2,8 +2,9 @@ package fuzs.eternalnether.world.entity.monster.piglin;
 
 import fuzs.eternalnether.EternalNether;
 import fuzs.eternalnether.init.ModItems;
-import fuzs.eternalnether.world.entity.ai.goal.UseShieldGoal;
+import fuzs.eternalnether.world.entity.ai.goal.ShieldDefenseGoal;
 import fuzs.eternalnether.world.entity.monster.ShieldedMob;
+import fuzs.puzzleslib.api.item.v2.ToolTypeHelper;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -46,8 +47,8 @@ public class PiglinHunter extends Piglin implements ShieldedMob {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(1, new UseShieldGoal<>(this, Player.class));
         super.registerGoals();
+        this.goalSelector.addGoal(1, new ShieldDefenseGoal<>(this, Player.class));
     }
 
     @Override
@@ -104,7 +105,7 @@ public class PiglinHunter extends Piglin implements ShieldedMob {
     public void startUsingShield() {
         if (!this.isUsingShield() && !this.isShieldDisabled()) {
             for (InteractionHand interactionHand : InteractionHand.values()) {
-                if (this.getItemInHand(interactionHand).is(ModItems.GILDED_NETHERITE_SHIELD.value())) {
+                if (ToolTypeHelper.INSTANCE.isShield(this.getItemInHand(interactionHand))) {
                     this.startUsingItem(interactionHand);
                     this.setUsingShield(true);
                     this.setShieldMainHand(interactionHand == InteractionHand.MAIN_HAND);
@@ -120,8 +121,8 @@ public class PiglinHunter extends Piglin implements ShieldedMob {
     @Override
     public void stopUsingShield() {
         if (this.isUsingShield()) {
-            for (InteractionHand interactionhand : InteractionHand.values()) {
-                if (this.getItemInHand(interactionhand).is(ModItems.GILDED_NETHERITE_SHIELD.value())) {
+            for (InteractionHand interactionHand : InteractionHand.values()) {
+                if (ToolTypeHelper.INSTANCE.isShield(this.getItemInHand(interactionHand))) {
                     this.stopUsingItem();
                     this.setUsingShield(false);
                     AttributeInstance attributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
