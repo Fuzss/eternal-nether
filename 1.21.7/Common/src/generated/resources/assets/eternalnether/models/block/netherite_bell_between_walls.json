@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/bell_between_walls",
-  "textures": {
-    "bar": "minecraft:block/crimson_planks",
-    "particle": "eternalnether:block/netherite_bell_bottom"
-  }
-}
