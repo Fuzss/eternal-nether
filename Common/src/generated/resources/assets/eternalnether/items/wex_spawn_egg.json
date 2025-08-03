@@ -1,16 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "eternalnether:item/wex_spawn_egg",
-    "tints": [
-      {
-        "type": "minecraft:constant",
-        "value": -9332536
-      },
-      {
-        "type": "minecraft:constant",
-        "value": -12030826
-      }
-    ]
+    "model": "eternalnether:item/wex_spawn_egg"
   }
 }

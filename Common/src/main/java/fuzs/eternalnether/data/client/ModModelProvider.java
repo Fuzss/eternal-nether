@@ -16,11 +16,9 @@ import net.minecraft.client.data.models.MultiVariant;
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
 import net.minecraft.client.data.models.model.*;
-import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.core.Direction;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BellAttachType;
@@ -87,38 +85,25 @@ public class ModModelProvider extends AbstractModelProvider {
 
     @Override
     public void addItemModels(ItemModelGenerators itemModelGenerators) {
-        ItemModelGenerationHelper.generateSpawnEgg(ModItems.PIGLIN_PRISONER_SPAWN_EGG.value(), itemModelGenerators);
-        ItemModelGenerationHelper.generateSpawnEgg(ModItems.PIGLIN_HUNTER_SPAWN_EGG.value(), itemModelGenerators);
-        ItemModelGenerationHelper.generateSpawnEgg(ModItems.WEX_SPAWN_EGG.value(), itemModelGenerators);
-        ItemModelGenerationHelper.generateSpawnEgg(ModItems.WARPED_ENDERMAN_SPAWN_EGG.value(), itemModelGenerators);
-        ItemModelGenerationHelper.generateSpawnEgg(ModItems.WRAITHER_SPAWN_EGG.value(), itemModelGenerators);
-        ItemModelGenerationHelper.generateSpawnEgg(ModItems.CORPOR_SPAWN_EGG.value(), itemModelGenerators);
-        ItemModelGenerationHelper.generateSpawnEgg(ModItems.WITHER_SKELETON_KNIGHT_SPAWN_EGG.value(),
-                itemModelGenerators);
-        ItemModelGenerationHelper.generateSpawnEgg(ModItems.WITHER_SKELETON_HORSE_SPAWN_EGG.value(),
-                itemModelGenerators);
+        itemModelGenerators.generateFlatItem(ModItems.PIGLIN_PRISONER_SPAWN_EGG.value(), ModelTemplates.FLAT_ITEM);
+        itemModelGenerators.generateFlatItem(ModItems.PIGLIN_HUNTER_SPAWN_EGG.value(), ModelTemplates.FLAT_ITEM);
+        itemModelGenerators.generateFlatItem(ModItems.WEX_SPAWN_EGG.value(), ModelTemplates.FLAT_ITEM);
+        itemModelGenerators.generateFlatItem(ModItems.WARPED_ENDERMAN_SPAWN_EGG.value(), ModelTemplates.FLAT_ITEM);
+        itemModelGenerators.generateFlatItem(ModItems.WRAITHER_SPAWN_EGG.value(), ModelTemplates.FLAT_ITEM);
+        itemModelGenerators.generateFlatItem(ModItems.CORPOR_SPAWN_EGG.value(), ModelTemplates.FLAT_ITEM);
+        itemModelGenerators.generateFlatItem(ModItems.WITHER_SKELETON_KNIGHT_SPAWN_EGG.value(),
+                ModelTemplates.FLAT_ITEM);
+        itemModelGenerators.generateFlatItem(ModItems.WITHER_SKELETON_HORSE_SPAWN_EGG.value(),
+                ModelTemplates.FLAT_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.WITHER_WALTZ_MUSIC_DISC.value(), ModelTemplates.FLAT_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.WARPED_ENDER_PEARL.value(), ModelTemplates.FLAT_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.WITHERED_BONE.value(), ModelTemplates.FLAT_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.WITHERED_BONE_MEAL.value(), ModelTemplates.FLAT_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.CUTLASS.value(), ModelTemplates.FLAT_HANDHELD_ITEM);
-        this.generateShield(ModItems.GILDED_NETHERITE_SHIELD.value(), Blocks.CRIMSON_PLANKS, itemModelGenerators);
-    }
-
-    /**
-     * @see ItemModelGenerators#generateShield(Item)
-     */
-    public final void generateShield(Item item, Block particleBlock, ItemModelGenerators itemModelGenerators) {
-        ResourceLocation resourceLocation = SHIELD_MODEL_TEMPLATE.create(ModelLocationHelper.getItemModel(item),
-                TextureMapping.particle(particleBlock),
-                itemModelGenerators.modelOutput);
-        ResourceLocation resourceLocation2 = SHIELD_BLOCKING_MODEL_TEMPLATE.create(ModelLocationHelper.getItemModel(item,
-                "_blocking"), TextureMapping.particle(particleBlock), itemModelGenerators.modelOutput);
-        ItemModel.Unbaked unbaked = ItemModelUtils.specialModel(resourceLocation,
-                new GildedNetheriteShieldSpecialRenderer.Unbaked());
-        ItemModel.Unbaked unbaked2 = ItemModelUtils.specialModel(resourceLocation2,
-                new GildedNetheriteShieldSpecialRenderer.Unbaked());
-        itemModelGenerators.generateBooleanDispatch(item, ItemModelUtils.isUsingItem(), unbaked2, unbaked);
+        ItemModelGenerationHelper.generateShield(ModItems.GILDED_NETHERITE_SHIELD.value(),
+                Blocks.CRIMSON_PLANKS,
+                GildedNetheriteShieldSpecialRenderer.Unbaked::new,
+                itemModelGenerators);
     }
 
     public static TextureMapping bell(Block bellBlock, Block barBlock, Block postBlock) {

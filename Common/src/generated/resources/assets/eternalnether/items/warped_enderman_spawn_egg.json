@@ -1,16 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "eternalnether:item/warped_enderman_spawn_egg",
-    "tints": [
-      {
-        "type": "minecraft:constant",
-        "value": -15826303
-      },
-      {
-        "type": "minecraft:constant",
-        "value": -16752288
-      }
-    ]
+    "model": "eternalnether:item/warped_enderman_spawn_egg"
   }
 }
