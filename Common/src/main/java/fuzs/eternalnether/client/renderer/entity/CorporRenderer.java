@@ -18,7 +18,7 @@ public class CorporRenderer extends AbstractSkeletonRenderer<Corpor, SkeletonRen
     private static final ResourceLocation TEXTURE_LOCATION = EternalNether.id("textures/entity/skeleton/corpor.png");
 
     public CorporRenderer(EntityRendererProvider.Context context) {
-        super(context, ModModelLayers.CORPOR, ModModelLayers.CORPOR_INNER_ARMOR, ModModelLayers.CORPOR_OUTER_ARMOR);
+        super(context, ModModelLayers.CORPOR, ModModelLayers.CORPOR_ARMOR);
     }
 
     public static LayerDefinition createBodyLayer() {

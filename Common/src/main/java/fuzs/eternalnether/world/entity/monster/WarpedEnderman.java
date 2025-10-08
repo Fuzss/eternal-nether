@@ -140,7 +140,7 @@ public class WarpedEnderman extends EnderMan implements Shearable {
             if (this.level() instanceof ServerLevel serverLevel) {
                 this.shear(serverLevel, SoundSource.PLAYERS, itemStack);
                 this.gameEvent(GameEvent.SHEAR, player);
-                itemStack.hurtAndBreak(1, player, getSlotForHand(interactionResult));
+                itemStack.hurtAndBreak(1, player, interactionResult.asEquipmentSlot());
             }
 
             return InteractionResult.SUCCESS;

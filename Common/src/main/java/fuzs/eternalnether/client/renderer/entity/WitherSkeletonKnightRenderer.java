@@ -6,7 +6,7 @@ import fuzs.eternalnether.client.model.geom.ModModelLayers;
 import fuzs.eternalnether.client.renderer.entity.state.WitherSkeletonKnightRenderState;
 import fuzs.eternalnether.world.entity.monster.WitherSkeletonKnight;
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.AbstractSkeletonRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.layers.SkeletonClothingLayer;
@@ -22,18 +22,15 @@ public class WitherSkeletonKnightRenderer extends AbstractSkeletonRenderer<Withe
             "textures/entity/skeleton/wither_skeleton_knight_overlay.png");
 
     public WitherSkeletonKnightRenderer(EntityRendererProvider.Context context) {
-        super(context,
-                ModModelLayers.WITHER_SKELETON_KNIGHT,
-                ModModelLayers.WITHER_SKELETON_KNIGHT_INNER_ARMOR,
-                ModModelLayers.WITHER_SKELETON_KNIGHT_OUTER_ARMOR);
+        super(context, ModModelLayers.WITHER_SKELETON_KNIGHT, ModModelLayers.WITHER_SKELETON_KNIGHT_ARMOR);
         this.addLayer(new SkeletonClothingLayer<>(this,
                 context.getModelSet(),
                 ModModelLayers.WITHER_SKELETON_KNIGHT_OUTER_LAYER,
                 OVERLAY_TEXTURE_LOCATION) {
             @Override
-            public void render(PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, WitherSkeletonKnightRenderState renderState, float yRot, float xRot) {
+            public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, WitherSkeletonKnightRenderState renderState, float yRot, float xRot) {
                 if (!renderState.isDisarmored) {
-                    super.render(poseStack, bufferSource, packedLight, renderState, yRot, xRot);
+                    super.submit(poseStack, nodeCollector, packedLight, renderState, yRot, xRot);
                 }
             }
         });

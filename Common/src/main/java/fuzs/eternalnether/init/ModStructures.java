@@ -17,6 +17,7 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureSpawnOverride;
 import net.minecraft.world.level.levelgen.structure.TerrainAdjustment;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
+import net.minecraft.world.level.levelgen.structure.structures.JigsawStructure;
 
 import java.util.Map;
 import java.util.Optional;
@@ -52,7 +53,7 @@ public final class ModStructures {
                         3,
                         UniformHeight.of(VerticalAnchor.absolute(56), VerticalAnchor.absolute(84)),
                         Optional.empty(),
-                        128));
+                        new JigsawStructure.MaxDistance(128)));
         context.register(CITADEL_STRUCTURE,
                 new CitadelStructure(new Structure.StructureSettings.Builder(context.lookup(Registries.BIOME)
                         .getOrThrow(ModTags.HAS_CITADEL_BIOME_TAG_KEY)).spawnOverrides(Map.of(MobCategory.MONSTER,
@@ -71,7 +72,7 @@ public final class ModStructures {
                         4,
                         UniformHeight.of(VerticalAnchor.absolute(48), VerticalAnchor.absolute(70)),
                         Optional.empty(),
-                        116));
+                        new JigsawStructure.MaxDistance(116)));
         context.register(PIGLIN_MANOR_STRUCTURE,
                 new CitadelStructure(new Structure.StructureSettings.Builder(context.lookup(Registries.BIOME)
                         .getOrThrow(ModTags.HAS_PIGLIN_MANOR_BIOME_TAG_KEY)).spawnOverrides(Map.of(MobCategory.MONSTER,
@@ -90,6 +91,6 @@ public final class ModStructures {
                         1,
                         UniformHeight.of(VerticalAnchor.absolute(34), VerticalAnchor.absolute(72)),
                         Optional.empty(),
-                        116));
+                        new JigsawStructure.MaxDistance(116)));
     }
 }

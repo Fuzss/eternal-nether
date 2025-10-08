@@ -251,7 +251,7 @@ public class PiglinPrisoner extends GoalBasedPiglin implements OwnableEntity {
     }
 
     public void setOwner(@Nullable Player player) {
-        this.entityData.set(DATA_OWNERUUID_ID, Optional.ofNullable(player).map(EntityReference::new));
+        this.entityData.set(DATA_OWNERUUID_ID, Optional.ofNullable(player).map(EntityReference::of));
     }
 
     private void setOwnerReference(@Nullable EntityReference<LivingEntity> owner) {

@@ -23,7 +23,8 @@ public final class ModEntityTypes {
                     .eyeHeight(0.51875F)
                     .passengerAttachments(0.7375F)
                     .ridingOffset(0.04F)
-                    .clientTrackingRange(8));
+                    .clientTrackingRange(8)
+                    .notInPeaceful());
     public static final Holder.Reference<EntityType<WarpedEnderman>> WARPED_ENDERMAN = ModRegistry.REGISTRIES.registerEntityType(
             "warped_enderman",
             () -> EntityType.Builder.of(WarpedEnderman::new, MobCategory.MONSTER)
@@ -31,8 +32,8 @@ public final class ModEntityTypes {
                     .sized(0.6F, 2.9F)
                     .eyeHeight(2.55F)
                     .passengerAttachments(2.80625F)
-                    .clientTrackingRange(8));
-
+                    .clientTrackingRange(8)
+                    .notInPeaceful());
     public static final Holder.Reference<EntityType<PiglinPrisoner>> PIGLIN_PRISONER = ModRegistry.REGISTRIES.registerEntityType(
             "piglin_prisoner",
             () -> EntityType.Builder.of(PiglinPrisoner::new, MobCategory.MONSTER)
@@ -49,7 +50,6 @@ public final class ModEntityTypes {
                     .passengerAttachments(2.0125F)
                     .ridingOffset(-0.7F)
                     .clientTrackingRange(8));
-
     public static final Holder.Reference<EntityType<Wraither>> WRAITHER = ModRegistry.REGISTRIES.registerEntityType(
             "wraither",
             () -> EntityType.Builder.of(Wraither::new, MobCategory.MONSTER)
@@ -58,7 +58,8 @@ public final class ModEntityTypes {
                     .sized(0.7F, 2.4F)
                     .eyeHeight(2.1F)
                     .ridingOffset(-0.875F)
-                    .clientTrackingRange(8));
+                    .clientTrackingRange(8)
+                    .notInPeaceful());
     public static final Holder.Reference<EntityType<WitherSkeletonKnight>> WITHER_SKELETON_KNIGHT = ModRegistry.REGISTRIES.registerEntityType(
             "wither_skeleton_knight",
             () -> EntityType.Builder.of(WitherSkeletonKnight::new, MobCategory.MONSTER)
@@ -67,7 +68,8 @@ public final class ModEntityTypes {
                     .sized(0.7F, 2.4F)
                     .eyeHeight(2.1F)
                     .ridingOffset(-0.875F)
-                    .clientTrackingRange(8));
+                    .clientTrackingRange(8)
+                    .notInPeaceful());
     public static final Holder.Reference<EntityType<Corpor>> CORPOR = ModRegistry.REGISTRIES.registerEntityType("corpor",
             () -> EntityType.Builder.of(Corpor::new, MobCategory.MONSTER)
                     .fireImmune()
@@ -75,8 +77,8 @@ public final class ModEntityTypes {
                     .sized(0.7F, 2.4F)
                     .eyeHeight(2.1F)
                     .ridingOffset(-0.875F)
-                    .clientTrackingRange(8));
-
+                    .clientTrackingRange(8)
+                    .notInPeaceful());
     public static final Holder.Reference<EntityType<WitherSkeletonHorse>> WITHER_SKELETON_HORSE = ModRegistry.REGISTRIES.registerEntityType(
             "wither_skeleton_horse",
             () -> EntityType.Builder.of(WitherSkeletonHorse::new, MobCategory.CREATURE)
@@ -85,7 +87,6 @@ public final class ModEntityTypes {
                     .eyeHeight(1.52F)
                     .passengerAttachments(1.31875F)
                     .clientTrackingRange(10));
-
     public static final Holder.Reference<EntityType<ThrownWarpedEnderpearl>> WARPED_ENDER_PEARL = ModRegistry.REGISTRIES.registerEntityType(
             "warped_ender_pearl",
             () -> EntityType.Builder.<ThrownWarpedEnderpearl>of(ThrownWarpedEnderpearl::new, MobCategory.MISC)

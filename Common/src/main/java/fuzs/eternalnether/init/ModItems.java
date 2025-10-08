@@ -104,31 +104,21 @@ public final class ModItems {
                                     Optional.empty())));
 
     public static final Holder.Reference<Item> PIGLIN_PRISONER_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
-            ModEntityTypes.PIGLIN_PRISONER,
-            0XC79E88,
-            0XF9F3A4);
+            ModEntityTypes.PIGLIN_PRISONER);
     public static final Holder.Reference<Item> PIGLIN_HUNTER_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
-            ModEntityTypes.PIGLIN_HUNTER,
-            0XBA6645,
-            0XF9F3A4);
+            ModEntityTypes.PIGLIN_HUNTER);
     public static final Holder.Reference<Item> WEX_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
-            ModEntityTypes.WEX,
-            0X7198C8);
+            ModEntityTypes.WEX);
     public static final Holder.Reference<Item> WARPED_ENDERMAN_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
-            ModEntityTypes.WARPED_ENDERMAN,
-            0X0E8281);
+            ModEntityTypes.WARPED_ENDERMAN);
     public static final Holder.Reference<Item> WRAITHER_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
-            ModEntityTypes.WRAITHER,
-            0X474D4D);
+            ModEntityTypes.WRAITHER);
     public static final Holder.Reference<Item> CORPOR_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
-            ModEntityTypes.CORPOR,
-            0X4A5757);
+            ModEntityTypes.CORPOR);
     public static final Holder.Reference<Item> WITHER_SKELETON_KNIGHT_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
-            ModEntityTypes.WITHER_SKELETON_KNIGHT,
-            0X4E5252);
+            ModEntityTypes.WITHER_SKELETON_KNIGHT);
     public static final Holder.Reference<Item> WITHER_SKELETON_HORSE_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
-            ModEntityTypes.WITHER_SKELETON_HORSE,
-            0X4D4747);
+            ModEntityTypes.WITHER_SKELETON_HORSE);
 
     public static void boostrap() {
         // NO-OP

@@ -1,7 +1,6 @@
 package fuzs.eternalnether.client.renderer.entity.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import fuzs.eternalnether.EternalNether;
 import fuzs.eternalnether.client.model.geom.ModModelLayers;
 import net.minecraft.client.model.HoglinModel;
@@ -11,8 +10,8 @@ import net.minecraft.client.model.PlayerCapeModel;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.PiglinRenderState;
@@ -24,6 +23,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.equipment.Equippable;
+
+import java.util.Collections;
 
 public class HoglinSkullLayer extends RenderLayer<PiglinRenderState, PiglinModel> {
     private static final ResourceLocation SKULL_TEXTURE_LOCATION = EternalNether.id(
@@ -45,15 +46,9 @@ public class HoglinSkullLayer extends RenderLayer<PiglinRenderState, PiglinModel
     public static LayerDefinition createSkullLayer() {
         MeshDefinition meshDefinition = HumanoidModel.createMesh(CubeDeformation.NONE, 0.0F);
         PartDefinition partDefinition = meshDefinition.getRoot();
+        partDefinition.retainExactParts(Collections.emptySet());
 
-        PartDefinition partDefinition2 = partDefinition.clearChild("head");
-        partDefinition2.clearChild("hat");
-        PartDefinition partDefinition3 = partDefinition.clearChild("body");
-        partDefinition.clearChild("left_arm");
-        partDefinition.clearChild("right_arm");
-        partDefinition.clearChild("left_leg");
-        partDefinition.clearChild("right_leg");
-
+        PartDefinition partDefinition3 = partDefinition.getChild("body");
         PartDefinition partDefinition4 = partDefinition3.addOrReplaceChild("skull",
                 CubeListBuilder.create(),
                 PartPose.offsetAndRotation(0.0F, -8.9F, -3.3F, 0.87266463F * 0.75F, Mth.PI, 0.0F));
@@ -78,20 +73,25 @@ public class HoglinSkullLayer extends RenderLayer<PiglinRenderState, PiglinModel
     }
 
     @Override
-    public void render(PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, PiglinRenderState renderState, float yRot, float xRot) {
+    public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, PiglinRenderState renderState, float yRot, float xRot) {
         if (!renderState.isBaby) {
             poseStack.pushPose();
             if (this.hasLayer(renderState.chestEquipment, EquipmentClientInfo.LayerType.HUMANOID)) {
                 poseStack.translate(0.0F, 0.0F, 0.06875F);
             }
+
             if (renderState.isPassenger) {
                 poseStack.translate(0.0F, -0.4375F, 0.0F);
             }
 
-            VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.entitySolid(SKULL_TEXTURE_LOCATION));
-            this.getParentModel().copyPropertiesTo(this.model);
-            this.model.setupAnim(renderState);
-            this.model.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY);
+            nodeCollector.submitModel(this.model,
+                    renderState,
+                    poseStack,
+                    RenderType.entitySolid(SKULL_TEXTURE_LOCATION),
+                    packedLight,
+                    OverlayTexture.NO_OVERLAY,
+                    renderState.outlineColor,
+                    null);
             poseStack.popPose();
         }
     }

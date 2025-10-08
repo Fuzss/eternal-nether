@@ -67,11 +67,6 @@ public abstract class GoalBasedPiglin extends AbstractPiglin {
     }
 
     @Override
-    protected boolean shouldDespawnInPeaceful() {
-        return false;
-    }
-
-    @Override
     public boolean removeWhenFarAway(double distanceToClosestPlayer) {
         return !this.isPersistenceRequired();
     }

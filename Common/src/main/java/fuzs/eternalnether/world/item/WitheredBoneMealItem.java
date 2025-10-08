@@ -26,22 +26,22 @@ public class WitheredBoneMealItem extends BoneMealItem {
         BlockPos blockPos = context.getClickedPos();
         BlockPos blockPos2 = blockPos.relative(context.getClickedFace());
         if (growCrop(context.getItemInHand(), level, blockPos)) {
-            if (!level.isClientSide) {
+            if (!level.isClientSide()) {
                 context.getPlayer().gameEvent(GameEvent.ITEM_INTERACT_FINISH);
                 level.levelEvent(LevelEvent.PARTICLES_AND_SOUND_PLANT_GROWTH, blockPos, 15);
             }
 
-            return InteractionResultHelper.sidedSuccess(level.isClientSide);
+            return InteractionResultHelper.sidedSuccess(level.isClientSide());
         } else {
             BlockState blockState = level.getBlockState(blockPos);
             if (blockState.isFaceSturdy(level, blockPos, context.getClickedFace())) {
                 if (growWaterPlant(context.getItemInHand(), level, blockPos2, context.getClickedFace())) {
-                    if (!level.isClientSide) {
+                    if (!level.isClientSide()) {
                         context.getPlayer().gameEvent(GameEvent.ITEM_INTERACT_FINISH);
                         level.levelEvent(LevelEvent.PARTICLES_AND_SOUND_PLANT_GROWTH, blockPos2, 15);
                     }
 
-                    return InteractionResultHelper.sidedSuccess(level.isClientSide);
+                    return InteractionResultHelper.sidedSuccess(level.isClientSide());
                 }
             }
 

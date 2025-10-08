@@ -1,13 +1,13 @@
 {
   "values": [
-    "minecraft:warped_forest",
+    {
+      "id": "#byg:glowstone_gardens",
+      "required": false
+    },
     {
       "id": "#incendium:inverted_forest",
       "required": false
     },
-    {
-      "id": "#byg:glowstone_gardens",
-      "required": false
-    }
+    "minecraft:warped_forest"
   ]
 }

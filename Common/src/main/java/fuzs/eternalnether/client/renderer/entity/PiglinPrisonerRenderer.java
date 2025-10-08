@@ -15,10 +15,8 @@ public class PiglinPrisonerRenderer extends PiglinRenderer {
         super(context,
                 ModModelLayers.PIGLIN_PRISONER,
                 ModModelLayers.PIGLIN_PRISONER_BABY,
-                ModModelLayers.PIGLIN_PRISONER_INNER_ARMOR,
-                ModModelLayers.PIGLIN_PRISONER_OUTER_ARMOR,
-                ModModelLayers.PIGLIN_PRISONER_BABY_INNER_ARMOR,
-                ModModelLayers.PIGLIN_PRISONER_BABY_OUTER_ARMOR);
+                ModModelLayers.PIGLIN_PRISONER_ARMOR,
+                ModModelLayers.PIGLIN_PRISONER_BABY_ARMOR);
     }
 
     @Override

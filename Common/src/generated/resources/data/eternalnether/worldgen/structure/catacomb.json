@@ -26,5 +26,6 @@
     }
   },
   "start_pool": "eternalnether:catacomb/start_pool",
-  "step": "underground_decoration"
+  "step": "underground_decoration",
+  "use_expansion_hack": false
 }

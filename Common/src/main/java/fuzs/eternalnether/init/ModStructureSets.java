@@ -13,7 +13,7 @@ import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement
 import java.util.List;
 import java.util.Optional;
 
-public class ModStructureSets {
+public final class ModStructureSets {
     public static final ResourceKey<StructureSet> CATACOMB_STRUCTURE_SET = ModRegistry.REGISTRIES.makeResourceKey(
             Registries.STRUCTURE_SET,
             "catacomb");

@@ -35,8 +35,7 @@ public class WitherSkeletonHorse extends SkeletonHorse {
 
     @Override
     public void aiStep() {
-        super.aiStep();
-        if (this.level().isClientSide && this.random.nextInt(3) == 0) {
+        if (this.level().isClientSide() && this.random.nextInt(3) == 0) {
             this.level()
                     .addParticle(ParticleTypes.SOUL_FIRE_FLAME,
                             this.getX(this.random.nextGaussian() * 0.25),
@@ -46,7 +45,9 @@ public class WitherSkeletonHorse extends SkeletonHorse {
                             this.random.nextDouble() * -0.05,
                             0.0);
         }
+
         this.floatHorse();
+        super.aiStep();
     }
 
     private void floatHorse() {

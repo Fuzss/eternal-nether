@@ -1,21 +1,20 @@
 package fuzs.eternalnether.client.renderer.special;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.serialization.MapCodec;
 import fuzs.eternalnether.EternalNether;
 import fuzs.eternalnether.client.model.geom.ModModelLayers;
 import net.minecraft.client.model.ShieldModel;
-import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BannerRenderer;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.special.ShieldSpecialRenderer;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.MaterialSet;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.util.Unit;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.entity.BannerPatternLayers;
@@ -29,44 +28,68 @@ public class GildedNetheriteShieldSpecialRenderer extends ShieldSpecialRenderer 
     public static final Material NO_PATTERN_SHIELD = new Material(Sheets.SHIELD_SHEET,
             EternalNether.id("entity/gilded_netherite_shield_base_nopattern"));
 
+    private final MaterialSet materials;
     private final ShieldModel model;
 
-    public GildedNetheriteShieldSpecialRenderer(ShieldModel model) {
-        super(model);
+    public GildedNetheriteShieldSpecialRenderer(MaterialSet materials, ShieldModel model) {
+        super(materials, model);
+        this.materials = materials;
         this.model = model;
     }
 
+    /**
+     * @see ShieldSpecialRenderer#submit(DataComponentMap, ItemDisplayContext, PoseStack, SubmitNodeCollector, int,
+     *         int, boolean, int)
+     */
     @Override
-    public void render(@Nullable DataComponentMap patterns, ItemDisplayContext displayContext, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay, boolean hasFoilType) {
+    public void submit(@Nullable DataComponentMap patterns, ItemDisplayContext displayContext, PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, int packedOverlay, boolean hasFoil, int outlineColor) {
         BannerPatternLayers bannerPatternLayers =
                 patterns != null ? patterns.getOrDefault(DataComponents.BANNER_PATTERNS, BannerPatternLayers.EMPTY) :
                         BannerPatternLayers.EMPTY;
         DyeColor dyeColor = patterns != null ? patterns.get(DataComponents.BASE_COLOR) : null;
-        boolean bl = !bannerPatternLayers.layers().isEmpty() || dyeColor != null;
+        boolean hasPattern = !bannerPatternLayers.layers().isEmpty() || dyeColor != null;
         poseStack.pushPose();
         poseStack.scale(1.0F, -1.0F, -1.0F);
-        // copied from super method with different materials
-        Material material = bl ? SHIELD_BASE : NO_PATTERN_SHIELD;
-        VertexConsumer vertexConsumer = material.sprite()
-                .wrap(ItemRenderer.getFoilBuffer(bufferSource,
-                        this.model.renderType(material.atlasLocation()),
-                        displayContext == ItemDisplayContext.GUI,
-                        hasFoilType));
-        this.model.handle().render(poseStack, vertexConsumer, packedLight, packedOverlay);
-        if (bl) {
-            BannerRenderer.renderPatterns(poseStack,
-                    bufferSource,
+        // use custom materials
+        Material material = hasPattern ? SHIELD_BASE : NO_PATTERN_SHIELD;
+        nodeCollector.submitModelPart(this.model.handle(),
+                poseStack,
+                this.model.renderType(material.atlasLocation()),
+                packedLight,
+                packedOverlay,
+                this.materials.get(material),
+                false,
+                false,
+                -1,
+                null,
+                outlineColor);
+        if (hasPattern) {
+            BannerRenderer.submitPatterns(this.materials,
+                    poseStack,
+                    nodeCollector,
                     packedLight,
                     packedOverlay,
-                    this.model.plate(),
+                    this.model,
+                    Unit.INSTANCE,
                     material,
                     false,
                     (DyeColor) Objects.requireNonNullElse(dyeColor, DyeColor.WHITE),
                     bannerPatternLayers,
-                    hasFoilType,
-                    false);
+                    hasFoil,
+                    null,
+                    outlineColor);
         } else {
-            this.model.plate().render(poseStack, vertexConsumer, packedLight, packedOverlay);
+            nodeCollector.submitModelPart(this.model.plate(),
+                    poseStack,
+                    this.model.renderType(material.atlasLocation()),
+                    packedLight,
+                    packedOverlay,
+                    this.materials.get(material),
+                    false,
+                    hasFoil,
+                    -1,
+                    null,
+                    outlineColor);
         }
 
         poseStack.popPose();
@@ -82,8 +105,9 @@ public class GildedNetheriteShieldSpecialRenderer extends ShieldSpecialRenderer 
         }
 
         @Override
-        public SpecialModelRenderer<?> bake(EntityModelSet modelSet) {
-            return new GildedNetheriteShieldSpecialRenderer(new ShieldModel(modelSet.bakeLayer(ModModelLayers.GILDED_NETHERITE_SHIELD)));
+        public SpecialModelRenderer<?> bake(BakingContext context) {
+            return new GildedNetheriteShieldSpecialRenderer(context.materials(),
+                    new ShieldModel(context.entityModelSet().bakeLayer(ModModelLayers.GILDED_NETHERITE_SHIELD)));
         }
     }
 }

@@ -2,7 +2,7 @@
   "values": [
     "minecraft:soul_sand_valley",
     {
-      "id": "#biomesoplenty:withered_abyss",
+      "id": "#byg:wailing_garth",
       "required": false
     },
     {
@@ -10,11 +10,11 @@
       "required": false
     },
     {
-      "id": "#incendium:withered_forest",
+      "id": "#biomesoplenty:withered_abyss",
       "required": false
     },
     {
-      "id": "#byg:wailing_garth",
+      "id": "#incendium:withered_forest",
       "required": false
     }
   ]

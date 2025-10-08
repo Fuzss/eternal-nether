@@ -5,8 +5,8 @@ import fuzs.eternalnether.EternalNether;
 import fuzs.eternalnether.client.model.geom.ModModelLayers;
 import fuzs.eternalnether.client.renderer.entity.state.WraitherRenderState;
 import fuzs.eternalnether.world.entity.monster.Wraither;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.AbstractSkeletonRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.layers.EyesLayer;
@@ -20,15 +20,12 @@ public class WraitherRenderer extends AbstractSkeletonRenderer<Wraither, Wraithe
             "textures/entity/skeleton/wraither_eyes.png"));
 
     public WraitherRenderer(EntityRendererProvider.Context context) {
-        super(context,
-                ModModelLayers.WRAITHER,
-                ModModelLayers.WRAITHER_INNER_ARMOR,
-                ModModelLayers.WRAITHER_OUTER_ARMOR);
+        super(context, ModModelLayers.WRAITHER, ModModelLayers.WRAITHER_ARMOR);
         this.addLayer(new EyesLayer<>(this) {
             @Override
-            public void render(PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, WraitherRenderState renderState, float yRot, float xRot) {
+            public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, WraitherRenderState renderState, float yRot, float xRot) {
                 if (renderState.isPossessed) {
-                    super.render(poseStack, bufferSource, packedLight, renderState, yRot, xRot);
+                    super.submit(poseStack, nodeCollector, packedLight, renderState, yRot, xRot);
                 }
             }
 

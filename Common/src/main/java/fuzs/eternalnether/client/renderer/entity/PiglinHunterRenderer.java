@@ -21,10 +21,8 @@ public class PiglinHunterRenderer extends PiglinRenderer {
         super(context,
                 ModModelLayers.PIGLIN_HUNTER,
                 ModModelLayers.PIGLIN_HUNTER_BABY,
-                ModModelLayers.PIGLIN_HUNTER_INNER_ARMOR,
-                ModModelLayers.PIGLIN_HUNTER_OUTER_ARMOR,
-                ModModelLayers.PIGLIN_HUNTER_BABY_INNER_ARMOR,
-                ModModelLayers.PIGLIN_HUNTER_BABY_OUTER_ARMOR);
+                ModModelLayers.PIGLIN_HUNTER_ARMOR,
+                ModModelLayers.PIGLIN_HUNTER_BABY_ARMOR);
         this.addLayer(new HoglinSkullLayer(this, context.getModelSet(), context.getEquipmentAssets()));
     }
 
