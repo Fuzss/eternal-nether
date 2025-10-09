@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/stairs",
-  "textures": {
-    "bottom": "eternalnether:block/cracked_withered_blackstone",
-    "side": "eternalnether:block/cracked_withered_blackstone",
-    "top": "eternalnether:block/cracked_withered_blackstone"
-  }
-}
