@@ -12,18 +12,21 @@ public final class ModBlockFamilies {
             .wall(ModBlocks.WITHERED_BLACKSTONE_WALL.value())
             .cracked(ModBlocks.CRACKED_WITHERED_BLACKSTONE.value())
             .chiseled(ModBlocks.CHISELED_WITHERED_BLACKSTONE.value())
+            .generateStonecutterRecipe()
             .dontGenerateModel()
             .getFamily();
     public static final BlockFamily CRACKED_WITHERED_BLACKSTONE_FAMILY = BlockFamilies.familyBuilder(ModBlocks.CRACKED_WITHERED_BLACKSTONE.value())
             .slab(ModBlocks.CRACKED_WITHERED_BLACKSTONE_SLAB.value())
             .stairs(ModBlocks.CRACKED_WITHERED_BLACKSTONE_STAIRS.value())
             .wall(ModBlocks.CRACKED_WITHERED_BLACKSTONE_WALL.value())
+            .generateStonecutterRecipe()
             .getFamily();
     public static final BlockFamily WARPED_NETHER_BRICKS_FAMILY = BlockFamilies.familyBuilder(ModBlocks.WARPED_NETHER_BRICKS.value())
             .slab(ModBlocks.WARPED_NETHER_BRICK_SLAB.value())
             .stairs(ModBlocks.WARPED_NETHER_BRICK_STAIRS.value())
             .wall(ModBlocks.WARPED_NETHER_BRICK_WALL.value())
             .chiseled(ModBlocks.CHISELED_WARPED_NETHER_BRICKS.value())
+            .generateStonecutterRecipe()
             .getFamily();
 
     public static Stream<BlockFamily> getAllFamilies() {

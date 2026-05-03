@@ -129,7 +129,7 @@ public class WitherSkeletonKnight extends WitherSkeleton implements ShieldedMob 
         if (!this.isUsingShield()) {
             super.knockback(strength, x, z);
         } else {
-            this.playSound(SoundEvents.SHIELD_BLOCK.value(), 1.0F, 0.8F + this.level().random.nextFloat() * 0.4F);
+            this.playSound(SoundEvents.SHIELD_BLOCK.value(), 1.0F, 0.8F + this.level().getRandom().nextFloat() * 0.4F);
         }
     }
 
@@ -152,7 +152,7 @@ public class WitherSkeletonKnight extends WitherSkeleton implements ShieldedMob 
         this.setShieldCooldown(60);
         this.stopUsingShield();
         this.level().broadcastEntityEvent(this, (byte) 30);
-        this.playSound(SoundEvents.SHIELD_BREAK.value(), 0.8F, 0.8F + this.level().random.nextFloat() * 0.4F);
+        this.playSound(SoundEvents.SHIELD_BREAK.value(), 0.8F, 0.8F + this.level().getRandom().nextFloat() * 0.4F);
     }
 
     @Override

@@ -2,8 +2,8 @@ package fuzs.eternalnether.world.entity.projectile;
 
 import fuzs.eternalnether.init.ModEntityTypes;
 import fuzs.eternalnether.init.ModItems;
-import fuzs.puzzleslib.api.event.v1.core.EventResult;
-import fuzs.puzzleslib.api.event.v1.data.MutableFloat;
+import fuzs.puzzleslib.common.api.event.v1.core.EventResult;
+import fuzs.puzzleslib.common.api.event.v1.data.MutableFloat;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;

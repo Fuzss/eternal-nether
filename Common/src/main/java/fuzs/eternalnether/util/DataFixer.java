@@ -4,8 +4,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import fuzs.puzzleslib.api.config.v3.json.GsonCodecHelper;
-import fuzs.puzzleslib.impl.PuzzlesLib;
+import fuzs.eternalnether.EternalNether;
+import fuzs.puzzleslib.common.api.config.v3.json.GsonCodecHelper;
 import net.minecraft.nbt.*;
 import net.minecraft.util.GsonHelper;
 
@@ -70,7 +70,7 @@ public abstract class DataFixer<T> {
                 T t = this.read(inputFile);
                 this.write(outputFile, this.process(t, targetValue, replacementValue));
             } catch (IOException exception) {
-                PuzzlesLib.LOGGER.warn("Failed handling {}", outputFile, exception);
+                EternalNether.LOGGER.warn("Failed handling {}", outputFile, exception);
                 iterator.remove();
             }
         }

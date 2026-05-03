@@ -3,8 +3,9 @@ package fuzs.eternalnether.world.level.block.entity;
 import fuzs.eternalnether.init.ModBlocks;
 import fuzs.eternalnether.init.ModEntityTypes;
 import fuzs.eternalnether.world.entity.monster.piglin.PiglinPrisoner;
-import fuzs.puzzleslib.api.block.v1.entity.TickingBlockEntity;
+import fuzs.puzzleslib.common.api.block.v1.entity.TickingBlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -32,13 +33,13 @@ public class NetheriteBellBlockEntity extends BellBlockEntity implements Ticking
     }
 
     @Override
-    public void clientTick() {
-        this.tick();
+    public void clientTick(Level level, BlockPos blockPos, BlockState blockState) {
+        this.tick(level, blockPos);
     }
 
     @Override
-    public void serverTick() {
-        if (this.tick()) {
+    public void serverTick(ServerLevel serverLevel, BlockPos blockPos, BlockState blockState) {
+        if (this.tick(serverLevel, blockPos)) {
             this.nearbyEntities.stream().filter(this::isPiglinPrisonerWithinRange).forEach(this::rescue);
         }
     }
@@ -46,7 +47,7 @@ public class NetheriteBellBlockEntity extends BellBlockEntity implements Ticking
     /**
      * @see BellBlockEntity#tick(Level, BlockPos, BlockState, BellBlockEntity, ResonationEndAction)
      */
-    private boolean tick() {
+    private boolean tick(Level level, BlockPos blockPos) {
         if (this.shaking) {
             ++this.ticks;
         }
@@ -55,10 +56,9 @@ public class NetheriteBellBlockEntity extends BellBlockEntity implements Ticking
             this.ticks = 0;
         }
         if (this.ticks >= TICKS_BEFORE_RESONATION && this.resonationTicks == 0
-                && this.arePiglinPrisonersNearby(this.getBlockPos(), this.nearbyEntities)) {
+                && this.arePiglinPrisonersNearby(blockPos, this.nearbyEntities)) {
             this.resonating = true;
-            this.getLevel()
-                    .playSound(null, this.getBlockPos(), SoundEvents.BELL_RESONATE, SoundSource.BLOCKS, 1.5F, 0.8F);
+            level.playSound(null, blockPos, SoundEvents.BELL_RESONATE, SoundSource.BLOCKS, 1.5F, 0.8F);
         }
         if (this.resonating) {
             if (this.resonationTicks < MAX_RESONATION_TICKS) {
@@ -74,10 +74,11 @@ public class NetheriteBellBlockEntity extends BellBlockEntity implements Ticking
     /**
      * @see BellBlockEntity#areRaidersNearby(BlockPos, List)
      */
-    protected boolean arePiglinPrisonersNearby(BlockPos pos, List<LivingEntity> livingEntities) {
+    protected boolean arePiglinPrisonersNearby(BlockPos blockPos, List<LivingEntity> livingEntities) {
         for (LivingEntity livingEntity : livingEntities) {
-            if (livingEntity.isAlive() && !livingEntity.isRemoved() && pos.closerToCenterThan(livingEntity.position(),
-                    HEAR_BELL_RADIUS) && this.isRescuedPiglinPrisoner(livingEntity)) {
+            if (livingEntity.isAlive() && !livingEntity.isRemoved()
+                    && blockPos.closerToCenterThan(livingEntity.position(), HEAR_BELL_RADIUS)
+                    && this.isRescuedPiglinPrisoner(livingEntity)) {
                 return true;
             }
         }

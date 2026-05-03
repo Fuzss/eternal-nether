@@ -93,7 +93,7 @@ public final class CitadelStructure extends JigsawStructure {
 
     private boolean isChunkValid(Structure.GenerationContext context) {
         WorldgenRandom worldgenrandom = new WorldgenRandom(new LegacyRandomSource(0L));
-        worldgenrandom.setLargeFeatureSeed(context.seed(), context.chunkPos().x, context.chunkPos().z);
+        worldgenrandom.setLargeFeatureSeed(context.seed(), context.chunkPos().x(), context.chunkPos().z());
         return context.validBiome()
                 .test(context.chunkGenerator()
                         .getBiomeSource()

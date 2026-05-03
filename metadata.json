@@ -1,9 +1,10 @@
 {
+    "minecraft": "26.1.2",
     "mod": {
         "id": "eternalnether",
         "group": "fuzs.eternalnether",
         "name": "Eternal Nether",
-        "version": "21.11.0",
+        "version": "26.1.0",
         "authors": [
             "Izofar",
             "Fuzs"
@@ -37,13 +38,13 @@
     ],
     "links": [
         {
-            "name": "github",
-            "slug": "eternalnether"
-        },
-        {
             "name": "curseforge",
             "slug": "eternal-nether",
             "id": "1252482"
+        },
+        {
+            "name": "github",
+            "slug": "eternal-nether"
         },
         {
             "name": "modrinth",

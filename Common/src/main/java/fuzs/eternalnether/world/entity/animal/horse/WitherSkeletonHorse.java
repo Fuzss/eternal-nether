@@ -9,12 +9,14 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.equine.SkeletonHorse;
+import net.minecraft.world.entity.monster.Strider;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class WitherSkeletonHorse extends SkeletonHorse {
 
@@ -50,17 +52,25 @@ public class WitherSkeletonHorse extends SkeletonHorse {
         super.aiStep();
     }
 
+    /**
+     * @see Strider#floatStrider()
+     */
     private void floatHorse() {
         if (this.isInLava()) {
-            CollisionContext collisionContext = CollisionContext.of(this);
-            if (collisionContext.isAbove(LiquidBlock.SHAPE_STABLE, this.blockPosition(), true) && !this.level()
+            CollisionContext context = CollisionContext.of(this);
+            if (context.isAbove(this.getLiquidCollisionShape(), this.blockPosition(), true) && !this.level()
                     .getFluidState(this.blockPosition().above())
                     .is(FluidTags.LAVA)) {
                 this.setOnGround(true);
             } else {
-                this.setDeltaMovement(this.getDeltaMovement().scale(0.5D).add(0.0D, 0.05D, 0.0D));
+                this.setDeltaMovement(this.getDeltaMovement().scale(0.5).add(0.0, 0.05, 0.0));
             }
         }
+    }
+
+    @Override
+    public VoxelShape getLiquidCollisionShape() {
+        return Block.column(16.0, 0.0, 8.0);
     }
 
     @Override

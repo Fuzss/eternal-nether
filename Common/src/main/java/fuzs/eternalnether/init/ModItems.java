@@ -3,6 +3,7 @@ package fuzs.eternalnether.init;
 import fuzs.eternalnether.world.item.WarpedEnderpearlItem;
 import fuzs.eternalnether.world.item.WitheredBoneMealItem;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -61,47 +62,60 @@ public final class ModItems {
             "wither_waltz");
     public static final Holder.Reference<Item> WITHER_WALTZ_MUSIC_DISC = ModRegistry.REGISTRIES.registerItem(
             "wither_waltz_music_disc",
-            () -> new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(WITHER_WALTZ_JUKEBOX_SONG));
+            () -> {
+                return new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(WITHER_WALTZ_JUKEBOX_SONG);
+            });
     public static final Holder.Reference<Item> WARPED_ENDER_PEARL = ModRegistry.REGISTRIES.registerItem(
             "warped_ender_pearl",
             WarpedEnderpearlItem::new,
-            () -> new Item.Properties().stacksTo(16).useCooldown(1.0F).rarity(Rarity.RARE));
+            () -> {
+                return new Item.Properties().stacksTo(16).useCooldown(1.0F).rarity(Rarity.RARE);
+            });
     public static final Holder.Reference<Item> WITHERED_BONE = ModRegistry.REGISTRIES.registerItem("withered_bone");
     public static final Holder.Reference<Item> WITHERED_BONE_MEAL = ModRegistry.REGISTRIES.registerItem(
             "withered_bone_meal",
             WitheredBoneMealItem::new);
 
     public static final Holder.Reference<Item> NETHERITE_BELL = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.NETHERITE_BELL,
-            () -> new Item.Properties().rarity(Rarity.EPIC).fireResistant());
+            () -> {
+                return new Item.Properties().rarity(Rarity.EPIC).fireResistant();
+            });
     public static final Holder.Reference<Item> GILDED_NETHERITE_SHIELD = ModRegistry.REGISTRIES.registerItem(
             "gilded_netherite_shield",
             ShieldItem::new,
-            () -> new Item.Properties().durability(1512)
-                    .rarity(Rarity.RARE)
-                    .fireResistant()
-                    .component(DataComponents.BANNER_PATTERNS, BannerPatternLayers.EMPTY)
-                    .equippableUnswappable(EquipmentSlot.OFFHAND)
-                    .component(DataComponents.BLOCKS_ATTACKS,
-                            new BlocksAttacks(0.25F,
+            () -> {
+                return new Item.Properties().durability(1512)
+                        .rarity(Rarity.RARE)
+                        .fireResistant()
+                        .component(DataComponents.BANNER_PATTERNS, BannerPatternLayers.EMPTY)
+                        .equippableUnswappable(EquipmentSlot.OFFHAND)
+                        .delayedComponent(DataComponents.BLOCKS_ATTACKS, (HolderLookup.Provider context) -> {
+                            return new BlocksAttacks(0.25F,
                                     0.0F,
                                     List.of(new BlocksAttacks.DamageReduction(90.0F, Optional.empty(), 0.0F, 1.0F)),
                                     new BlocksAttacks.ItemDamageFunction(3.0F, 1.0F, 1.0F),
-                                    Optional.of(DamageTypeTags.BYPASSES_SHIELD),
+                                    Optional.of(context.lookupOrThrow(Registries.DAMAGE_TYPE)
+                                            .getOrThrow(DamageTypeTags.BYPASSES_SHIELD)),
                                     Optional.of(SoundEvents.SHIELD_BLOCK),
-                                    Optional.of(SoundEvents.SHIELD_BREAK)))
-                    .component(DataComponents.BREAK_SOUND, SoundEvents.SHIELD_BREAK));
-    public static final Holder.Reference<Item> CUTLASS = ModRegistry.REGISTRIES.registerItem("cutlass",
-            () -> new Item.Properties().sword(ToolMaterial.IRON, 3.0F, -1.6F)
-                    .durability(312)
-                    .enchantable(1)
-                    .component(DataComponents.BLOCKS_ATTACKS,
-                            new BlocksAttacks(0.0F,
-                                    0.0F,
-                                    List.of(new BlocksAttacks.DamageReduction(180.0F, Optional.empty(), 0.0F, 0.5F)),
-                                    BlocksAttacks.ItemDamageFunction.DEFAULT,
-                                    Optional.of(ModTags.BYPASSES_CUTLASS_DAMAGE_TYPE_TAG_KEY),
-                                    Optional.of(ModSoundEvents.ITEM_SWORD_BLOCK_SOUND_EVENT),
-                                    Optional.empty())));
+                                    Optional.of(SoundEvents.SHIELD_BREAK));
+                        })
+                        .component(DataComponents.BREAK_SOUND, SoundEvents.SHIELD_BREAK);
+            });
+    public static final Holder.Reference<Item> CUTLASS = ModRegistry.REGISTRIES.registerItem("cutlass", () -> {
+        return new Item.Properties().sword(ToolMaterial.IRON, 3.0F, -1.6F)
+                .durability(312)
+                .enchantable(1)
+                .delayedComponent(DataComponents.BLOCKS_ATTACKS, (HolderLookup.Provider context) -> {
+                    return new BlocksAttacks(0.0F,
+                            0.0F,
+                            List.of(new BlocksAttacks.DamageReduction(180.0F, Optional.empty(), 0.0F, 0.5F)),
+                            BlocksAttacks.ItemDamageFunction.DEFAULT,
+                            Optional.of(context.lookupOrThrow(Registries.DAMAGE_TYPE)
+                                    .getOrThrow(ModTags.BYPASSES_CUTLASS_DAMAGE_TYPE_TAG_KEY)),
+                            Optional.of(ModSoundEvents.ITEM_SWORD_BLOCK_SOUND_EVENT),
+                            Optional.empty());
+                });
+    });
 
     public static final Holder.Reference<Item> PIGLIN_PRISONER_SPAWN_EGG = ModRegistry.REGISTRIES.registerSpawnEggItem(
             ModEntityTypes.PIGLIN_PRISONER);

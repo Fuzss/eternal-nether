@@ -1,52 +1,21 @@
 package fuzs.eternalnether.data;
 
-import com.google.common.collect.ImmutableMap;
 import fuzs.eternalnether.init.ModBlockFamilies;
 import fuzs.eternalnether.init.ModBlocks;
 import fuzs.eternalnether.init.ModItems;
-import fuzs.puzzleslib.api.data.v2.AbstractRecipeProvider;
-import fuzs.puzzleslib.api.data.v2.core.DataProviderContext;
+import fuzs.puzzleslib.common.api.data.v2.AbstractRecipeProvider;
+import fuzs.puzzleslib.common.api.data.v2.core.DataProviderContext;
 import net.minecraft.data.BlockFamily;
-import net.minecraft.data.recipes.*;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
-import java.util.Map;
-import java.util.function.BiFunction;
-
 public class ModRecipeProvider extends AbstractRecipeProvider {
-    private static final Map<BlockFamily.Variant, BiFunction<ItemLike, ItemLike, RecipeBuilder>> STONECUTTING_BUILDERS = ImmutableMap.<BlockFamily.Variant, BiFunction<ItemLike, ItemLike, RecipeBuilder>>builder()
-            .put(BlockFamily.Variant.CHISELED,
-                    (itemLike, itemLike2) -> SingleItemRecipeBuilder.stonecutting(Ingredient.of(itemLike2),
-                            RecipeCategory.BUILDING_BLOCKS,
-                            itemLike))
-            .put(BlockFamily.Variant.CUT,
-                    (itemLike, itemLike2) -> SingleItemRecipeBuilder.stonecutting(Ingredient.of(itemLike2),
-                            RecipeCategory.BUILDING_BLOCKS,
-                            itemLike))
-            .put(BlockFamily.Variant.SLAB,
-                    (itemLike, itemLike2) -> SingleItemRecipeBuilder.stonecutting(Ingredient.of(itemLike2),
-                            RecipeCategory.BUILDING_BLOCKS,
-                            itemLike,
-                            2))
-            .put(BlockFamily.Variant.STAIRS,
-                    (itemLike, itemLike2) -> SingleItemRecipeBuilder.stonecutting(Ingredient.of(itemLike2),
-                            RecipeCategory.BUILDING_BLOCKS,
-                            itemLike))
-            .put(BlockFamily.Variant.POLISHED,
-                    (itemLike, itemLike2) -> SingleItemRecipeBuilder.stonecutting(Ingredient.of(itemLike2),
-                            RecipeCategory.BUILDING_BLOCKS,
-                            itemLike))
-            .put(BlockFamily.Variant.WALL,
-                    (itemLike, itemLike2) -> SingleItemRecipeBuilder.stonecutting(Ingredient.of(itemLike2),
-                            RecipeCategory.DECORATIONS,
-                            itemLike))
-            .build();
 
     public ModRecipeProvider(DataProviderContext context) {
         super(context);
@@ -76,26 +45,10 @@ public class ModRecipeProvider extends AbstractRecipeProvider {
                 getItemName(ModItems.WITHERED_BONE_MEAL.value()));
     }
 
-    public void generateForEnabledBlockFamilies(FeatureFlagSet enabledFeatures) {
-        ModBlockFamilies.getAllFamilies()
-                .filter(BlockFamily::shouldGenerateRecipe)
-                .forEach(blockFamily -> this.generateRecipes(blockFamily, enabledFeatures));
-    }
-
-    public void generateRecipes(RecipeOutput recipeOutput, BlockFamily blockFamily, FeatureFlagSet requiredFeatures) {
-        this.generateRecipes(blockFamily, requiredFeatures);
-        // also automatically generate stone-cutting recipes
-        blockFamily.getVariants().forEach((BlockFamily.Variant variant, Block block) -> {
-            if (block.requiredFeatures().isSubsetOf(requiredFeatures)) {
-                BiFunction<ItemLike, ItemLike, RecipeBuilder> biFunction = STONECUTTING_BUILDERS.get(variant);
-                ItemLike itemLike = this.getBaseBlock(blockFamily, variant);
-                if (biFunction != null) {
-                    RecipeBuilder recipeBuilder = biFunction.apply(block, itemLike);
-                    recipeBuilder.unlockedBy(blockFamily.getRecipeUnlockedBy().orElseGet(() -> getHasName(itemLike)),
-                            this.has(itemLike));
-                    recipeBuilder.save(recipeOutput, getStonecuttingRecipeName(block, itemLike));
-                }
-            }
+    @Override
+    public void generateForEnabledBlockFamilies(FeatureFlagSet flagSet) {
+        ModBlockFamilies.getAllFamilies().forEach((BlockFamily blockFamily) -> {
+            this.generateRecipes(blockFamily, flagSet);
         });
     }
 }

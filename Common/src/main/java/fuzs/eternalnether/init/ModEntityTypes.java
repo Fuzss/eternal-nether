@@ -99,12 +99,12 @@ public final class ModEntityTypes {
     }
 
     public static void setPiglinBruteSensorsAndMemories() {
-        PiglinBrute.SENSOR_TYPES = ImmutableList.<SensorType<? extends Sensor<? super PiglinBrute>>>builder()
-                .addAll(PiglinBrute.SENSOR_TYPES)
+        PiglinBrute.BRAIN_PROVIDER.sensorTypes = ImmutableList.<SensorType<? extends Sensor<? super PiglinBrute>>>builder()
+                .addAll(PiglinBrute.BRAIN_PROVIDER.sensorTypes)
                 .add(ModSensorTypes.PIGLIN_BRUTE_SPECIFIC_SENSOR_TYPE.value())
                 .build();
-        PiglinBrute.MEMORY_TYPES = ImmutableList.<MemoryModuleType<?>>builder()
-                .addAll(PiglinBrute.MEMORY_TYPES)
+        PiglinBrute.BRAIN_PROVIDER.memoryTypes = ImmutableList.<MemoryModuleType<?>>builder()
+                .addAll(PiglinBrute.BRAIN_PROVIDER.memoryTypes)
                 .add(MemoryModuleType.UNIVERSAL_ANGER, MemoryModuleType.NEAREST_TARGETABLE_PLAYER_NOT_WEARING_GOLD)
                 .build();
     }

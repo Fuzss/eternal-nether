@@ -4,18 +4,19 @@ import fuzs.eternalnether.EternalNether;
 import fuzs.eternalnether.init.ModEntityTypes;
 import fuzs.eternalnether.init.ModItems;
 import fuzs.eternalnether.init.ModStructures;
-import fuzs.puzzleslib.api.data.v2.AbstractAdvancementProvider;
-import fuzs.puzzleslib.api.data.v2.core.DataProviderContext;
+import fuzs.puzzleslib.common.api.data.v2.AbstractAdvancementProvider;
+import fuzs.puzzleslib.common.api.data.v2.core.DataProviderContext;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.criterion.*;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.equipment.trim.ArmorTrim;
 import net.minecraft.world.item.equipment.trim.TrimMaterials;
@@ -50,7 +51,7 @@ public class ModAdvancementProvider extends AbstractAdvancementProvider {
         HolderLookup.RegistryLookup<EntityType<?>> entityLookup = registries.lookupOrThrow(Registries.ENTITY_TYPE);
         HolderLookup.RegistryLookup<Structure> structureLookup = registries.lookupOrThrow(Registries.STRUCTURE);
         Advancement.Builder.advancement()
-                .display(display(new ItemStack(ModItems.CHISELED_WITHERED_BLACKSTONE),
+                .display(display(new ItemStackTemplate(ModItems.CHISELED_WITHERED_BLACKSTONE.value()),
                         ROOT_ADVANCEMENT.id(),
                         EternalNether.id("textures/block/soul_stone.png"),
                         AdvancementType.TASK,
@@ -74,28 +75,29 @@ public class ModAdvancementProvider extends AbstractAdvancementProvider {
                                 ModStructures.PIGLIN_MANOR_STRUCTURE))))
                 .save(writer, EXPLORE_STRUCTURES_ADVANCEMENT.name());
         Advancement.Builder.advancement()
-                .display(display(new ItemStack(ModItems.WITHERED_DEBRIS), CATACOMB_ADVANCEMENT.id()))
+                .display(display(new ItemStackTemplate(ModItems.WITHERED_DEBRIS.value()), CATACOMB_ADVANCEMENT.id()))
                 .parent(EXPLORE_STRUCTURES_ADVANCEMENT.asParent())
                 .addCriterion("in_catacomb",
                         PlayerTrigger.TriggerInstance.located(LocationPredicate.Builder.inStructure(structureLookup.getOrThrow(
                                 ModStructures.CATACOMB_STRUCTURE))))
                 .save(writer, CATACOMB_ADVANCEMENT.name());
         Advancement.Builder.advancement()
-                .display(display(new ItemStack(ModItems.CHISELED_WARPED_NETHER_BRICKS), CITADEL_ADVANCEMENT.id()))
+                .display(display(new ItemStackTemplate(ModItems.CHISELED_WARPED_NETHER_BRICKS.value()),
+                        CITADEL_ADVANCEMENT.id()))
                 .parent(EXPLORE_STRUCTURES_ADVANCEMENT.asParent())
                 .addCriterion("in_citadel",
                         PlayerTrigger.TriggerInstance.located(LocationPredicate.Builder.inStructure(structureLookup.getOrThrow(
                                 ModStructures.CITADEL_STRUCTURE))))
                 .save(writer, CITADEL_ADVANCEMENT.name());
         Advancement.Builder.advancement()
-                .display(display(new ItemStack(Items.CRIMSON_PLANKS), PIGLIN_MANOR_ADVANCEMENT.id()))
+                .display(display(new ItemStackTemplate(Items.CRIMSON_PLANKS), PIGLIN_MANOR_ADVANCEMENT.id()))
                 .parent(EXPLORE_STRUCTURES_ADVANCEMENT.asParent())
                 .addCriterion("in_piglin_manor",
                         PlayerTrigger.TriggerInstance.located(LocationPredicate.Builder.inStructure(structureLookup.getOrThrow(
                                 ModStructures.PIGLIN_MANOR_STRUCTURE))))
                 .save(writer, PIGLIN_MANOR_ADVANCEMENT.name());
         Advancement.Builder.advancement()
-                .display(display(new ItemStack(ModItems.NETHERITE_BELL),
+                .display(display(new ItemStackTemplate(ModItems.NETHERITE_BELL.value()),
                         RESCUE_PIGLIN_PRISONER_ADVANCEMENT.id(),
                         AdvancementType.CHALLENGE))
                 .parent(PIGLIN_MANOR_ADVANCEMENT.asParent())
@@ -105,7 +107,7 @@ public class ModAdvancementProvider extends AbstractAdvancementProvider {
                                 .of(entityLookup, ModEntityTypes.PIGLIN_PRISONER.value())))
                 .save(writer, RESCUE_PIGLIN_PRISONER_ADVANCEMENT.name());
         Advancement.Builder.advancement()
-                .display(display(new ItemStack(Items.SADDLE), RIDE_WITHER_SKELETON_HORSE_ADVANCEMENT.id()))
+                .display(display(new ItemStackTemplate(Items.SADDLE), RIDE_WITHER_SKELETON_HORSE_ADVANCEMENT.id()))
                 .parent(PIGLIN_MANOR_ADVANCEMENT.asParent())
                 .addCriterion("ride_wither_skeleton_horse",
                         StartRidingTrigger.TriggerInstance.playerStartsRiding(EntityPredicate.Builder.entity()
@@ -115,7 +117,7 @@ public class ModAdvancementProvider extends AbstractAdvancementProvider {
                                                 .of(entityLookup, EntityType.PLAYER)))))
                 .save(writer, RIDE_WITHER_SKELETON_HORSE_ADVANCEMENT.name());
         Advancement.Builder.advancement()
-                .display(display(new ItemStack(Items.ENDER_PEARL), SUMMON_ENDERMAN_ADVANCEMENT.id()))
+                .display(display(new ItemStackTemplate(Items.ENDER_PEARL), SUMMON_ENDERMAN_ADVANCEMENT.id()))
                 .parent(CITADEL_ADVANCEMENT.asParent())
                 .addCriterion("summon_enderman",
                         SummonedEntityTrigger.TriggerInstance.summonedEntity(EntityPredicate.Builder.entity()
@@ -123,11 +125,11 @@ public class ModAdvancementProvider extends AbstractAdvancementProvider {
                 .save(writer, SUMMON_ENDERMAN_ADVANCEMENT.name());
     }
 
-    private static ItemStack getNetheriteBootsDisplayItem(HolderLookup.Provider registries) {
-        ItemStack itemStack = new ItemStack(Items.NETHERITE_BOOTS);
-        itemStack.set(DataComponents.TRIM,
-                new ArmorTrim(registries.lookupOrThrow(Registries.TRIM_MATERIAL).getOrThrow(TrimMaterials.GOLD),
-                        registries.lookupOrThrow(Registries.TRIM_PATTERN).getOrThrow(TrimPatterns.SENTRY)));
-        return itemStack;
+    private static ItemStackTemplate getNetheriteBootsDisplayItem(HolderLookup.Provider registries) {
+        ArmorTrim armorTrim = new ArmorTrim(registries.lookupOrThrow(Registries.TRIM_MATERIAL)
+                .getOrThrow(TrimMaterials.GOLD),
+                registries.lookupOrThrow(Registries.TRIM_PATTERN).getOrThrow(TrimPatterns.SENTRY));
+        DataComponentPatch patch = DataComponentPatch.builder().set(DataComponents.TRIM, armorTrim).build();
+        return new ItemStackTemplate(Items.NETHERITE_BOOTS, patch);
     }
 }

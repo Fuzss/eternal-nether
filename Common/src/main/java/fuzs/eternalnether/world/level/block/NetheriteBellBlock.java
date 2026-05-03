@@ -3,7 +3,7 @@ package fuzs.eternalnether.world.level.block;
 import com.mojang.serialization.MapCodec;
 import fuzs.eternalnether.init.ModBlocks;
 import fuzs.eternalnether.world.level.block.entity.NetheriteBellBlockEntity;
-import fuzs.puzzleslib.api.block.v1.entity.TickingEntityBlock;
+import fuzs.puzzleslib.common.api.block.v1.entity.TickingEntityBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BellBlock;

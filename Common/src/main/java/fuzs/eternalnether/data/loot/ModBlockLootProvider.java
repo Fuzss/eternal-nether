@@ -1,8 +1,8 @@
 package fuzs.eternalnether.data.loot;
 
 import fuzs.eternalnether.init.ModBlocks;
-import fuzs.puzzleslib.api.data.v2.AbstractLootProvider;
-import fuzs.puzzleslib.api.data.v2.core.DataProviderContext;
+import fuzs.puzzleslib.common.api.data.v2.AbstractLootProvider;
+import fuzs.puzzleslib.common.api.data.v2.core.DataProviderContext;
 
 public class ModBlockLootProvider extends AbstractLootProvider.Blocks {
 

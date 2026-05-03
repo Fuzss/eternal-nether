@@ -72,7 +72,7 @@ public class PiglinHunter extends CrossbowAttackPiglin implements ShieldedMob {
         if (!this.isUsingShield()) {
             super.knockback(strength, x, z);
         } else {
-            this.playSound(SoundEvents.SHIELD_BLOCK.value(), 1.0F, 0.8F + this.level().random.nextFloat() * 0.4F);
+            this.playSound(SoundEvents.SHIELD_BLOCK.value(), 1.0F, 0.8F + this.level().getRandom().nextFloat() * 0.4F);
         }
     }
 

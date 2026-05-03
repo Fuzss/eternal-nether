@@ -1,6 +1,5 @@
 package fuzs.eternalnether.world.item;
 
-import fuzs.puzzleslib.api.util.v1.InteractionResultHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
@@ -31,7 +30,7 @@ public class WitheredBoneMealItem extends BoneMealItem {
                 level.levelEvent(LevelEvent.PARTICLES_AND_SOUND_PLANT_GROWTH, blockPos, 15);
             }
 
-            return InteractionResultHelper.sidedSuccess(level.isClientSide());
+            return InteractionResult.SUCCESS;
         } else {
             BlockState blockState = level.getBlockState(blockPos);
             if (blockState.isFaceSturdy(level, blockPos, context.getClickedFace())) {
@@ -41,7 +40,7 @@ public class WitheredBoneMealItem extends BoneMealItem {
                         level.levelEvent(LevelEvent.PARTICLES_AND_SOUND_PLANT_GROWTH, blockPos2, 15);
                     }
 
-                    return InteractionResultHelper.sidedSuccess(level.isClientSide());
+                    return InteractionResult.SUCCESS;
                 }
             }
 

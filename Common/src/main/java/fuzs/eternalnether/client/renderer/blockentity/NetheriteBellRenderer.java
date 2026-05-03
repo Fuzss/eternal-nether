@@ -1,31 +1,28 @@
 package fuzs.eternalnether.client.renderer.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import fuzs.eternalnether.EternalNether;
 import fuzs.eternalnether.client.model.geom.ModModelLayers;
 import net.minecraft.client.model.object.bell.BellModel;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BellRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.state.BellRenderState;
-import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.resources.model.MaterialSet;
+import net.minecraft.client.resources.model.sprite.SpriteGetter;
+import net.minecraft.client.resources.model.sprite.SpriteId;
 
 public class NetheriteBellRenderer extends BellRenderer {
-    public static final Material NETHERITE_BELL_MATERIAL = new Material(TextureAtlas.LOCATION_BLOCKS,
-            EternalNether.id("entity/bell/netherite_bell_body"));
+    public static final SpriteId NETHERITE_BELL_TEXTURE = Sheets.BLOCK_ENTITIES_MAPPER.defaultNamespaceApply(
+            "bell/netherite_bell_body");
 
-    private final MaterialSet materials;
+    private final SpriteGetter sprites;
     private final BellModel model;
 
     public NetheriteBellRenderer(BlockEntityRendererProvider.Context context) {
         super(context);
-        this.materials = context.materials();
+        this.sprites = context.sprites();
         this.model = new BellModel(context.bakeLayer(ModModelLayers.NETHERITE_BELL));
     }
 
@@ -33,20 +30,19 @@ public class NetheriteBellRenderer extends BellRenderer {
      * @see BellRenderer#submit(BellRenderState, PoseStack, SubmitNodeCollector, CameraRenderState)
      */
     @Override
-    public void submit(BellRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
-        // use custom model and material
-        BellModel.State state = new BellModel.State(renderState.ticks, renderState.shakeDirection);
-        this.model.setupAnim(state);
-        RenderType renderType = NETHERITE_BELL_MATERIAL.renderType(RenderTypes::entitySolid);
-        nodeCollector.submitModel(this.model,
-                state,
+    public void submit(BellRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
+        // Use our custom texture.
+        BellModel.State modelState = new BellModel.State(state.ticks, state.shakeDirection);
+        this.model.setupAnim(modelState);
+        submitNodeCollector.submitModel(this.model,
+                modelState,
                 poseStack,
-                renderType,
-                renderState.lightCoords,
+                state.lightCoords,
                 OverlayTexture.NO_OVERLAY,
                 -1,
-                this.materials.get(BELL_TEXTURE),
+                NETHERITE_BELL_TEXTURE,
+                this.sprites,
                 0,
-                renderState.breakProgress);
+                state.breakProgress);
     }
 }

@@ -45,13 +45,7 @@ public abstract class GoalBasedPiglin extends AbstractPiglin {
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(5,
-                new AvoidEntityGoal<>(this,
-                        Mob.class,
-                        8.0F,
-                        1.0,
-                        1.2,
-                        (LivingEntity livingEntity) -> PiglinAi.isZombified(livingEntity.getType())));
+        this.goalSelector.addGoal(5, new AvoidEntityGoal<>(this, Mob.class, 8.0F, 1.0, 1.2, PiglinAi::isZombified));
         this.goalSelector.addGoal(7, new RandomStrollGoal(this, 0.6));
         this.goalSelector.addGoal(9, new LookAtPlayerGoal(this, Player.class, 15.0F, 1.0F));
         this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));
@@ -61,10 +55,16 @@ public abstract class GoalBasedPiglin extends AbstractPiglin {
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, WitherBoss.class, true));
     }
 
-    @Override
-    protected Brain.Provider<?> brainProvider() {
-        return Brain.provider(MEMORY_TYPES, ImmutableList.of());
-    }
+    // TODO check if this is still necessary
+//    @Override
+//    protected Brain<? extends LivingEntity> makeBrain(Brain.Packed packedBrain) {
+//        return super.makeBrain(packedBrain);
+//    }
+//
+//    @Override
+//    protected Brain.Provider<?> brainProvider() {
+//        return Brain.provider(MEMORY_TYPES, ImmutableList.of());
+//    }
 
     @Override
     public boolean removeWhenFarAway(double distanceToClosestPlayer) {

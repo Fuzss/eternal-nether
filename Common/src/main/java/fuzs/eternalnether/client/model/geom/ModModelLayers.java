@@ -1,7 +1,7 @@
 package fuzs.eternalnether.client.model.geom;
 
 import fuzs.eternalnether.EternalNether;
-import fuzs.puzzleslib.api.client.init.v1.ModelLayerFactory;
+import fuzs.puzzleslib.common.api.client.init.v1.ModelLayerFactory;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.entity.ArmorModelSet;
 
@@ -43,8 +43,5 @@ public class ModModelLayers {
             "wither_skeleton_horse_baby");
     public static final ModelLayerLocation WITHER_SKELETON_HORSE_SADDLE = MODEL_LAYERS.registerModelLayer(
             "wither_skeleton_horse",
-            "saddle");
-    public static final ModelLayerLocation WITHER_SKELETON_HORSE_BABY_SADDLE = MODEL_LAYERS.registerModelLayer(
-            "wither_skeleton_horse_baby",
             "saddle");
 }

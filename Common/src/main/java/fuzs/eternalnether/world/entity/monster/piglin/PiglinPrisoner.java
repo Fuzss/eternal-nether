@@ -3,7 +3,7 @@ package fuzs.eternalnether.world.entity.monster.piglin;
 import fuzs.eternalnether.init.ModFeatures;
 import fuzs.eternalnether.init.ModItems;
 import fuzs.eternalnether.world.entity.ai.goal.FollowOwnerGoal;
-import fuzs.puzzleslib.api.util.v1.EntityHelper;
+import fuzs.puzzleslib.common.api.util.v1.EntityHelper;
 import net.minecraft.core.Holder;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
