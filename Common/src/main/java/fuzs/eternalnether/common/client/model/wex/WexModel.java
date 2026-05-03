@@ -1,4 +1,4 @@
-package fuzs.eternalnether.common.client.model;
+package fuzs.eternalnether.common.client.model.wex;
 
 import fuzs.eternalnether.common.client.renderer.entity.state.WexRenderState;
 import net.minecraft.client.model.HumanoidModel;
@@ -12,7 +12,7 @@ import net.minecraft.client.model.monster.skeleton.SkeletonModel;
 import net.minecraft.util.Mth;
 
 /**
- * Adapted from {@link net.minecraft.client.model.VexModel} from before Minecraft 1.19.3.
+ * Adapted from {@link net.minecraft.client.model.monster.vex.VexModel} from before Minecraft 1.19.3.
  */
 public class WexModel extends HumanoidModel<WexRenderState> {
     private final ModelPart leftWing;

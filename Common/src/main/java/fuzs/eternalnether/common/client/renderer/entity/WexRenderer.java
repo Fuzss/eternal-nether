@@ -1,7 +1,7 @@
 package fuzs.eternalnether.common.client.renderer.entity;
 
 import fuzs.eternalnether.common.EternalNether;
-import fuzs.eternalnether.common.client.model.WexModel;
+import fuzs.eternalnether.common.client.model.wex.WexModel;
 import fuzs.eternalnether.common.client.model.geom.ModModelLayers;
 import fuzs.eternalnether.common.client.renderer.entity.state.WexRenderState;
 import fuzs.eternalnether.common.world.entity.monster.Wex;

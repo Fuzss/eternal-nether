@@ -35,7 +35,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class PiglinPrisoner extends GoalBasedPiglin implements OwnableEntity {
+public class PiglinPrisoner extends AgeablePiglin implements OwnableEntity {
     private static final EntityDataAccessor<Optional<EntityReference<LivingEntity>>> DATA_OWNERUUID_ID = SynchedEntityData.defineId(
             PiglinPrisoner.class,
             EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE);

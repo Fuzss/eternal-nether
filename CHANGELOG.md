@@ -10,3 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Update to Minecraft 26.1.x
+- Baby piglin hunters now spawn with proper hunting equipment like their adult counterpart
+- Improve wither skeleton horse path-finding around and in lava
+
+### Fixed
+
+- Fix piglin-based mobs being unable to spawn as babies
+- Fix wither skeleton horses missing an inventory slot for equipping a saddle

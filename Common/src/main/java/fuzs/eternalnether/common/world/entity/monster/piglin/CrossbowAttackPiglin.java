@@ -13,6 +13,7 @@ import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RangedCrossbowAttackGoal;
 import net.minecraft.world.entity.monster.CrossbowAttackMob;
 import net.minecraft.world.entity.monster.piglin.AbstractPiglin;
+import net.minecraft.world.entity.monster.piglin.Piglin;
 import net.minecraft.world.entity.monster.piglin.PiglinArmPose;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.Item;
@@ -22,7 +23,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.jspecify.annotations.Nullable;
 
-public abstract class CrossbowAttackPiglin extends GoalBasedPiglin implements CrossbowAttackMob {
+/**
+ * Implements weapon related components from {@link Piglin}.
+ * <p>
+ * Note that equipment is added to both adults and babies.
+ */
+public abstract class CrossbowAttackPiglin extends AgeablePiglin implements CrossbowAttackMob {
     private static final EntityDataAccessor<Boolean> DATA_IS_CHARGING_CROSSBOW = SynchedEntityData.defineId(
             CrossbowAttackPiglin.class,
             EntityDataSerializers.BOOLEAN);
@@ -69,23 +75,22 @@ public abstract class CrossbowAttackPiglin extends GoalBasedPiglin implements Cr
     @Nullable
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason spawnReason, @Nullable SpawnGroupData spawnGroupData) {
-        if (spawnReason != EntitySpawnReason.STRUCTURE && this.isAdult()) {
+        spawnGroupData = super.finalizeSpawn(level, difficulty, spawnReason, spawnGroupData);
+        if (spawnReason != EntitySpawnReason.STRUCTURE) {
             this.setItemSlot(EquipmentSlot.MAINHAND, this.createSpawnWeapon());
         }
 
         this.populateDefaultEquipmentSlots(level.getRandom(), difficulty);
         this.populateDefaultEquipmentEnchantments(level, level.getRandom(), difficulty);
-        return super.finalizeSpawn(level, difficulty, spawnReason, spawnGroupData);
+        return spawnGroupData;
     }
 
     @Override
     protected void populateDefaultEquipmentSlots(RandomSource random, DifficultyInstance difficulty) {
-        if (this.isAdult()) {
-            this.maybeWearArmor(EquipmentSlot.HEAD, new ItemStack(Items.GOLDEN_HELMET), random);
-            this.maybeWearArmor(EquipmentSlot.CHEST, new ItemStack(Items.GOLDEN_CHESTPLATE), random);
-            this.maybeWearArmor(EquipmentSlot.LEGS, new ItemStack(Items.GOLDEN_LEGGINGS), random);
-            this.maybeWearArmor(EquipmentSlot.FEET, new ItemStack(Items.GOLDEN_BOOTS), random);
-        }
+        this.maybeWearArmor(EquipmentSlot.HEAD, new ItemStack(Items.GOLDEN_HELMET), random);
+        this.maybeWearArmor(EquipmentSlot.CHEST, new ItemStack(Items.GOLDEN_CHESTPLATE), random);
+        this.maybeWearArmor(EquipmentSlot.LEGS, new ItemStack(Items.GOLDEN_LEGGINGS), random);
+        this.maybeWearArmor(EquipmentSlot.FEET, new ItemStack(Items.GOLDEN_BOOTS), random);
     }
 
     private void maybeWearArmor(EquipmentSlot slot, ItemStack stack, RandomSource random) {

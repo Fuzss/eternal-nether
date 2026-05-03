@@ -30,3 +30,9 @@ accessible  field   net/minecraft/world/level/levelgen/structure/structures/Jigs
 accessible  field   net/minecraft/world/level/levelgen/structure/structures/JigsawStructure poolAliases Ljava/util/List;
 accessible  field   net/minecraft/world/level/levelgen/structure/structures/JigsawStructure dimensionPadding    Lnet/minecraft/world/level/levelgen/structure/pools/DimensionPadding;
 accessible  field   net/minecraft/world/level/levelgen/structure/structures/JigsawStructure liquidSettings  Lnet/minecraft/world/level/levelgen/structure/templatesystem/LiquidSettings;
+extendable  method  net/minecraft/client/renderer/entity/layers/ItemInHandLayer useBabyOffset   (Lnet/minecraft/client/renderer/entity/state/ArmedEntityRenderState;)Z
+accessible  field   net/minecraft/client/renderer/entity/layers/HumanoidArmorLayer  equipmentRenderer   Lnet/minecraft/client/renderer/entity/layers/EquipmentLayerRenderer;
+accessible  method  net/minecraft/client/renderer/entity/layers/HumanoidArmorLayer  shouldRender    (Lnet/minecraft/world/item/equipment/Equippable;Lnet/minecraft/world/entity/EquipmentSlot;)Z
+extendable  method  net/minecraft/client/renderer/entity/layers/HumanoidArmorLayer  renderArmorPiece    (Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/EquipmentSlot;ILnet/minecraft/client/renderer/entity/state/HumanoidRenderState;)V
+accessible  method  net/minecraft/client/renderer/entity/layers/HumanoidArmorLayer  getArmorModel   (Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;Lnet/minecraft/world/entity/EquipmentSlot;)Lnet/minecraft/client/model/HumanoidModel;
+accessible  method  net/minecraft/client/renderer/entity/layers/HumanoidArmorLayer  usesInnerModel  (Lnet/minecraft/world/entity/EquipmentSlot;)Z

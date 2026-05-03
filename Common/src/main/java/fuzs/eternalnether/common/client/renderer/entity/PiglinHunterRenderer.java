@@ -6,7 +6,6 @@ import fuzs.eternalnether.common.client.renderer.entity.layers.HoglinSkullLayer;
 import fuzs.eternalnether.common.world.entity.monster.ShieldedMob;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.PiglinRenderer;
 import net.minecraft.client.renderer.entity.state.PiglinRenderState;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
@@ -14,7 +13,7 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.monster.piglin.AbstractPiglin;
 import net.minecraft.world.item.ItemStack;
 
-public class PiglinHunterRenderer extends PiglinRenderer {
+public class PiglinHunterRenderer extends AbstractPiglinRenderer {
     private static final Identifier TEXTURE_LOCATION = EternalNether.id("textures/entity/piglin/piglin_hunter.png");
 
     public PiglinHunterRenderer(EntityRendererProvider.Context context) {
@@ -27,7 +26,7 @@ public class PiglinHunterRenderer extends PiglinRenderer {
     }
 
     @Override
-    public Identifier getTextureLocation(PiglinRenderState renderState) {
+    public Identifier getTextureLocation(PiglinRenderState state) {
         return TEXTURE_LOCATION;
     }
 

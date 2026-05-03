@@ -5,7 +5,7 @@ import fuzs.eternalnether.common.init.ModFeatures;
 import fuzs.eternalnether.common.init.ModRegistry;
 import fuzs.eternalnether.common.world.entity.animal.horse.WitherSkeletonHorse;
 import fuzs.eternalnether.common.world.entity.monster.*;
-import fuzs.eternalnether.common.world.entity.monster.piglin.GoalBasedPiglin;
+import fuzs.eternalnether.common.world.entity.monster.piglin.AgeablePiglin;
 import fuzs.eternalnether.common.world.entity.monster.piglin.PiglinPrisoner;
 import fuzs.eternalnether.common.world.entity.monster.skeleton.Corpor;
 import fuzs.eternalnether.common.world.entity.monster.skeleton.WitherSkeletonKnight;
@@ -81,11 +81,11 @@ public class EternalNether implements ModConstructor {
         context.registerSpawnPlacement(ModEntityTypes.PIGLIN_PRISONER.value(),
                 SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                GoalBasedPiglin::checkPiglinSpawnRules);
+                AgeablePiglin::checkPiglinSpawnRules);
         context.registerSpawnPlacement(ModEntityTypes.PIGLIN_HUNTER.value(),
                 SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                GoalBasedPiglin::checkPiglinSpawnRules);
+                AgeablePiglin::checkPiglinSpawnRules);
         context.registerSpawnPlacement(ModEntityTypes.WEX.value(),
                 SpawnPlacementTypes.NO_RESTRICTIONS,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,

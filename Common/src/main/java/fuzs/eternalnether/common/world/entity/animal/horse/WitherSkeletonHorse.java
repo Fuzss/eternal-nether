@@ -5,7 +5,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -25,15 +24,22 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.Nullable;
 
 public class WitherSkeletonHorse extends SkeletonHorse {
-
     /**
-     * @see Strider#Strider(EntityType, Level)
+     * Copied from {@code SkeletonHorse#BABY_DIMENSIONS} from Minecraft 1.21.11.
+     *
+     * @see SkeletonHorse#BABY_DIMENSIONS
      */
+    private static final EntityDimensions BABY_DIMENSIONS = ModEntityTypes.WITHER_SKELETON_HORSE.value()
+            .getDimensions()
+            .withAttachments(EntityAttachments.builder()
+                    .attach(EntityAttachment.PASSENGER,
+                            0.0F,
+                            ModEntityTypes.WITHER_SKELETON_HORSE.value().getHeight() - 0.03125F,
+                            0.0F))
+            .scale(0.5F);
+
     public WitherSkeletonHorse(EntityType<? extends SkeletonHorse> entityType, Level level) {
         super(entityType, level);
-        this.setPathfindingMalus(PathType.LAVA, 0.0F);
-        this.setPathfindingMalus(PathType.FIRE_IN_NEIGHBOR, 0.0F);
-        this.setPathfindingMalus(PathType.FIRE, 0.0F);
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -41,31 +47,8 @@ public class WitherSkeletonHorse extends SkeletonHorse {
     }
 
     @Override
-    protected void randomizeAttributes(RandomSource random) {
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(35.0);
-        this.getAttribute(Attributes.JUMP_STRENGTH).setBaseValue(1.0);
-        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.35);
-    }
-
-    @Override
     public EntityDimensions getDefaultDimensions(Pose pose) {
-        return this.isBaby() ? createBabyDimensions() : super.getDefaultDimensions(pose);
-    }
-
-    /**
-     * Copied from {@code SkeletonHorse#BABY_DIMENSIONS} from Minecraft 1.21.11.
-     *
-     * @see SkeletonHorse#BABY_DIMENSIONS
-     */
-    private static EntityDimensions createBabyDimensions() {
-        return ModEntityTypes.WITHER_SKELETON_HORSE.value()
-                .getDimensions()
-                .withAttachments(EntityAttachments.builder()
-                        .attach(EntityAttachment.PASSENGER,
-                                0.0F,
-                                ModEntityTypes.WITHER_SKELETON_HORSE.value().getHeight() - 0.03125F,
-                                0.0F))
-                .scale(0.5F);
+        return this.isBaby() ? BABY_DIMENSIONS : super.getDefaultDimensions(pose);
     }
 
     @Override
