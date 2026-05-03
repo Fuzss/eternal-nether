@@ -1,3 +1,7 @@
-// 1.21.11	2025-12-19T23:53:55.260572	Tags for minecraft:entity_type mod id vanilla
+// 26.1.2	2026-05-03T20:04:51.495063	Tags for minecraft:entity_type mod id vanilla
 8f52fb848bac4e5993f2ba514dc235f9f61fb53b data/enderzoology/tags/entity_type/concussion_immune.json
+59ad409a6a4df8837ad24daa4d0ca6c994c0aa3d data/minecraft/tags/entity_type/burn_in_daylight.json
+ae05ab6e6c26a74e6ded116fafec71dcf0517bd6 data/minecraft/tags/entity_type/can_equip_saddle.json
+ae05ab6e6c26a74e6ded116fafec71dcf0517bd6 data/minecraft/tags/entity_type/cannot_be_age_locked.json
+ae05ab6e6c26a74e6ded116fafec71dcf0517bd6 data/minecraft/tags/entity_type/followable_friendly_mobs.json
 e04e6f2d44aedb179fe931f2d15c6b2a7827b6f6 data/minecraft/tags/entity_type/skeletons.json

@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "eternalnether:withered_blackstone",
+  "result": {
+    "id": "eternalnether:chiseled_withered_blackstone"
+  }
+}

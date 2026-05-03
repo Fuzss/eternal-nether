@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "eternalnether:warped_nether_bricks",
+  "result": {
+    "id": "eternalnether:chiseled_warped_nether_bricks"
+  }
+}

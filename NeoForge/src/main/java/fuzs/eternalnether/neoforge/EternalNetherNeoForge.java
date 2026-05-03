@@ -1,14 +1,14 @@
 package fuzs.eternalnether.neoforge;
 
-import fuzs.eternalnether.EternalNether;
-import fuzs.eternalnether.data.ModAdvancementProvider;
-import fuzs.eternalnether.data.ModRecipeProvider;
-import fuzs.eternalnether.data.loot.ModBlockLootProvider;
-import fuzs.eternalnether.data.loot.ModChestLootProvider;
-import fuzs.eternalnether.data.loot.ModEntityTypeLootProvider;
-import fuzs.eternalnether.data.loot.ModShearingLootProvider;
-import fuzs.eternalnether.data.tags.*;
-import fuzs.eternalnether.init.ModRegistry;
+import fuzs.eternalnether.common.EternalNether;
+import fuzs.eternalnether.common.data.ModAdvancementProvider;
+import fuzs.eternalnether.common.data.ModRecipeProvider;
+import fuzs.eternalnether.common.data.loot.ModBlockLootProvider;
+import fuzs.eternalnether.common.data.loot.ModChestLootProvider;
+import fuzs.eternalnether.common.data.loot.ModEntityTypeLootProvider;
+import fuzs.eternalnether.common.data.loot.ModShearingLootProvider;
+import fuzs.eternalnether.common.data.tags.*;
+import fuzs.eternalnether.common.init.ModRegistry;
 import fuzs.puzzleslib.common.api.core.v1.ModConstructor;
 import fuzs.puzzleslib.neoforge.api.data.v2.core.DataProviderHelper;
 import net.neoforged.fml.common.Mod;

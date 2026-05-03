@@ -21,7 +21,6 @@
       "translate": "advancements.eternalnether.summon_enderman.description"
     },
     "icon": {
-      "count": 1,
       "id": "minecraft:ender_pearl"
     },
     "title": {

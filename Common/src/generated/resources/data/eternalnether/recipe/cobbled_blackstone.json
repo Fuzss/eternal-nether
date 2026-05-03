@@ -5,7 +5,6 @@
   "experience": 0.1,
   "ingredient": "minecraft:blackstone",
   "result": {
-    "count": 1,
     "id": "eternalnether:cobbled_blackstone"
   }
 }

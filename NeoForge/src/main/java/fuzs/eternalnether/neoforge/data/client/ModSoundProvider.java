@@ -1,7 +1,7 @@
 package fuzs.eternalnether.neoforge.data.client;
 
-import fuzs.eternalnether.EternalNether;
-import fuzs.eternalnether.init.ModSoundEvents;
+import fuzs.eternalnether.common.EternalNether;
+import fuzs.eternalnether.common.init.ModSoundEvents;
 import fuzs.puzzleslib.common.api.data.v2.core.DataProviderContext;
 import fuzs.puzzleslib.neoforge.api.client.data.v2.AbstractSoundProvider;
 

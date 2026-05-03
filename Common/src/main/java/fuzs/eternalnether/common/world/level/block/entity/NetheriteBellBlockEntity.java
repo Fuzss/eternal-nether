@@ -1,0 +1,110 @@
+package fuzs.eternalnether.common.world.level.block.entity;
+
+import fuzs.eternalnether.common.init.ModBlocks;
+import fuzs.eternalnether.common.init.ModEntityTypes;
+import fuzs.eternalnether.common.world.entity.monster.piglin.PiglinPrisoner;
+import fuzs.puzzleslib.common.api.block.v1.entity.TickingBlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BellBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.List;
+
+/**
+ * The implementation omits the client-side particles, which are not very impactful.
+ */
+public class NetheriteBellBlockEntity extends BellBlockEntity implements TickingBlockEntity {
+
+    public NetheriteBellBlockEntity(BlockPos blockPos, BlockState blockState) {
+        super(blockPos, blockState);
+    }
+
+    @Override
+    public BlockEntityType<?> getType() {
+        return ModBlocks.NETHERITE_BELL_BLOCK_ENTITY_TYPE.value();
+    }
+
+    @Override
+    public void clientTick(Level level, BlockPos blockPos, BlockState blockState) {
+        this.tick(level, blockPos);
+    }
+
+    @Override
+    public void serverTick(ServerLevel serverLevel, BlockPos blockPos, BlockState blockState) {
+        if (this.tick(serverLevel, blockPos)) {
+            this.nearbyEntities.stream().filter(this::isPiglinPrisonerWithinRange).forEach(this::rescue);
+        }
+    }
+
+    /**
+     * @see BellBlockEntity#tick(Level, BlockPos, BlockState, BellBlockEntity, ResonationEndAction)
+     */
+    private boolean tick(Level level, BlockPos blockPos) {
+        if (this.shaking) {
+            ++this.ticks;
+        }
+        if (this.ticks >= DURATION) {
+            this.shaking = false;
+            this.ticks = 0;
+        }
+        if (this.ticks >= TICKS_BEFORE_RESONATION && this.resonationTicks == 0
+                && this.arePiglinPrisonersNearby(blockPos, this.nearbyEntities)) {
+            this.resonating = true;
+            level.playSound(null, blockPos, SoundEvents.BELL_RESONATE, SoundSource.BLOCKS, 1.5F, 0.8F);
+        }
+        if (this.resonating) {
+            if (this.resonationTicks < MAX_RESONATION_TICKS) {
+                ++this.resonationTicks;
+            } else {
+                this.resonating = false;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @see BellBlockEntity#areRaidersNearby(BlockPos, List)
+     */
+    protected boolean arePiglinPrisonersNearby(BlockPos blockPos, List<LivingEntity> livingEntities) {
+        for (LivingEntity livingEntity : livingEntities) {
+            if (livingEntity.isAlive() && !livingEntity.isRemoved()
+                    && blockPos.closerToCenterThan(livingEntity.position(), HEAR_BELL_RADIUS)
+                    && this.isRescuedPiglinPrisoner(livingEntity)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @see BellBlockEntity#isRaiderWithinRange(BlockPos, LivingEntity)
+     */
+    protected boolean isPiglinPrisonerWithinRange(LivingEntity livingEntity) {
+        return livingEntity.isAlive() && !livingEntity.isRemoved() && this.getBlockPos()
+                .closerToCenterThan(livingEntity.position(), SEARCH_RADIUS)
+                && this.isRescuedPiglinPrisoner(livingEntity);
+    }
+
+    private boolean isRescuedPiglinPrisoner(LivingEntity livingEntity) {
+        return livingEntity.getType() == ModEntityTypes.PIGLIN_PRISONER.value()
+                && ((PiglinPrisoner) livingEntity).getOwner() != null;
+    }
+
+    /**
+     * @see BellBlockEntity#glow(LivingEntity)
+     */
+    protected void rescue(LivingEntity livingEntity) {
+        livingEntity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 300));
+        ((PiglinPrisoner) livingEntity).isBeingRescued();
+    }
+}
