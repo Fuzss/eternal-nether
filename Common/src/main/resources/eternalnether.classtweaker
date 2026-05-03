@@ -1,4 +1,4 @@
-accessWidener   v2  named
+classTweaker    v2  official
 accessible  method  net/minecraft/world/entity/monster/piglin/PiglinBruteAi setAngerTarget  (Lnet/minecraft/world/entity/monster/piglin/PiglinBrute;Lnet/minecraft/world/entity/LivingEntity;)V
 accessible  field   net/minecraft/world/level/levelgen/feature/BasaltColumnsFeature CANNOT_PLACE_ON Lcom/google/common/collect/ImmutableList;
 mutable field   net/minecraft/world/level/levelgen/feature/BasaltColumnsFeature CANNOT_PLACE_ON Lcom/google/common/collect/ImmutableList;
