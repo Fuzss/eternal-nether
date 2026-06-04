@@ -1,6 +1,7 @@
 package fuzs.eternalnether.common.client.renderer.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import fuzs.eternalnether.common.EternalNether;
 import fuzs.eternalnether.common.client.model.geom.ModModelLayers;
 import net.minecraft.client.model.object.bell.BellModel;
 import net.minecraft.client.renderer.Sheets;
@@ -14,8 +15,8 @@ import net.minecraft.client.resources.model.sprite.SpriteGetter;
 import net.minecraft.client.resources.model.sprite.SpriteId;
 
 public class NetheriteBellRenderer extends BellRenderer {
-    public static final SpriteId NETHERITE_BELL_TEXTURE = Sheets.BLOCK_ENTITIES_MAPPER.defaultNamespaceApply(
-            "bell/netherite_bell_body");
+    public static final SpriteId NETHERITE_BELL_TEXTURE = Sheets.BLOCK_ENTITIES_MAPPER.apply(EternalNether.id(
+            "bell/netherite_bell_body"));
 
     private final SpriteGetter sprites;
     private final BellModel model;

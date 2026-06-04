@@ -2,7 +2,7 @@
   "sources": [
     {
       "type": "minecraft:single",
-      "resource": "minecraft:entity/bell/netherite_bell_body"
+      "resource": "eternalnether:entity/bell/netherite_bell_body"
     }
   ]
 }
