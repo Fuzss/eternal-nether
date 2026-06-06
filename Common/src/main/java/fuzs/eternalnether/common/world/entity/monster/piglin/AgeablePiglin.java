@@ -5,18 +5,21 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.monster.piglin.AbstractPiglin;
 import net.minecraft.world.entity.monster.piglin.Piglin;
@@ -33,12 +36,22 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.Nullable;
 
+import java.util.List;
+
 /**
  * A {@link Goal} based implementation of {@link AbstractPiglin}.
  * <p>
  * Additionally implements baby components from {@link Piglin}.
  */
 public abstract class AgeablePiglin extends AbstractPiglin {
+    /**
+     * These must be present for {@link AbstractPiglin}.
+     *
+     * @see Piglin#hurtServer(ServerLevel, DamageSource, float)
+     */
+    private static final Brain.Provider<AgeablePiglin> BRAIN_PROVIDER = Brain.provider(List.of(MemoryModuleType.ANGRY_AT),
+            List.of(),
+            (AgeablePiglin piglin) -> List.of());
     /**
      * @see Piglin#DATA_BABY_ID
      */
@@ -101,6 +114,16 @@ public abstract class AgeablePiglin extends AbstractPiglin {
         if (DATA_BABY_ID.equals(accessor)) {
             this.refreshDimensions();
         }
+    }
+
+    @Override
+    protected Brain<? extends AgeablePiglin> makeBrain(Brain.Packed packedBrain) {
+        return BRAIN_PROVIDER.makeBrain(this, packedBrain);
+    }
+
+    @Override
+    public Brain<? extends AgeablePiglin> getBrain() {
+        return (Brain<? extends AgeablePiglin>) super.getBrain();
     }
 
     @Override
