@@ -53,9 +53,9 @@ public class ModAdvancementProvider extends AbstractAdvancementProvider {
         Advancement.Builder.advancement()
                 .display(display(new ItemStackTemplate(ModItems.CHISELED_WITHERED_BLACKSTONE.value()),
                         ROOT_ADVANCEMENT.id(),
-                        EternalNether.id("textures/block/soul_stone.png"),
+                        EternalNether.id("block/soul_stone"),
                         AdvancementType.TASK,
-                        true))
+                        false))
                 .addCriterion("entered_nether", ChangeDimensionTrigger.TriggerInstance.changedDimensionTo(Level.NETHER))
                 .save(writer, ROOT_ADVANCEMENT.name());
         Advancement.Builder.advancement()

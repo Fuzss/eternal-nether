@@ -8,11 +8,10 @@
     }
   },
   "display": {
-    "background": "eternalnether:textures/block/soul_stone.png",
+    "background": "eternalnether:block/soul_stone",
     "description": {
       "translate": "advancements.eternalnether.root.description"
     },
-    "hidden": true,
     "icon": {
       "id": "eternalnether:chiseled_withered_blackstone"
     },
