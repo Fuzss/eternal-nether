@@ -2,15 +2,18 @@ package fuzs.eternalnether.common;
 
 import fuzs.eternalnether.common.init.ModEntityTypes;
 import fuzs.eternalnether.common.init.ModFeatures;
+import fuzs.eternalnether.common.init.ModItems;
 import fuzs.eternalnether.common.init.ModRegistry;
 import fuzs.eternalnether.common.world.entity.animal.horse.WitherSkeletonHorse;
-import fuzs.eternalnether.common.world.entity.monster.*;
+import fuzs.eternalnether.common.world.entity.monster.WarpedEnderman;
+import fuzs.eternalnether.common.world.entity.monster.Wex;
 import fuzs.eternalnether.common.world.entity.monster.piglin.AgeablePiglin;
 import fuzs.eternalnether.common.world.entity.monster.piglin.PiglinPrisoner;
 import fuzs.eternalnether.common.world.entity.monster.skeleton.Corpor;
 import fuzs.eternalnether.common.world.entity.monster.skeleton.WitherSkeletonKnight;
 import fuzs.eternalnether.common.world.entity.monster.skeleton.Wraither;
 import fuzs.eternalnether.common.world.entity.projectile.ThrownWarpedEnderpearl;
+import fuzs.eternalnether.common.world.item.WitheredBoneMealItem;
 import fuzs.puzzleslib.common.api.biome.v1.BiomeLoadingContext;
 import fuzs.puzzleslib.common.api.biome.v1.BiomeLoadingPhase;
 import fuzs.puzzleslib.common.api.biome.v1.BiomeModificationContext;
@@ -19,12 +22,18 @@ import fuzs.puzzleslib.common.api.core.v1.context.BiomeModificationsContext;
 import fuzs.puzzleslib.common.api.core.v1.context.EntityAttributesContext;
 import fuzs.puzzleslib.common.api.core.v1.context.SpawnPlacementsContext;
 import fuzs.puzzleslib.common.api.event.v1.entity.EnderPearlTeleportCallback;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.dispenser.BlockSource;
+import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.entity.animal.equine.SkeletonHorse;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.piglin.PiglinBrute;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.Heightmap;
 import org.slf4j.Logger;
@@ -49,6 +58,25 @@ public class EternalNether implements ModConstructor {
     public void onCommonSetup() {
         ModFeatures.setBasaltFeatureRestrictions();
         ModEntityTypes.setPiglinBruteSensorsAndMemories();
+        DispenserBlock.registerBehavior(ModItems.WITHERED_BONE_MEAL.value(), new OptionalDispenseItemBehavior() {
+            @Override
+            protected ItemStack execute(BlockSource source, ItemStack dispensed) {
+                this.setSuccess(true);
+                Level level = source.level();
+                BlockPos target = source.pos().relative(source.state().getValue(DispenserBlock.FACING));
+                if (!WitheredBoneMealItem.growCrop(dispensed, level, target) && !WitheredBoneMealItem.growWaterPlant(
+                        dispensed,
+                        level,
+                        target,
+                        null)) {
+                    this.setSuccess(false);
+                } else if (!level.isClientSide()) {
+                    level.levelEvent(1505, target, 15);
+                }
+
+                return dispensed;
+            }
+        });
     }
 
     @Override

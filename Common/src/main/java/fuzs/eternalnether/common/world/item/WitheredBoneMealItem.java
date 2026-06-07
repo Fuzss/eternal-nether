@@ -22,22 +22,22 @@ public class WitheredBoneMealItem extends BoneMealItem {
     @Override
     public InteractionResult useOn(UseOnContext context) {
         Level level = context.getLevel();
-        BlockPos blockPos = context.getClickedPos();
-        BlockPos blockPos2 = blockPos.relative(context.getClickedFace());
-        if (growCrop(context.getItemInHand(), level, blockPos)) {
+        BlockPos clickedPos = context.getClickedPos();
+        BlockPos growthPos = clickedPos.relative(context.getClickedFace());
+        if (growCrop(context.getItemInHand(), level, clickedPos)) {
             if (!level.isClientSide()) {
                 context.getPlayer().gameEvent(GameEvent.ITEM_INTERACT_FINISH);
-                level.levelEvent(LevelEvent.PARTICLES_AND_SOUND_PLANT_GROWTH, blockPos, 15);
+                level.levelEvent(LevelEvent.PARTICLES_AND_SOUND_PLANT_GROWTH, clickedPos, 15);
             }
 
             return InteractionResult.SUCCESS;
         } else {
-            BlockState blockState = level.getBlockState(blockPos);
-            if (blockState.isFaceSturdy(level, blockPos, context.getClickedFace())) {
-                if (growWaterPlant(context.getItemInHand(), level, blockPos2, context.getClickedFace())) {
+            BlockState blockState = level.getBlockState(clickedPos);
+            if (blockState.isFaceSturdy(level, clickedPos, context.getClickedFace())) {
+                if (growWaterPlant(context.getItemInHand(), level, growthPos, context.getClickedFace())) {
                     if (!level.isClientSide()) {
                         context.getPlayer().gameEvent(GameEvent.ITEM_INTERACT_FINISH);
-                        level.levelEvent(LevelEvent.PARTICLES_AND_SOUND_PLANT_GROWTH, blockPos2, 15);
+                        level.levelEvent(LevelEvent.PARTICLES_AND_SOUND_PLANT_GROWTH, growthPos, 15);
                     }
 
                     return InteractionResult.SUCCESS;
@@ -49,26 +49,28 @@ public class WitheredBoneMealItem extends BoneMealItem {
     }
 
     public static boolean growCrop(ItemStack itemStack, Level level, BlockPos blockPos) {
-        boolean wasPlantGrown = false;
+        boolean isSuccess = false;
         for (int i = 0; i < GROWTH_BONUS_COUNT; i++) {
             if (BoneMealItem.growCrop(itemStack, level, blockPos)) {
-                wasPlantGrown = true;
+                isSuccess = true;
             } else {
-                return wasPlantGrown;
+                return isSuccess;
             }
         }
-        return wasPlantGrown;
+
+        return true;
     }
 
     public static boolean growWaterPlant(ItemStack itemStack, Level level, BlockPos blockPos, @Nullable Direction direction) {
-        boolean wasPlantGrown = false;
+        boolean isSuccess = false;
         for (int i = 0; i < GROWTH_BONUS_COUNT; i++) {
             if (BoneMealItem.growWaterPlant(itemStack, level, blockPos, direction)) {
-                wasPlantGrown = true;
+                isSuccess = true;
             } else {
-                return wasPlantGrown;
+                return isSuccess;
             }
         }
-        return wasPlantGrown;
+
+        return true;
     }
 }

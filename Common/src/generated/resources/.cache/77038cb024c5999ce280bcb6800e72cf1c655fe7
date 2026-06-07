@@ -1,4 +1,4 @@
-// 26.1.2	2026-05-03T18:26:22.36602	Model Definitions
+// 26.1.2	2026-06-07T09:11:09.909919	Model Definitions
 55def79dcb5388b7db72d9b85563e625fda99a46 assets/eternalnether/blockstates/chiseled_warped_nether_bricks.json
 704cf36657794ad727a5598fe6864d385d63b3e1 assets/eternalnether/blockstates/chiseled_withered_blackstone.json
 1b6d9cd5d69999152e521fcd615abcc95daf4ef5 assets/eternalnether/blockstates/cobbled_blackstone.json
@@ -30,7 +30,7 @@ d3f84e062cc45bf4ca1e28053fc1b78552585d92 assets/eternalnether/items/corpor_spawn
 5df60a2b3c8ca378dc3773da934d6b2b37f422bd assets/eternalnether/items/cracked_withered_blackstone_stairs.json
 81fead61954b97c49906d52bed4b1cdc93db06e1 assets/eternalnether/items/cracked_withered_blackstone_wall.json
 0e81f360249dbea4c9c5531e2b278a7eedf45bf2 assets/eternalnether/items/cutlass.json
-d9e9b3c8605edab7747d4042e3c18c59a3305d0a assets/eternalnether/items/gilded_netherite_shield.json
+41a8690df4c86834197adeb6df3b13fa6087b14c assets/eternalnether/items/gilded_netherite_shield.json
 544e8536b6f6fa1eed27d309fd60d6b318adbbce assets/eternalnether/items/netherite_bell.json
 db4a5721c185c0ec778b786e094c728dfa5a593c assets/eternalnether/items/piglin_hunter_spawn_egg.json
 b6d75ae8a3812c83b62af76df27543943944de64 assets/eternalnether/items/piglin_prisoner_spawn_egg.json

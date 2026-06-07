@@ -5,8 +5,10 @@ import fuzs.eternalnether.common.EternalNether;
 import fuzs.eternalnether.common.data.ModAdvancementProvider;
 import fuzs.eternalnether.common.init.*;
 import fuzs.puzzleslib.common.api.client.data.v2.AbstractLanguageProvider;
+import fuzs.puzzleslib.common.api.core.v1.ModContainer;
 import fuzs.puzzleslib.common.api.data.v2.core.DataProviderContext;
 import net.minecraft.data.BlockFamily;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
 
 import java.util.Map;
@@ -76,6 +78,12 @@ public class ModLanguageProvider extends AbstractLanguageProvider {
         builder.add(ModItems.WITHERED_BONE.value(), "Withered Bone");
         builder.add(ModItems.WITHERED_BONE_MEAL.value(), "Withered Bone Meal");
         builder.add(ModItems.GILDED_NETHERITE_SHIELD.value(), "Gilded Netherite Shield");
+        for (DyeColor dyeColor : DyeColor.values()) {
+            builder.add(ModItems.GILDED_NETHERITE_SHIELD.value(),
+                    dyeColor.getName(),
+                    ModContainer.getCapitalizedString(dyeColor.getName()) + " Gilded Netherite Shield");
+        }
+
         builder.add(ModItems.CUTLASS.value(), "Cutlass");
 
         builder.add(ModEntityTypes.WEX.value(), "Wex");

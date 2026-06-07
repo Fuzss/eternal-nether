@@ -6,13 +6,14 @@ import fuzs.eternalnether.common.init.ModItems;
 import fuzs.puzzleslib.common.api.data.v2.AbstractRecipeProvider;
 import fuzs.puzzleslib.common.api.data.v2.core.DataProviderContext;
 import net.minecraft.data.BlockFamily;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.data.recipes.*;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.ShieldDecorationRecipe;
 import net.minecraft.world.level.block.Blocks;
 
 public class ModRecipeProvider extends AbstractRecipeProvider {
@@ -43,6 +44,10 @@ public class ModRecipeProvider extends AbstractRecipeProvider {
                 ModItems.WITHERED_BONE_BLOCK.value(),
                 getConversionRecipeName(ModItems.WITHERED_BONE_MEAL.value(), ModItems.WITHERED_BONE_BLOCK.value()),
                 getItemName(ModItems.WITHERED_BONE_MEAL.value()));
+        SpecialRecipeBuilder.special(() -> new ShieldDecorationRecipe(this.tag(ItemTags.BANNERS),
+                        Ingredient.of(ModItems.GILDED_NETHERITE_SHIELD.value()),
+                        new ItemStackTemplate(ModItems.GILDED_NETHERITE_SHIELD.value())))
+                .save(this.output, "shield_decoration");
     }
 
     @Override
