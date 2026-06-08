@@ -7,17 +7,19 @@ import fuzs.eternalnether.common.world.level.levelgen.structure.CitadelStructure
 import fuzs.eternalnether.common.world.level.levelgen.structure.PiglinManorStructure;
 import fuzs.puzzleslib.common.api.data.v2.AbstractDatapackRegistriesProvider;
 import fuzs.puzzleslib.common.api.init.v3.registry.RegistryManager;
+import fuzs.puzzleslib.common.impl.item.CreativeModeTabHelper;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.JukeboxSong;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.storage.loot.LootTable;
+
+import java.util.Collection;
 
 public final class ModRegistry {
     public static final RegistrySetBuilder REGISTRY_SET_BUILDER = new RegistrySetBuilder().add(Registries.JUKEBOX_SONG,
@@ -40,8 +42,38 @@ public final class ModRegistry {
     public static final Holder.Reference<EntityDataSerializer<WarpedEnderman.Variant>> WARPED_ENDER_MAN_VARIANT_ENTITY_DATA_SERIALIZER = REGISTRIES.registerEntityDataSerializer(
             "warped_ender_man_variant",
             () -> EntityDataSerializer.forValueType(WarpedEnderman.Variant.STREAM_CODEC));
-    public static final Holder.Reference<CreativeModeTab> CREATIVE_MODE_TAB = REGISTRIES.registerCreativeModeTab(
-            ModItems.WITHERED_DEBRIS);
+    public static final Holder.Reference<CreativeModeTab> CREATIVE_MODE_TAB = REGISTRIES.registerCreativeModeTab(() -> new ItemStack(
+                    ModItems.WITHERED_DEBRIS),
+            (CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) -> {
+                // TODO use proper Puzzles Lib method
+                Collection<ItemStack> tabContents = ItemStackLinkedSet.createTypeAndComponentsSet();
+                CreativeModeTab.Output filteredOutput = (ItemStack itemStack, CreativeModeTab.TabVisibility tabVisibility) -> {
+                    if (!tabContents.contains(itemStack)
+                            || tabVisibility == CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY) {
+                        tabContents.add(itemStack);
+                        output.accept(itemStack, tabVisibility);
+                    }
+                };
+                filteredOutput.accept(ModItems.COBBLED_BLACKSTONE.value());
+                filteredOutput.accept(ModItems.WITHERED_BLACKSTONE.value());
+                ModBlockFamilies.WITHERED_BLACKSTONE_FAMILY.getItemVariants()
+                        .values()
+                        .forEach((Holder.Reference<Item> holder) -> {
+                            filteredOutput.accept(holder.value());
+                        });
+                ModBlockFamilies.CRACKED_WITHERED_BLACKSTONE_FAMILY.getItemVariants()
+                        .values()
+                        .forEach((Holder.Reference<Item> holder) -> {
+                            filteredOutput.accept(holder.value());
+                        });
+                filteredOutput.accept(ModItems.WARPED_NETHER_BRICKS.value());
+                ModBlockFamilies.WARPED_NETHER_BRICKS_FAMILY.getItemVariants()
+                        .values()
+                        .forEach((Holder.Reference<Item> holder) -> {
+                            filteredOutput.accept(holder.value());
+                        });
+                CreativeModeTabHelper.getDisplayItems(EternalNether.MOD_ID).accept(parameters, filteredOutput);
+            });
     public static final ResourceKey<PlacedFeature> SOUL_STONE_BLOBS_PLACED_FEATURE = REGISTRIES.makeResourceKey(
             Registries.PLACED_FEATURE,
             "soul_stone_blobs");
