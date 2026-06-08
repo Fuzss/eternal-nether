@@ -1,35 +1,41 @@
 package fuzs.eternalnether.common.init;
 
-import net.minecraft.data.BlockFamilies;
+import fuzs.puzzleslib.common.api.init.v3.family.BlockSetFamily;
+import fuzs.puzzleslib.common.api.init.v3.family.BlockSetVariant;
 import net.minecraft.data.BlockFamily;
+import net.minecraft.util.Util;
 
 import java.util.stream.Stream;
 
+/**
+ * TODO remove the manual calls to {@link BlockFamily.Builder#generateStonecutterRecipe()}, they are no longer necessary.
+ * <p>
+ * TODO Also, the chiseled variant now supports properly overriding the base name.
+ */
 public final class ModBlockFamilies {
-    public static final BlockFamily WITHERED_BLACKSTONE_FAMILY = BlockFamilies.familyBuilder(ModBlocks.WITHERED_BLACKSTONE.value())
-            .slab(ModBlocks.WITHERED_BLACKSTONE_SLAB.value())
-            .stairs(ModBlocks.WITHERED_BLACKSTONE_STAIRS.value())
-            .wall(ModBlocks.WITHERED_BLACKSTONE_WALL.value())
-            .cracked(ModBlocks.CRACKED_WITHERED_BLACKSTONE.value())
-            .chiseled(ModBlocks.CHISELED_WITHERED_BLACKSTONE.value())
-            .generateStonecutterRecipe()
-            .dontGenerateModel()
-            .getFamily();
-    public static final BlockFamily CRACKED_WITHERED_BLACKSTONE_FAMILY = BlockFamilies.familyBuilder(ModBlocks.CRACKED_WITHERED_BLACKSTONE.value())
-            .slab(ModBlocks.CRACKED_WITHERED_BLACKSTONE_SLAB.value())
-            .stairs(ModBlocks.CRACKED_WITHERED_BLACKSTONE_STAIRS.value())
-            .wall(ModBlocks.CRACKED_WITHERED_BLACKSTONE_WALL.value())
-            .generateStonecutterRecipe()
-            .getFamily();
-    public static final BlockFamily WARPED_NETHER_BRICKS_FAMILY = BlockFamilies.familyBuilder(ModBlocks.WARPED_NETHER_BRICKS.value())
-            .slab(ModBlocks.WARPED_NETHER_BRICK_SLAB.value())
-            .stairs(ModBlocks.WARPED_NETHER_BRICK_STAIRS.value())
-            .wall(ModBlocks.WARPED_NETHER_BRICK_WALL.value())
-            .chiseled(ModBlocks.CHISELED_WARPED_NETHER_BRICKS.value())
-            .generateStonecutterRecipe()
-            .getFamily();
+    public static final BlockSetFamily WITHERED_BLACKSTONE_FAMILY = BlockSetFamily.any(ModRegistry.REGISTRIES,
+                    ModBlocks.WITHERED_BLACKSTONE,
+                    "withered_blackstone")
+            .generateFor(BlockSetVariant.CHISELED)
+            .generateFor(BlockSetVariant.CRACKED)
+            .configureBlockFamily(BlockFamily.Builder::generateStonecutterRecipe);
+    public static final BlockSetFamily CRACKED_WITHERED_BLACKSTONE_FAMILY = BlockSetFamily.any(ModRegistry.REGISTRIES,
+            WITHERED_BLACKSTONE_FAMILY.getBlock(BlockSetVariant.CRACKED),
+            "cracked_withered_blackstone").configureBlockFamily(BlockFamily.Builder::generateStonecutterRecipe);
+    public static final BlockSetFamily WARPED_NETHER_BRICKS_FAMILY = Util.make(BlockSetFamily.any(ModRegistry.REGISTRIES,
+                    ModBlocks.WARPED_NETHER_BRICKS,
+                    "warped_nether_brick").configureBlockFamily(BlockFamily.Builder::generateStonecutterRecipe),
+            (BlockSetFamily.Writable family) -> {
+                BlockSetFamily.Context context = (BlockSetFamily.Context) family;
+                context.registerBlock(BlockSetVariant.CHISELED, ModBlocks.CHISELED_WARPED_NETHER_BRICKS);
+                context.registerItem(BlockSetVariant.CHISELED, ModItems.CHISELED_WARPED_NETHER_BRICKS);
+            });
 
-    public static Stream<BlockFamily> getAllFamilies() {
+    public static void bootstrap() {
+        // NO-OP
+    }
+
+    public static Stream<BlockSetFamily> getAllBlockSetFamilies() {
         return Stream.of(WITHERED_BLACKSTONE_FAMILY, CRACKED_WITHERED_BLACKSTONE_FAMILY, WARPED_NETHER_BRICKS_FAMILY);
     }
 }

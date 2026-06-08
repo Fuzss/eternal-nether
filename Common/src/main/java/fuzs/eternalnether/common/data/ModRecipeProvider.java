@@ -5,16 +5,15 @@ import fuzs.eternalnether.common.init.ModBlocks;
 import fuzs.eternalnether.common.init.ModItems;
 import fuzs.puzzleslib.common.api.data.v2.AbstractRecipeProvider;
 import fuzs.puzzleslib.common.api.data.v2.core.DataProviderContext;
-import net.minecraft.data.BlockFamily;
 import net.minecraft.data.recipes.*;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.flag.FeatureFlagSet;
-import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.ShieldDecorationRecipe;
 import net.minecraft.world.level.block.Blocks;
+
+import java.util.Collections;
 
 public class ModRecipeProvider extends AbstractRecipeProvider {
 
@@ -24,7 +23,10 @@ public class ModRecipeProvider extends AbstractRecipeProvider {
 
     @Override
     public void addRecipes(RecipeOutput recipeOutput) {
-        this.generateForEnabledBlockFamilies(FeatureFlags.DEFAULT_FLAGS);
+        // TODO use proper Puzzles Lib method
+        this.generateFor(ModBlockFamilies.WITHERED_BLACKSTONE_FAMILY, Collections.emptyMap());
+        this.generateFor(ModBlockFamilies.CRACKED_WITHERED_BLACKSTONE_FAMILY, Collections.emptyMap());
+        this.generateFor(ModBlockFamilies.WARPED_NETHER_BRICKS_FAMILY, Collections.emptyMap());
         ShapedRecipeBuilder.shaped(this.items(), RecipeCategory.BUILDING_BLOCKS, ModBlocks.WARPED_NETHER_BRICKS.value())
                 .define('W', Items.WARPED_ROOTS)
                 .define('N', Items.NETHER_BRICK)
@@ -48,12 +50,5 @@ public class ModRecipeProvider extends AbstractRecipeProvider {
                         Ingredient.of(ModItems.GILDED_NETHERITE_SHIELD.value()),
                         new ItemStackTemplate(ModItems.GILDED_NETHERITE_SHIELD.value())))
                 .save(this.output, "shield_decoration");
-    }
-
-    @Override
-    public void generateForEnabledBlockFamilies(FeatureFlagSet flagSet) {
-        ModBlockFamilies.getAllFamilies().forEach((BlockFamily blockFamily) -> {
-            this.generateRecipes(blockFamily, flagSet);
-        });
     }
 }

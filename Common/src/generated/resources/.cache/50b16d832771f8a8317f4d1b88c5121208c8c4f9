@@ -1,5 +1,8 @@
-// 26.1.2	2026-05-03T18:26:22.365653	Tags for minecraft:block mod id vanilla
+// 26.1.2	2026-06-08T17:19:02.971224	Tags for minecraft:block mod id vanilla
 703d42eb71daef5dbc3d0b70013d625be952a947 data/eternalnether/tags/block/withered.json
-429a90d8699e5490096c65e3bacab2ac3b675410 data/minecraft/tags/block/mineable/pickaxe.json
+cead91bb4afda9c8acc90f9c5490bce16466b30c data/minecraft/tags/block/mineable/pickaxe.json
 c47079e5f55cc933640771f59c27c961c089a136 data/minecraft/tags/block/needs_diamond_tool.json
+8032c6d8c5595b62e4988972608bd8918900572e data/minecraft/tags/block/slabs.json
+f7aa9cde91bb9fd5828de6944e86d32c73518f88 data/minecraft/tags/block/stairs.json
+71cf5e04ec574bfe1ee3c77070864c4f9707254b data/minecraft/tags/block/walls.json
 53bb74b74bd3dd3e3ba151a284492625d085084e data/minecraft/tags/block/wither_summon_base_blocks.json

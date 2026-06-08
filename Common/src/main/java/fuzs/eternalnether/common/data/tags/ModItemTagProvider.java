@@ -1,9 +1,11 @@
 package fuzs.eternalnether.common.data.tags;
 
+import fuzs.eternalnether.common.init.ModBlockFamilies;
 import fuzs.eternalnether.common.init.ModItems;
 import fuzs.eternalnether.common.init.ModTags;
 import fuzs.puzzleslib.common.api.data.v2.core.DataProviderContext;
 import fuzs.puzzleslib.common.api.data.v2.tags.AbstractTagProvider;
+import fuzs.puzzleslib.common.api.init.v3.family.BlockSetFamily;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.ItemTags;
@@ -18,6 +20,9 @@ public class ModItemTagProvider extends AbstractTagProvider<Item> {
 
     @Override
     public void addTags(HolderLookup.Provider provider) {
+        ModBlockFamilies.getAllBlockSetFamilies().forEach((BlockSetFamily blockSetFamily) -> {
+            this.generateFor(blockSetFamily.getItemVariants(), VARIANT_ITEM_TAGS);
+        });
         this.tag(ItemTags.STONE_CRAFTING_MATERIALS).add(ModItems.COBBLED_BLACKSTONE.value());
         this.tag(ItemTags.STONE_TOOL_MATERIALS).add(ModItems.COBBLED_BLACKSTONE.value());
         this.tag("c:music_discs").add(ModItems.WITHER_WALTZ_MUSIC_DISC.value());

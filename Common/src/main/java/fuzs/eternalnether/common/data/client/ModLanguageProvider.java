@@ -1,41 +1,14 @@
 package fuzs.eternalnether.common.data.client;
 
-import com.google.common.collect.ImmutableMap;
 import fuzs.eternalnether.common.EternalNether;
 import fuzs.eternalnether.common.data.ModAdvancementProvider;
 import fuzs.eternalnether.common.init.*;
 import fuzs.puzzleslib.common.api.client.data.v2.AbstractLanguageProvider;
 import fuzs.puzzleslib.common.api.core.v1.ModContainer;
 import fuzs.puzzleslib.common.api.data.v2.core.DataProviderContext;
-import net.minecraft.data.BlockFamily;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.level.block.Block;
-
-import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 
 public class ModLanguageProvider extends AbstractLanguageProvider {
-    static final Map<BlockFamily.Variant, BiFunction<BlockFamilyBuilder, Block, BlockFamilyBuilder>> VARIANT_FUNCTIONS = ImmutableMap.<BlockFamily.Variant, BiFunction<BlockFamilyBuilder, Block, BlockFamilyBuilder>>builder()
-            .put(BlockFamily.Variant.BUTTON, BlockFamilyBuilder::button)
-            .put(BlockFamily.Variant.CHISELED, BlockFamilyBuilder::chiseled)
-            .put(BlockFamily.Variant.CRACKED, BlockFamilyBuilder::cracked)
-            .put(BlockFamily.Variant.CUT, BlockFamilyBuilder::cut)
-            .put(BlockFamily.Variant.DOOR, BlockFamilyBuilder::door)
-            .put(BlockFamily.Variant.CUSTOM_FENCE, BlockFamilyBuilder::fence)
-            .put(BlockFamily.Variant.FENCE, BlockFamilyBuilder::fence)
-            .put(BlockFamily.Variant.CUSTOM_FENCE_GATE, BlockFamilyBuilder::fenceGate)
-            .put(BlockFamily.Variant.FENCE_GATE, BlockFamilyBuilder::fenceGate)
-            .put(BlockFamily.Variant.MOSAIC, BlockFamilyBuilder::mosaic)
-            .put(BlockFamily.Variant.SIGN, BlockFamilyBuilder::sign)
-            .put(BlockFamily.Variant.SLAB, BlockFamilyBuilder::slab)
-            .put(BlockFamily.Variant.STAIRS, BlockFamilyBuilder::stairs)
-            .put(BlockFamily.Variant.PRESSURE_PLATE, BlockFamilyBuilder::pressurePlate)
-            .put(BlockFamily.Variant.POLISHED, BlockFamilyBuilder::polished)
-            .put(BlockFamily.Variant.TRAPDOOR, BlockFamilyBuilder::trapdoor)
-            .put(BlockFamily.Variant.WALL, BlockFamilyBuilder::wall)
-            .put(BlockFamily.Variant.WALL_SIGN, BlockFamilyBuilder::wallSign)
-            .build();
 
     public ModLanguageProvider(DataProviderContext context) {
         super(context);
@@ -46,16 +19,11 @@ public class ModLanguageProvider extends AbstractLanguageProvider {
         builder.addCreativeModeTab(ModRegistry.CREATIVE_MODE_TAB, EternalNether.MOD_NAME);
 
         builder.addBlock(ModBlocks.COBBLED_BLACKSTONE, "Cobbled Blackstone");
-        blockFamily(builder, "Withered Blackstone").baseBlock(ModBlocks.WITHERED_BLACKSTONE.value())
-                .slab(ModBlocks.WITHERED_BLACKSTONE_SLAB.value())
-                .stairs(ModBlocks.WITHERED_BLACKSTONE_STAIRS.value())
-                .wall(ModBlocks.WITHERED_BLACKSTONE_WALL.value())
-                .chiseled(ModBlocks.CHISELED_WITHERED_BLACKSTONE.value());
-        blockFamily(builder,
-                "Cracked Withered Blackstone").generateFor(ModBlockFamilies.CRACKED_WITHERED_BLACKSTONE_FAMILY);
-        blockFamily(builder,
-                "Warped Nether Brick",
-                "Warped Nether Bricks").generateFor(ModBlockFamilies.WARPED_NETHER_BRICKS_FAMILY);
+        builder.add(ModBlocks.WITHERED_BLACKSTONE.value(), "Withered Blackstone");
+        builder.add(ModBlocks.WARPED_NETHER_BRICKS.value(), "Warped Nether Bricks");
+        this.generateFor(builder, ModBlockFamilies.WITHERED_BLACKSTONE_FAMILY, "Withered Blackstone");
+        this.generateFor(builder, ModBlockFamilies.CRACKED_WITHERED_BLACKSTONE_FAMILY, "Cracked Withered Blackstone");
+        this.generateFor(builder, ModBlockFamilies.WARPED_NETHER_BRICKS_FAMILY, "Warped Nether Brick");
         builder.add(ModBlocks.WITHERED_BASALT.value(), "Withered Basalt");
         builder.add(ModBlocks.WITHERED_COAL_BLOCK.value(), "Withered Coal Block");
         builder.add(ModBlocks.WITHERED_QUARTZ_BLOCK.value(), "Withered Quartz Block");
@@ -131,125 +99,5 @@ public class ModLanguageProvider extends AbstractLanguageProvider {
         builder.add(ModAdvancementProvider.RESCUE_PIGLIN_PRISONER_ADVANCEMENT.title(), "Saving Private Swine");
         builder.add(ModAdvancementProvider.RESCUE_PIGLIN_PRISONER_ADVANCEMENT.description(),
                 "Rescue a Piglin Prisoner");
-    }
-
-    public static BlockFamilyBuilder blockFamily(TranslationBuilder builder, String blockValue) {
-        return new BlockFamilyBuilder(builder::add, blockValue);
-    }
-
-    public static BlockFamilyBuilder blockFamily(TranslationBuilder builder, String blockValue, String baseBlockValue) {
-        return new BlockFamilyBuilder(builder::add, blockValue, baseBlockValue);
-    }
-
-    public static class BlockFamilyBuilder {
-        private final BiConsumer<Block, String> valueConsumer;
-        private final String blockValue;
-        private final String baseBlockValue;
-
-        public BlockFamilyBuilder(BiConsumer<Block, String> valueConsumer, String blockValue) {
-            this(valueConsumer, blockValue, blockValue);
-        }
-
-        public BlockFamilyBuilder(BiConsumer<Block, String> valueConsumer, String blockValue, String baseBlockValue) {
-            this.valueConsumer = valueConsumer;
-            this.blockValue = blockValue;
-            this.baseBlockValue = baseBlockValue;
-        }
-
-        public void generateFor(BlockFamily blockFamily) {
-            this.baseBlock(blockFamily.getBaseBlock());
-            blockFamily.getVariants().forEach((BlockFamily.Variant variant, Block block) -> {
-                BiFunction<BlockFamilyBuilder, Block, BlockFamilyBuilder> variantFunction = VARIANT_FUNCTIONS.get(
-                        variant);
-                if (variantFunction != null) {
-                    variantFunction.apply(this, block);
-                }
-            });
-        }
-
-        public BlockFamilyBuilder baseBlock(Block block) {
-            this.valueConsumer.accept(block, this.baseBlockValue);
-            return this;
-        }
-
-        public BlockFamilyBuilder button(Block block) {
-            this.valueConsumer.accept(block, this.blockValue + " Button");
-            return this;
-        }
-
-        public BlockFamilyBuilder chiseled(Block block) {
-            this.valueConsumer.accept(block, "Chiseled " + this.blockValue);
-            return this;
-        }
-
-        public BlockFamilyBuilder cracked(Block block) {
-            this.valueConsumer.accept(block, "Cracked " + this.blockValue);
-            return this;
-        }
-
-        public BlockFamilyBuilder cut(Block block) {
-            this.valueConsumer.accept(block, "Cut " + this.blockValue);
-            return this;
-        }
-
-        public BlockFamilyBuilder door(Block block) {
-            this.valueConsumer.accept(block, this.blockValue + " Door");
-            return this;
-        }
-
-        public BlockFamilyBuilder fence(Block block) {
-            this.valueConsumer.accept(block, this.blockValue + " Fence");
-            return this;
-        }
-
-        public BlockFamilyBuilder fenceGate(Block block) {
-            this.valueConsumer.accept(block, this.blockValue + " Fence Gate");
-            return this;
-        }
-
-        public BlockFamilyBuilder mosaic(Block block) {
-            this.valueConsumer.accept(block, "Mosaic " + this.blockValue);
-            return this;
-        }
-
-        public BlockFamilyBuilder sign(Block block) {
-            this.valueConsumer.accept(block, this.blockValue + " Sign");
-            return this;
-        }
-
-        public BlockFamilyBuilder slab(Block block) {
-            this.valueConsumer.accept(block, this.blockValue + " Slab");
-            return this;
-        }
-
-        public BlockFamilyBuilder stairs(Block block) {
-            this.valueConsumer.accept(block, this.blockValue + " Stairs");
-            return this;
-        }
-
-        public BlockFamilyBuilder pressurePlate(Block block) {
-            this.valueConsumer.accept(block, this.blockValue + " Pressure Plate");
-            return this;
-        }
-
-        public BlockFamilyBuilder polished(Block block) {
-            this.valueConsumer.accept(block, "Polished " + this.blockValue);
-            return this;
-        }
-
-        public BlockFamilyBuilder trapdoor(Block block) {
-            this.valueConsumer.accept(block, this.blockValue + " Trapdoor");
-            return this;
-        }
-
-        public BlockFamilyBuilder wall(Block block) {
-            this.valueConsumer.accept(block, this.blockValue + " Wall");
-            return this;
-        }
-
-        public BlockFamilyBuilder wallSign(Block block) {
-            this.valueConsumer.accept(block, this.blockValue + " Wall Sign");
-            return this;
-        }
     }
 }

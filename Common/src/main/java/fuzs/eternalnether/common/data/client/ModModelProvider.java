@@ -8,6 +8,7 @@ import fuzs.puzzleslib.common.api.client.data.v2.AbstractModelProvider;
 import fuzs.puzzleslib.common.api.client.data.v2.models.ItemModelGenerationHelper;
 import fuzs.puzzleslib.common.api.client.data.v2.models.ModelLocationHelper;
 import fuzs.puzzleslib.common.api.data.v2.core.DataProviderContext;
+import fuzs.puzzleslib.common.api.init.v3.family.BlockSetVariant;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.MultiVariant;
@@ -18,7 +19,6 @@ import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.special.ShieldSpecialRenderer;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.core.Direction;
-import net.minecraft.data.BlockFamily;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -26,6 +26,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BellAttachType;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
+import java.util.Collections;
 import java.util.function.Supplier;
 
 public class ModModelProvider extends AbstractModelProvider {
@@ -53,21 +54,32 @@ public class ModModelProvider extends AbstractModelProvider {
     public void addBlockModels(BlockModelGenerators blockModelGenerators) {
         BlockModelGenerators.TEXTURED_MODELS.put(ModBlocks.WITHERED_BLACKSTONE.value(),
                 TexturedModel.COLUMN_WITH_WALL.get(ModBlocks.WITHERED_BLACKSTONE.value())
-                        .updateTextures(map -> map.put(TextureSlot.SIDE,
-                                TextureMapping.getBlockTexture(ModBlocks.WITHERED_BLACKSTONE.value()))));
-        BlockModelGenerators.TEXTURED_MODELS.put(ModBlocks.CHISELED_WITHERED_BLACKSTONE.value(),
-                TexturedModel.COLUMN.get(ModBlocks.CHISELED_WITHERED_BLACKSTONE.value())
-                        .updateTextures(map -> map.put(TextureSlot.SIDE,
-                                TextureMapping.getBlockTexture(ModBlocks.CHISELED_WITHERED_BLACKSTONE.value()))));
-        ModBlockFamilies.getAllFamilies()
-                .filter(BlockFamily::shouldGenerateModel)
-                .forEach(blockFamily -> blockModelGenerators.family(blockFamily.getBaseBlock())
-                        .generateFor(blockFamily));
-        blockModelGenerators.family(ModBlocks.WITHERED_BLACKSTONE.value())
-                .slab(ModBlocks.WITHERED_BLACKSTONE_SLAB.value())
-                .stairs(ModBlocks.WITHERED_BLACKSTONE_STAIRS.value())
-                .wall(ModBlocks.WITHERED_BLACKSTONE_WALL.value())
-                .fullBlockVariant(ModBlocks.CHISELED_WITHERED_BLACKSTONE.value());
+                        .updateTextures((TextureMapping map) -> {
+                            map.put(TextureSlot.SIDE,
+                                    TextureMapping.getBlockTexture(ModBlocks.WITHERED_BLACKSTONE.value()));
+                        }));
+        BlockModelGenerators.TEXTURED_MODELS.put(ModBlockFamilies.WITHERED_BLACKSTONE_FAMILY.getBlock(BlockSetVariant.CHISELED)
+                        .value(),
+                TexturedModel.COLUMN.get(ModBlockFamilies.WITHERED_BLACKSTONE_FAMILY.getBlock(BlockSetVariant.CHISELED)
+                        .value()).updateTextures((TextureMapping map) -> {
+                    map.put(TextureSlot.SIDE,
+                            TextureMapping.getBlockTexture(ModBlockFamilies.WITHERED_BLACKSTONE_FAMILY.getBlock(
+                                    BlockSetVariant.CHISELED).value()));
+                }));
+        blockModelGenerators.createTrivialBlock(ModBlocks.WITHERED_BLACKSTONE.value(),
+                BlockModelGenerators.TEXTURED_MODELS::get);
+        blockModelGenerators.createTrivialCube(ModBlocks.WARPED_NETHER_BRICKS.value());
+        // TODO use proper Puzzles Lib method
+        this.generateForBlocks(blockModelGenerators,
+                ModBlockFamilies.WITHERED_BLACKSTONE_FAMILY,
+                Collections.emptyMap(),
+                BlockModelGenerators.TEXTURED_MODELS.get(ModBlocks.WITHERED_BLACKSTONE.value()));
+        this.generateForBlocks(blockModelGenerators,
+                ModBlockFamilies.CRACKED_WITHERED_BLACKSTONE_FAMILY,
+                Collections.emptyMap());
+        this.generateForBlocks(blockModelGenerators,
+                ModBlockFamilies.WARPED_NETHER_BRICKS_FAMILY,
+                Collections.emptyMap());
         blockModelGenerators.createTrivialCube(ModBlocks.COBBLED_BLACKSTONE.value());
         blockModelGenerators.createTrivialCube(ModBlocks.WITHERED_BASALT.value());
         blockModelGenerators.createTrivialCube(ModBlocks.WITHERED_COAL_BLOCK.value());
@@ -91,63 +103,58 @@ public class ModModelProvider extends AbstractModelProvider {
      * @see BlockModelGenerators#createBell()
      */
     public final void createBell(Block block, TextureMapping textureMapping, BlockModelGenerators blockModelGenerators) {
-        Identifier identifier = BELL_FLOOR_MODEL_TEMPLATE.create(ModelLocationHelper.getBlockModel(block, "_floor"),
+        Identifier floorTexture = BELL_FLOOR_MODEL_TEMPLATE.create(ModelLocationHelper.getBlockModel(block, "_floor"),
                 textureMapping,
                 blockModelGenerators.modelOutput);
-        Identifier resourceLocation2 = BELL_CEILING_MODEL_TEMPLATE.create(ModelLocationHelper.getBlockModel(block,
+        Identifier ceilingTexture = BELL_CEILING_MODEL_TEMPLATE.create(ModelLocationHelper.getBlockModel(block,
                 "_ceiling"), textureMapping, blockModelGenerators.modelOutput);
-        Identifier resourceLocation3 = BELL_WALL_MODEL_TEMPLATE.create(ModelLocationHelper.getBlockModel(block,
-                "_wall"), textureMapping, blockModelGenerators.modelOutput);
-        Identifier resourceLocation4 = BELL_BETWEEN_WALLS_MODEL_TEMPLATE.create(ModelLocationHelper.getBlockModel(block,
+        Identifier wallTexture = BELL_WALL_MODEL_TEMPLATE.create(ModelLocationHelper.getBlockModel(block, "_wall"),
+                textureMapping,
+                blockModelGenerators.modelOutput);
+        Identifier betweenWallsTexture = BELL_BETWEEN_WALLS_MODEL_TEMPLATE.create(ModelLocationHelper.getBlockModel(
+                block,
                 "_between_walls"), textureMapping, blockModelGenerators.modelOutput);
-        MultiVariant multiVariant = BlockModelGenerators.plainVariant(identifier);
-        MultiVariant multiVariant2 = BlockModelGenerators.plainVariant(resourceLocation2);
-        MultiVariant multiVariant3 = BlockModelGenerators.plainVariant(resourceLocation3);
-        MultiVariant multiVariant4 = BlockModelGenerators.plainVariant(resourceLocation4);
+        MultiVariant floor = BlockModelGenerators.plainVariant(floorTexture);
+        MultiVariant ceiling = BlockModelGenerators.plainVariant(ceilingTexture);
+        MultiVariant wall = BlockModelGenerators.plainVariant(wallTexture);
+        MultiVariant betweenWalls = BlockModelGenerators.plainVariant(betweenWallsTexture);
         blockModelGenerators.registerSimpleFlatItemModel(block.asItem());
         blockModelGenerators.blockStateOutput.accept(MultiVariantGenerator.dispatch(block)
                 .with(PropertyDispatch.initial(BlockStateProperties.HORIZONTAL_FACING,
                                 BlockStateProperties.BELL_ATTACHMENT)
-                        .select(Direction.NORTH, BellAttachType.FLOOR, multiVariant)
-                        .select(Direction.SOUTH,
-                                BellAttachType.FLOOR,
-                                multiVariant.with(BlockModelGenerators.Y_ROT_180))
-                        .select(Direction.EAST, BellAttachType.FLOOR, multiVariant.with(BlockModelGenerators.Y_ROT_90))
-                        .select(Direction.WEST, BellAttachType.FLOOR, multiVariant.with(BlockModelGenerators.Y_ROT_270))
-                        .select(Direction.NORTH, BellAttachType.CEILING, multiVariant2)
-                        .select(Direction.SOUTH,
-                                BellAttachType.CEILING,
-                                multiVariant2.with(BlockModelGenerators.Y_ROT_180))
-                        .select(Direction.EAST,
-                                BellAttachType.CEILING,
-                                multiVariant2.with(BlockModelGenerators.Y_ROT_90))
-                        .select(Direction.WEST,
-                                BellAttachType.CEILING,
-                                multiVariant2.with(BlockModelGenerators.Y_ROT_270))
-                        .select(Direction.NORTH,
-                                BellAttachType.SINGLE_WALL,
-                                multiVariant3.with(BlockModelGenerators.Y_ROT_270))
-                        .select(Direction.SOUTH,
-                                BellAttachType.SINGLE_WALL,
-                                multiVariant3.with(BlockModelGenerators.Y_ROT_90))
-                        .select(Direction.EAST, BellAttachType.SINGLE_WALL, multiVariant3)
-                        .select(Direction.WEST,
-                                BellAttachType.SINGLE_WALL,
-                                multiVariant3.with(BlockModelGenerators.Y_ROT_180))
+                        .select(Direction.NORTH, BellAttachType.FLOOR, floor)
+                        .select(Direction.SOUTH, BellAttachType.FLOOR, floor.with(BlockModelGenerators.Y_ROT_180))
+                        .select(Direction.EAST, BellAttachType.FLOOR, floor.with(BlockModelGenerators.Y_ROT_90))
+                        .select(Direction.WEST, BellAttachType.FLOOR, floor.with(BlockModelGenerators.Y_ROT_270))
+                        .select(Direction.NORTH, BellAttachType.CEILING, ceiling)
+                        .select(Direction.SOUTH, BellAttachType.CEILING, ceiling.with(BlockModelGenerators.Y_ROT_180))
+                        .select(Direction.EAST, BellAttachType.CEILING, ceiling.with(BlockModelGenerators.Y_ROT_90))
+                        .select(Direction.WEST, BellAttachType.CEILING, ceiling.with(BlockModelGenerators.Y_ROT_270))
+                        .select(Direction.NORTH, BellAttachType.SINGLE_WALL, wall.with(BlockModelGenerators.Y_ROT_270))
+                        .select(Direction.SOUTH, BellAttachType.SINGLE_WALL, wall.with(BlockModelGenerators.Y_ROT_90))
+                        .select(Direction.EAST, BellAttachType.SINGLE_WALL, wall)
+                        .select(Direction.WEST, BellAttachType.SINGLE_WALL, wall.with(BlockModelGenerators.Y_ROT_180))
                         .select(Direction.SOUTH,
                                 BellAttachType.DOUBLE_WALL,
-                                multiVariant4.with(BlockModelGenerators.Y_ROT_90))
+                                betweenWalls.with(BlockModelGenerators.Y_ROT_90))
                         .select(Direction.NORTH,
                                 BellAttachType.DOUBLE_WALL,
-                                multiVariant4.with(BlockModelGenerators.Y_ROT_270))
-                        .select(Direction.EAST, BellAttachType.DOUBLE_WALL, multiVariant4)
+                                betweenWalls.with(BlockModelGenerators.Y_ROT_270))
+                        .select(Direction.EAST, BellAttachType.DOUBLE_WALL, betweenWalls)
                         .select(Direction.WEST,
                                 BellAttachType.DOUBLE_WALL,
-                                multiVariant4.with(BlockModelGenerators.Y_ROT_180))));
+                                betweenWalls.with(BlockModelGenerators.Y_ROT_180))));
     }
 
     @Override
     public void addItemModels(ItemModelGenerators itemModelGenerators) {
+        this.generateForItems(itemModelGenerators, ModBlockFamilies.WITHERED_BLACKSTONE_FAMILY, Collections.emptyMap());
+        this.generateForItems(itemModelGenerators,
+                ModBlockFamilies.CRACKED_WITHERED_BLACKSTONE_FAMILY,
+                Collections.emptyMap());
+        this.generateForItems(itemModelGenerators,
+                ModBlockFamilies.WARPED_NETHER_BRICKS_FAMILY,
+                Collections.emptyMap());
         itemModelGenerators.generateFlatItem(ModItems.PIGLIN_PRISONER_SPAWN_EGG.value(), ModelTemplates.FLAT_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.PIGLIN_HUNTER_SPAWN_EGG.value(), ModelTemplates.FLAT_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.WEX_SPAWN_EGG.value(), ModelTemplates.FLAT_ITEM);

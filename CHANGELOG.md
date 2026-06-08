@@ -5,13 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v26.1.4-mc26.1.x] - 2026-06-07
+## [v26.1.4-mc26.1.x] - 2026-06-08
 
 ### Fixed
 
 - Fix withered bone meal being ejected from dispensers
 - Fix unable to apply banners to the gilded netherite shield
 - Fix gilded netherite shield item model rotations
+- Fix new slabs, stairs and walls missing from tags
 
 ## [v26.1.3-mc26.1.x] - 2026-06-07
 

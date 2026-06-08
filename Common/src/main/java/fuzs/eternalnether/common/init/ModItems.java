@@ -21,23 +21,10 @@ public final class ModItems {
     public static final Holder.Reference<Item> COBBLED_BLACKSTONE = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.COBBLED_BLACKSTONE);
 
     public static final Holder.Reference<Item> WITHERED_BLACKSTONE = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.WITHERED_BLACKSTONE);
-    public static final Holder.Reference<Item> WITHERED_BLACKSTONE_STAIRS = ModRegistry.REGISTRIES.registerBlockItem(
-            ModBlocks.WITHERED_BLACKSTONE_STAIRS);
-    public static final Holder.Reference<Item> WITHERED_BLACKSTONE_SLAB = ModRegistry.REGISTRIES.registerBlockItem(
-            ModBlocks.WITHERED_BLACKSTONE_SLAB);
-    public static final Holder.Reference<Item> WITHERED_BLACKSTONE_WALL = ModRegistry.REGISTRIES.registerBlockItem(
-            ModBlocks.WITHERED_BLACKSTONE_WALL);
-
-    public static final Holder.Reference<Item> CRACKED_WITHERED_BLACKSTONE = ModRegistry.REGISTRIES.registerBlockItem(
-            ModBlocks.CRACKED_WITHERED_BLACKSTONE);
-    public static final Holder.Reference<Item> CRACKED_WITHERED_BLACKSTONE_STAIRS = ModRegistry.REGISTRIES.registerBlockItem(
-            ModBlocks.CRACKED_WITHERED_BLACKSTONE_STAIRS);
-    public static final Holder.Reference<Item> CRACKED_WITHERED_BLACKSTONE_SLAB = ModRegistry.REGISTRIES.registerBlockItem(
-            ModBlocks.CRACKED_WITHERED_BLACKSTONE_SLAB);
-    public static final Holder.Reference<Item> CRACKED_WITHERED_BLACKSTONE_WALL = ModRegistry.REGISTRIES.registerBlockItem(
-            ModBlocks.CRACKED_WITHERED_BLACKSTONE_WALL);
-    public static final Holder.Reference<Item> CHISELED_WITHERED_BLACKSTONE = ModRegistry.REGISTRIES.registerBlockItem(
-            ModBlocks.CHISELED_WITHERED_BLACKSTONE);
+    public static final Holder.Reference<Item> WARPED_NETHER_BRICKS = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.WARPED_NETHER_BRICKS);
+    @Deprecated
+    public static final Holder.Reference<Item> CHISELED_WARPED_NETHER_BRICKS = ModRegistry.REGISTRIES.registerBlockItem(
+            ModBlocks.CHISELED_WARPED_NETHER_BRICKS);
 
     public static final Holder.Reference<Item> WITHERED_BASALT = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.WITHERED_BASALT);
     public static final Holder.Reference<Item> WITHERED_COAL_BLACK = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.WITHERED_COAL_BLOCK);
@@ -46,16 +33,6 @@ public final class ModItems {
     public static final Holder.Reference<Item> WITHERED_DEBRIS = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.WITHERED_DEBRIS);
     public static final Holder.Reference<Item> SOUL_STONE = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.SOUL_STONE);
     public static final Holder.Reference<Item> WITHERED_BONE_BLOCK = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.WITHERED_BONE_BLOCK);
-
-    public static final Holder.Reference<Item> WARPED_NETHER_BRICKS = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.WARPED_NETHER_BRICKS);
-    public static final Holder.Reference<Item> CHISELED_WARPED_NETHER_BRICKS = ModRegistry.REGISTRIES.registerBlockItem(
-            ModBlocks.CHISELED_WARPED_NETHER_BRICKS);
-    public static final Holder.Reference<Item> WARPED_NETHER_BRICK_STAIRS = ModRegistry.REGISTRIES.registerBlockItem(
-            ModBlocks.WARPED_NETHER_BRICK_STAIRS);
-    public static final Holder.Reference<Item> WARPED_NETHER_BRICK_SLAB = ModRegistry.REGISTRIES.registerBlockItem(
-            ModBlocks.WARPED_NETHER_BRICK_SLAB);
-    public static final Holder.Reference<Item> WARPED_NETHER_BRICK_WALL = ModRegistry.REGISTRIES.registerBlockItem(
-            ModBlocks.WARPED_NETHER_BRICK_WALL);
 
     public static final ResourceKey<JukeboxSong> WITHER_WALTZ_JUKEBOX_SONG = ModRegistry.REGISTRIES.makeResourceKey(
             Registries.JUKEBOX_SONG,

@@ -3,6 +3,7 @@ package fuzs.eternalnether.common.init;
 import com.google.common.collect.ImmutableList;
 import fuzs.eternalnether.common.world.level.levelgen.feature.MobFeature;
 import fuzs.eternalnether.common.world.level.levelgen.feature.MobPassengerFeature;
+import fuzs.puzzleslib.common.api.init.v3.family.BlockSetVariant;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.util.random.Weighted;
@@ -84,8 +85,8 @@ public final class ModFeatures {
                         // Wither Forts
                         ModBlocks.COBBLED_BLACKSTONE.value(),
                         ModBlocks.WITHERED_BLACKSTONE.value(),
-                        ModBlocks.CHISELED_WITHERED_BLACKSTONE.value(),
-                        ModBlocks.CRACKED_WITHERED_BLACKSTONE.value(),
+                        ModBlockFamilies.WITHERED_BLACKSTONE_FAMILY.getBlock(BlockSetVariant.CHISELED).value(),
+                        ModBlockFamilies.WITHERED_BLACKSTONE_FAMILY.getBlock(BlockSetVariant.CRACKED).value(),
                         ModBlocks.WITHERED_DEBRIS.value(),
                         Blocks.IRON_BARS,
                         Blocks.COAL_BLOCK)
@@ -102,8 +103,8 @@ public final class ModFeatures {
                 // Wither Forts
                 ModBlocks.COBBLED_BLACKSTONE.value(),
                 ModBlocks.WITHERED_BLACKSTONE.value(),
-                ModBlocks.CHISELED_WITHERED_BLACKSTONE.value(),
-                ModBlocks.CRACKED_WITHERED_BLACKSTONE.value(),
+                ModBlockFamilies.WITHERED_BLACKSTONE_FAMILY.getBlock(BlockSetVariant.CHISELED).value(),
+                ModBlockFamilies.WITHERED_BLACKSTONE_FAMILY.getBlock(BlockSetVariant.CRACKED).value(),
                 ModBlocks.WITHERED_DEBRIS.value(),
                 Blocks.IRON_BARS,
                 Blocks.COAL_BLOCK).build();

@@ -1,11 +1,13 @@
 package fuzs.eternalnether.common.data;
 
 import fuzs.eternalnether.common.EternalNether;
+import fuzs.eternalnether.common.init.ModBlockFamilies;
 import fuzs.eternalnether.common.init.ModEntityTypes;
 import fuzs.eternalnether.common.init.ModItems;
 import fuzs.eternalnether.common.init.ModStructures;
 import fuzs.puzzleslib.common.api.data.v2.AbstractAdvancementProvider;
 import fuzs.puzzleslib.common.api.data.v2.core.DataProviderContext;
+import fuzs.puzzleslib.common.api.init.v3.family.BlockSetVariant;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementRewards;
@@ -51,7 +53,8 @@ public class ModAdvancementProvider extends AbstractAdvancementProvider {
         HolderLookup.RegistryLookup<EntityType<?>> entityLookup = registries.lookupOrThrow(Registries.ENTITY_TYPE);
         HolderLookup.RegistryLookup<Structure> structureLookup = registries.lookupOrThrow(Registries.STRUCTURE);
         Advancement.Builder.advancement()
-                .display(display(new ItemStackTemplate(ModItems.CHISELED_WITHERED_BLACKSTONE.value()),
+                .display(display(new ItemStackTemplate(ModBlockFamilies.WITHERED_BLACKSTONE_FAMILY.getItem(
+                                BlockSetVariant.CHISELED).value()),
                         ROOT_ADVANCEMENT.id(),
                         EternalNether.id("block/soul_stone"),
                         AdvancementType.TASK,
@@ -82,8 +85,8 @@ public class ModAdvancementProvider extends AbstractAdvancementProvider {
                                 ModStructures.CATACOMB_STRUCTURE))))
                 .save(writer, CATACOMB_ADVANCEMENT.name());
         Advancement.Builder.advancement()
-                .display(display(new ItemStackTemplate(ModItems.CHISELED_WARPED_NETHER_BRICKS.value()),
-                        CITADEL_ADVANCEMENT.id()))
+                .display(display(new ItemStackTemplate(ModBlockFamilies.WARPED_NETHER_BRICKS_FAMILY.getItem(
+                        BlockSetVariant.CHISELED).value()), CITADEL_ADVANCEMENT.id()))
                 .parent(EXPLORE_STRUCTURES_ADVANCEMENT.asParent())
                 .addCriterion("in_citadel",
                         PlayerTrigger.TriggerInstance.located(LocationPredicate.Builder.inStructure(structureLookup.getOrThrow(

@@ -3,7 +3,10 @@ package fuzs.eternalnether.common.init;
 import fuzs.eternalnether.common.world.level.block.NetheriteBellBlock;
 import fuzs.eternalnether.common.world.level.block.entity.NetheriteBellBlockEntity;
 import net.minecraft.core.Holder;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
@@ -19,38 +22,13 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BLACKSTONE)
                     .strength(50.0F, 1200.0F)
                     .sound(SoundType.DEEPSLATE));
-    public static final Holder.Reference<Block> WITHERED_BLACKSTONE_STAIRS = ModRegistry.REGISTRIES.registerBlock(
-            "withered_blackstone_stairs",
-            (BlockBehaviour.Properties properties) -> new StairBlock(WITHERED_BLACKSTONE.value().defaultBlockState(),
-                    properties),
-            () -> BlockBehaviour.Properties.ofLegacyCopy(WITHERED_BLACKSTONE.value()));
-    public static final Holder.Reference<Block> WITHERED_BLACKSTONE_SLAB = ModRegistry.REGISTRIES.registerBlock(
-            "withered_blackstone_slab",
-            SlabBlock::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(WITHERED_BLACKSTONE.value()));
-    public static final Holder.Reference<Block> WITHERED_BLACKSTONE_WALL = ModRegistry.REGISTRIES.registerBlock(
-            "withered_blackstone_wall",
-            WallBlock::new,
-            () -> BlockBehaviour.Properties.ofLegacyCopy(WITHERED_BLACKSTONE.value()).forceSolidOn());
-    public static final Holder.Reference<Block> CRACKED_WITHERED_BLACKSTONE = ModRegistry.REGISTRIES.registerBlock(
-            "cracked_withered_blackstone",
-            () -> BlockBehaviour.Properties.ofFullCopy(WITHERED_BLACKSTONE.value()));
-    public static final Holder.Reference<Block> CRACKED_WITHERED_BLACKSTONE_STAIRS = ModRegistry.REGISTRIES.registerBlock(
-            "cracked_withered_blackstone_stairs",
-            (BlockBehaviour.Properties properties) -> new StairBlock(WITHERED_BLACKSTONE.value().defaultBlockState(),
-                    properties),
-            () -> BlockBehaviour.Properties.ofLegacyCopy(WITHERED_BLACKSTONE.value()));
-    public static final Holder.Reference<Block> CRACKED_WITHERED_BLACKSTONE_SLAB = ModRegistry.REGISTRIES.registerBlock(
-            "cracked_withered_blackstone_slab",
-            SlabBlock::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(WITHERED_BLACKSTONE.value()));
-    public static final Holder.Reference<Block> CRACKED_WITHERED_BLACKSTONE_WALL = ModRegistry.REGISTRIES.registerBlock(
-            "cracked_withered_blackstone_wall",
-            WallBlock::new,
-            () -> BlockBehaviour.Properties.ofLegacyCopy(WITHERED_BLACKSTONE.value()).forceSolidOn());
-    public static final Holder.Reference<Block> CHISELED_WITHERED_BLACKSTONE = ModRegistry.REGISTRIES.registerBlock(
-            "chiseled_withered_blackstone",
-            () -> BlockBehaviour.Properties.ofFullCopy(WITHERED_BLACKSTONE.value()));
+    public static final Holder.Reference<Block> WARPED_NETHER_BRICKS = ModRegistry.REGISTRIES.registerBlock(
+            "warped_nether_bricks",
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.NETHER_BRICKS).mapColor(MapColor.WARPED_STEM));
+    @Deprecated
+    public static final Holder.Reference<Block> CHISELED_WARPED_NETHER_BRICKS = ModRegistry.REGISTRIES.registerBlock(
+            "chiseled_warped_nether_bricks",
+            () -> BlockBehaviour.Properties.ofFullCopy(WARPED_NETHER_BRICKS.value()));
 
     public static final Holder.Reference<Block> WITHERED_BASALT = ModRegistry.REGISTRIES.registerBlock("withered_basalt",
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BASALT).strength(50.0F, 1200.0F));
@@ -72,26 +50,6 @@ public final class ModBlocks {
             "withered_bone_block",
             RotatedPillarBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BONE_BLOCK).mapColor(MapColor.COLOR_BLACK));
-
-    public static final Holder.Reference<Block> WARPED_NETHER_BRICKS = ModRegistry.REGISTRIES.registerBlock(
-            "warped_nether_bricks",
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.NETHER_BRICKS).mapColor(MapColor.WARPED_STEM));
-    public static final Holder.Reference<Block> WARPED_NETHER_BRICK_STAIRS = ModRegistry.REGISTRIES.registerBlock(
-            "warped_nether_brick_stairs",
-            (BlockBehaviour.Properties properties) -> new StairBlock(WARPED_NETHER_BRICKS.value().defaultBlockState(),
-                    properties),
-            () -> BlockBehaviour.Properties.ofFullCopy(WARPED_NETHER_BRICKS.value()));
-    public static final Holder.Reference<Block> WARPED_NETHER_BRICK_SLAB = ModRegistry.REGISTRIES.registerBlock(
-            "warped_nether_brick_slab",
-            SlabBlock::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(WARPED_NETHER_BRICKS.value()));
-    public static final Holder.Reference<Block> WARPED_NETHER_BRICK_WALL = ModRegistry.REGISTRIES.registerBlock(
-            "warped_nether_brick_wall",
-            WallBlock::new,
-            () -> BlockBehaviour.Properties.ofLegacyCopy(WARPED_NETHER_BRICKS.value()).forceSolidOn());
-    public static final Holder.Reference<Block> CHISELED_WARPED_NETHER_BRICKS = ModRegistry.REGISTRIES.registerBlock(
-            "chiseled_warped_nether_bricks",
-            () -> BlockBehaviour.Properties.ofFullCopy(WARPED_NETHER_BRICKS.value()));
 
     public static final Holder.Reference<Block> NETHERITE_BELL = ModRegistry.REGISTRIES.registerBlock("netherite_bell",
             NetheriteBellBlock::new,
