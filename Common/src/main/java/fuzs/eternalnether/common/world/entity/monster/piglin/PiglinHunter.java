@@ -11,6 +11,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.monster.piglin.AbstractPiglin;
@@ -68,11 +69,11 @@ public class PiglinHunter extends CrossbowAttackPiglin implements ShieldedMob {
     }
 
     @Override
-    public void knockback(double strength, double x, double z) {
-        if (!this.isUsingShield()) {
-            super.knockback(strength, x, z);
-        } else {
+    public void knockback(double power, double xd, double zd, DamageSource source, float damage) {
+        if (this.isUsingShield()) {
             this.playSound(SoundEvents.SHIELD_BLOCK.value(), 1.0F, 0.8F + this.level().getRandom().nextFloat() * 0.4F);
+        } else {
+            super.knockback(power, xd, zd, source, damage);
         }
     }
 

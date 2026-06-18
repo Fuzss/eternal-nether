@@ -9,6 +9,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.util.random.Weighted;
 import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -21,17 +22,17 @@ import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConf
 public final class ModFeatures {
     public static final WeightedList<Holder<? extends EntityType<? extends Mob>>> PIGLIN_MANOR_MOBS = WeightedList.of(
             new Weighted<>(ModEntityTypes.PIGLIN_HUNTER, 1),
-            new Weighted<>(getBuiltInRegistryHolder(EntityType.PIGLIN), 3));
+            new Weighted<>(getBuiltInRegistryHolder(EntityTypes.PIGLIN), 3));
     public static final WeightedList<Holder<? extends EntityType<? extends Mob>>> CATACOMB_MOBS = WeightedList.of(new Weighted<>(
                     ModEntityTypes.CORPOR,
                     1),
             new Weighted<>(ModEntityTypes.WITHER_SKELETON_KNIGHT, 2),
             new Weighted<>(ModEntityTypes.WRAITHER, 3),
-            new Weighted<>(getBuiltInRegistryHolder(EntityType.WITHER_SKELETON), 1));
+            new Weighted<>(getBuiltInRegistryHolder(EntityTypes.WITHER_SKELETON), 1));
     public static final WeightedList<Holder<? extends EntityType<? extends Mob>>> PIGLIN_PRISONER_CONVERSIONS = WeightedList.of(
-            new Weighted<>(getBuiltInRegistryHolder(EntityType.PIGLIN), 4),
+            new Weighted<>(getBuiltInRegistryHolder(EntityTypes.PIGLIN), 4),
             new Weighted<>(ModEntityTypes.PIGLIN_HUNTER, 3),
-            new Weighted<>(getBuiltInRegistryHolder(EntityType.PIGLIN_BRUTE), 1));
+            new Weighted<>(getBuiltInRegistryHolder(EntityTypes.PIGLIN_BRUTE), 1));
 
     public static final Holder.Reference<Feature<NoneFeatureConfiguration>> MOB_FEATURE_PIGLIN_PRISONER = ModRegistry.REGISTRIES.register(
             Registries.FEATURE,
@@ -48,11 +49,11 @@ public final class ModFeatures {
     public static final Holder.Reference<Feature<NoneFeatureConfiguration>> MOB_FEATURE_STRIDER = ModRegistry.REGISTRIES.register(
             Registries.FEATURE,
             "mob_feature_strider",
-            () -> new MobFeature(getBuiltInRegistryHolder(EntityType.STRIDER)));
+            () -> new MobFeature(getBuiltInRegistryHolder(EntityTypes.STRIDER)));
     public static final Holder.Reference<Feature<NoneFeatureConfiguration>> MOB_FEATURE_WITHER_SKELETON = ModRegistry.REGISTRIES.register(
             Registries.FEATURE,
             "mob_feature_wither_skeleton",
-            () -> new MobFeature(getBuiltInRegistryHolder(EntityType.WITHER_SKELETON)));
+            () -> new MobFeature(getBuiltInRegistryHolder(EntityTypes.WITHER_SKELETON)));
     public static final Holder.Reference<Feature<NoneFeatureConfiguration>> MOB_FEATURE_CATACOMB = ModRegistry.REGISTRIES.register(
             Registries.FEATURE,
             "mob_feature_catacomb",

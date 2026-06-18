@@ -126,23 +126,23 @@ public class WitherSkeletonKnight extends WitherSkeleton implements ShieldedMob 
     }
 
     @Override
-    public void knockback(double strength, double x, double z) {
-        if (!this.isUsingShield()) {
-            super.knockback(strength, x, z);
-        } else {
+    public void knockback(double power, double xd, double zd, DamageSource source, float damage) {
+        if (this.isUsingShield()) {
             this.playSound(SoundEvents.SHIELD_BLOCK.value(), 1.0F, 0.8F + this.level().getRandom().nextFloat() * 0.4F);
+        } else {
+            super.knockback(power, xd, zd, source, damage);
         }
     }
 
     /**
-     * @see Player#blockUsingItem(ServerLevel, LivingEntity)
+     * @see Player#blockUsingItem(ServerLevel, LivingEntity, DamageSource, float)
      */
     @Override
-    protected void blockUsingItem(ServerLevel level, LivingEntity entity) {
-        super.blockUsingItem(level, entity);
+    protected void blockUsingItem(ServerLevel level, LivingEntity attacker, DamageSource source, float damage) {
+        super.blockUsingItem(level, attacker, source, damage);
         ItemStack itemStack = this.getItemBlockingWith();
         BlocksAttacks blocksAttacks = itemStack != null ? itemStack.get(DataComponents.BLOCKS_ATTACKS) : null;
-        float secondsToDisableBlocking = entity.getSecondsToDisableBlocking();
+        float secondsToDisableBlocking = attacker.getSecondsToDisableBlocking();
         if (secondsToDisableBlocking > 0.0F && blocksAttacks != null) {
             blocksAttacks.disable(level, this, secondsToDisableBlocking, itemStack);
             this.disableShield();

@@ -22,9 +22,6 @@ public final class ModItems {
 
     public static final Holder.Reference<Item> WITHERED_BLACKSTONE = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.WITHERED_BLACKSTONE);
     public static final Holder.Reference<Item> WARPED_NETHER_BRICKS = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.WARPED_NETHER_BRICKS);
-    @Deprecated
-    public static final Holder.Reference<Item> CHISELED_WARPED_NETHER_BRICKS = ModRegistry.REGISTRIES.registerBlockItem(
-            ModBlocks.CHISELED_WARPED_NETHER_BRICKS);
 
     public static final Holder.Reference<Item> WITHERED_BASALT = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.WITHERED_BASALT);
     public static final Holder.Reference<Item> WITHERED_COAL_BLACK = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.WITHERED_COAL_BLOCK);

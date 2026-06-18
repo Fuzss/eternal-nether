@@ -17,7 +17,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -113,12 +112,6 @@ public class WitherSkeletonHorse extends SkeletonHorse {
     @Override
     protected PathNavigation createNavigation(Level level) {
         return new GroundPathNavigation(this, level) {
-            @Override
-            protected boolean hasValidPathType(PathType pathType) {
-                return pathType == PathType.LAVA || pathType == PathType.FIRE || pathType == PathType.FIRE_IN_NEIGHBOR
-                        || super.hasValidPathType(pathType);
-            }
-
             @Override
             public boolean isStableDestination(BlockPos pos) {
                 return this.level.getBlockState(pos).is(Blocks.LAVA) || super.isStableDestination(pos);

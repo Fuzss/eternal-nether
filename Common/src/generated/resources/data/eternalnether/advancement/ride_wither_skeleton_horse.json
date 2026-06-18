@@ -8,10 +8,10 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "vehicle": {
-                "type": "eternalnether:wither_skeleton_horse",
-                "passenger": {
-                  "type": "minecraft:player"
+              "minecraft:vehicle": {
+                "minecraft:entity_type": "eternalnether:wither_skeleton_horse",
+                "minecraft:passenger": {
+                  "minecraft:entity_type": "minecraft:player"
                 }
               }
             }

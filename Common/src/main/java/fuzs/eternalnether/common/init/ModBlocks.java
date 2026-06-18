@@ -25,10 +25,6 @@ public final class ModBlocks {
     public static final Holder.Reference<Block> WARPED_NETHER_BRICKS = ModRegistry.REGISTRIES.registerBlock(
             "warped_nether_bricks",
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.NETHER_BRICKS).mapColor(MapColor.WARPED_STEM));
-    @Deprecated
-    public static final Holder.Reference<Block> CHISELED_WARPED_NETHER_BRICKS = ModRegistry.REGISTRIES.registerBlock(
-            "chiseled_warped_nether_bricks",
-            () -> BlockBehaviour.Properties.ofFullCopy(WARPED_NETHER_BRICKS.value()));
 
     public static final Holder.Reference<Block> WITHERED_BASALT = ModRegistry.REGISTRIES.registerBlock("withered_basalt",
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BASALT).strength(50.0F, 1200.0F));

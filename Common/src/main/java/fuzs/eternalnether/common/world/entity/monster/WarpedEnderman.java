@@ -167,7 +167,7 @@ public class WarpedEnderman extends EnderMan implements Shearable {
     private void shearWarp(ServerLevel level) {
         switch (this.getVariant()) {
             case FRESH -> {
-                this.convertTo(EntityType.ENDERMAN,
+                this.convertTo(EntityTypes.ENDERMAN,
                         ConversionParams.single(this, false, false),
                         (EnderMan enderMan) -> {
                             level.sendParticles(ParticleTypes.EXPLOSION,

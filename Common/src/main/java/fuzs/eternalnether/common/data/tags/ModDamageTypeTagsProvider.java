@@ -8,9 +8,9 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageType;
 
-public class ModDamageTypeTagProvider extends AbstractTagProvider<DamageType> {
+public class ModDamageTypeTagsProvider extends AbstractTagProvider<DamageType> {
 
-    public ModDamageTypeTagProvider(DataProviderContext context) {
+    public ModDamageTypeTagsProvider(DataProviderContext context) {
         super(Registries.DAMAGE_TYPE, context);
     }
 

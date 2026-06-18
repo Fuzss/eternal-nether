@@ -13,8 +13,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.ShieldDecorationRecipe;
 import net.minecraft.world.level.block.Blocks;
 
-import java.util.Collections;
-
 public class ModRecipeProvider extends AbstractRecipeProvider {
 
     public ModRecipeProvider(DataProviderContext context) {
@@ -23,10 +21,9 @@ public class ModRecipeProvider extends AbstractRecipeProvider {
 
     @Override
     public void addRecipes(RecipeOutput recipeOutput) {
-        // TODO use proper Puzzles Lib method
-        this.generateFor(ModBlockFamilies.WITHERED_BLACKSTONE_FAMILY, Collections.emptyMap());
-        this.generateFor(ModBlockFamilies.CRACKED_WITHERED_BLACKSTONE_FAMILY, Collections.emptyMap());
-        this.generateFor(ModBlockFamilies.WARPED_NETHER_BRICKS_FAMILY, Collections.emptyMap());
+        this.generateFor(ModBlockFamilies.WITHERED_BLACKSTONE_FAMILY);
+        this.generateFor(ModBlockFamilies.CRACKED_WITHERED_BLACKSTONE_FAMILY);
+        this.generateFor(ModBlockFamilies.WARPED_NETHER_BRICKS_FAMILY);
         ShapedRecipeBuilder.shaped(this.items(), RecipeCategory.BUILDING_BLOCKS, ModBlocks.WARPED_NETHER_BRICKS.value())
                 .define('W', Items.WARPED_ROOTS)
                 .define('N', Items.NETHER_BRICK)

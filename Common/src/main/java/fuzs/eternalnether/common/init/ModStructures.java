@@ -7,7 +7,7 @@ import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.random.Weighted;
 import net.minecraft.util.random.WeightedList;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.GenerationStep;
@@ -45,7 +45,7 @@ public final class ModStructures {
                 new CatacombStructure(new Structure.StructureSettings.Builder(context.lookup(Registries.BIOME)
                         .getOrThrow(ModTags.HAS_CATACOMB_BIOME_TAG_KEY)).spawnOverrides(Map.of(MobCategory.MONSTER,
                                 new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.PIECE,
-                                        WeightedList.of(new MobSpawnSettings.SpawnerData(EntityType.MAGMA_CUBE, 1, 1)))))
+                                        WeightedList.of(new MobSpawnSettings.SpawnerData(EntityTypes.MAGMA_CUBE, 1, 1)))))
                         .generationStep(GenerationStep.Decoration.UNDERGROUND_DECORATION)
                         .build(),
                         context.lookup(Registries.TEMPLATE_POOL).getOrThrow(CATACOMB_START_POOL),
@@ -58,7 +58,7 @@ public final class ModStructures {
                 new CitadelStructure(new Structure.StructureSettings.Builder(context.lookup(Registries.BIOME)
                         .getOrThrow(ModTags.HAS_CITADEL_BIOME_TAG_KEY)).spawnOverrides(Map.of(MobCategory.MONSTER,
                                 new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.PIECE,
-                                        WeightedList.of(new Weighted<>(new MobSpawnSettings.SpawnerData(EntityType.ENDERMAN,
+                                        WeightedList.of(new Weighted<>(new MobSpawnSettings.SpawnerData(EntityTypes.ENDERMAN,
                                                         1,
                                                         1), 1),
                                                 new Weighted<>(new MobSpawnSettings.SpawnerData(ModEntityTypes.WARPED_ENDERMAN.value(),
@@ -77,7 +77,7 @@ public final class ModStructures {
                 new CitadelStructure(new Structure.StructureSettings.Builder(context.lookup(Registries.BIOME)
                         .getOrThrow(ModTags.HAS_PIGLIN_MANOR_BIOME_TAG_KEY)).spawnOverrides(Map.of(MobCategory.MONSTER,
                                 new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.PIECE,
-                                        WeightedList.of(new Weighted<>(new MobSpawnSettings.SpawnerData(EntityType.PIGLIN,
+                                        WeightedList.of(new Weighted<>(new MobSpawnSettings.SpawnerData(EntityTypes.PIGLIN,
                                                         1,
                                                         1), 2),
                                                 new Weighted<>(new MobSpawnSettings.SpawnerData(ModEntityTypes.PIGLIN_HUNTER.value(),

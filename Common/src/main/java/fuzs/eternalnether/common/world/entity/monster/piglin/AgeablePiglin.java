@@ -60,7 +60,7 @@ public abstract class AgeablePiglin extends AbstractPiglin {
     /**
      * @see Piglin#BABY_DIMENSIONS
      */
-    private static final EntityDimensions BABY_DIMENSIONS = EntityType.PIGLIN.getDimensions()
+    private static final EntityDimensions BABY_DIMENSIONS = EntityTypes.PIGLIN.getDimensions()
             .scale(0.5F)
             .withEyeHeight(0.97F);
     /**

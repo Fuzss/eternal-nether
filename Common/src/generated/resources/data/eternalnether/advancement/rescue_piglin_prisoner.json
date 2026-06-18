@@ -8,7 +8,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "eternalnether:piglin_prisoner"
+              "minecraft:entity_type": "eternalnether:piglin_prisoner"
             }
           }
         ]

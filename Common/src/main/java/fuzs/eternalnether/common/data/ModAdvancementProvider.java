@@ -12,12 +12,18 @@ import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.AdvancementType;
-import net.minecraft.advancements.criterion.*;
+import net.minecraft.advancements.predicates.LocationPredicate;
+import net.minecraft.advancements.predicates.entity.EntityPredicate;
+import net.minecraft.advancements.triggers.ChangeDimensionTrigger;
+import net.minecraft.advancements.triggers.PlayerTrigger;
+import net.minecraft.advancements.triggers.StartRidingTrigger;
+import net.minecraft.advancements.triggers.SummonedEntityTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.equipment.trim.ArmorTrim;
@@ -117,7 +123,7 @@ public class ModAdvancementProvider extends AbstractAdvancementProvider {
                                 .vehicle(EntityPredicate.Builder.entity()
                                         .of(entityLookup, ModEntityTypes.WITHER_SKELETON_HORSE.value())
                                         .passenger(EntityPredicate.Builder.entity()
-                                                .of(entityLookup, EntityType.PLAYER)))))
+                                                .of(entityLookup, EntityTypes.PLAYER)))))
                 .save(writer, RIDE_WITHER_SKELETON_HORSE_ADVANCEMENT.name());
         Advancement.Builder.advancement()
                 .display(display(new ItemStackTemplate(Items.ENDER_PEARL), SUMMON_ENDERMAN_ADVANCEMENT.id()))

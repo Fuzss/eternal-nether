@@ -15,19 +15,14 @@ import net.minecraft.client.data.models.MultiVariant;
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
 import net.minecraft.client.data.models.model.*;
-import net.minecraft.client.renderer.item.ItemModel;
-import net.minecraft.client.renderer.special.ShieldSpecialRenderer;
-import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BellAttachType;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 import java.util.Collections;
-import java.util.function.Supplier;
 
 public class ModModelProvider extends AbstractModelProvider {
     public static final TextureSlot BAR_TEXTURE_SLOT = TextureSlot.create("bar");
@@ -69,17 +64,9 @@ public class ModModelProvider extends AbstractModelProvider {
         blockModelGenerators.createTrivialBlock(ModBlocks.WITHERED_BLACKSTONE.value(),
                 BlockModelGenerators.TEXTURED_MODELS::get);
         blockModelGenerators.createTrivialCube(ModBlocks.WARPED_NETHER_BRICKS.value());
-        // TODO use proper Puzzles Lib method
-        this.generateForBlocks(blockModelGenerators,
-                ModBlockFamilies.WITHERED_BLACKSTONE_FAMILY,
-                Collections.emptyMap(),
-                BlockModelGenerators.TEXTURED_MODELS.get(ModBlocks.WITHERED_BLACKSTONE.value()));
-        this.generateForBlocks(blockModelGenerators,
-                ModBlockFamilies.CRACKED_WITHERED_BLACKSTONE_FAMILY,
-                Collections.emptyMap());
-        this.generateForBlocks(blockModelGenerators,
-                ModBlockFamilies.WARPED_NETHER_BRICKS_FAMILY,
-                Collections.emptyMap());
+        this.generateForBlocks(blockModelGenerators, ModBlockFamilies.WITHERED_BLACKSTONE_FAMILY);
+        this.generateForBlocks(blockModelGenerators, ModBlockFamilies.CRACKED_WITHERED_BLACKSTONE_FAMILY);
+        this.generateForBlocks(blockModelGenerators, ModBlockFamilies.WARPED_NETHER_BRICKS_FAMILY);
         blockModelGenerators.createTrivialCube(ModBlocks.COBBLED_BLACKSTONE.value());
         blockModelGenerators.createTrivialCube(ModBlocks.WITHERED_BASALT.value());
         blockModelGenerators.createTrivialCube(ModBlocks.WITHERED_COAL_BLOCK.value());
@@ -170,28 +157,9 @@ public class ModModelProvider extends AbstractModelProvider {
         itemModelGenerators.generateFlatItem(ModItems.WITHERED_BONE.value(), ModelTemplates.FLAT_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.WITHERED_BONE_MEAL.value(), ModelTemplates.FLAT_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.CUTLASS.value(), ModelTemplates.FLAT_HANDHELD_ITEM);
-        generateShield(ModItems.GILDED_NETHERITE_SHIELD.value(),
+        ItemModelGenerationHelper.generateShield(ModItems.GILDED_NETHERITE_SHIELD.value(),
                 Blocks.CRIMSON_PLANKS,
                 GildedNetheriteShieldSpecialRenderer.Unbaked::new,
                 itemModelGenerators);
-    }
-
-    /**
-     * TODO this has moved to Puzzles Lib
-     */
-    @Deprecated
-    public static void generateShield(Item item, Block particleBlock, Supplier<SpecialModelRenderer.Unbaked<?>> specialModelSupplier, ItemModelGenerators itemModelGenerators) {
-        Identifier normalModel = ItemModelGenerationHelper.SHIELD_MODEL_TEMPLATE.create(ModelLocationHelper.getItemModel(
-                item), TextureMapping.particle(particleBlock), itemModelGenerators.modelOutput);
-        Identifier blockingModel = ItemModelGenerationHelper.SHIELD_BLOCKING_MODEL_TEMPLATE.create(ModelLocationHelper.getItemModel(
-                item,
-                "_blocking"), TextureMapping.particle(particleBlock), itemModelGenerators.modelOutput);
-        ItemModel.Unbaked normal = ItemModelUtils.specialModel(normalModel, specialModelSupplier.get());
-        ItemModel.Unbaked blocking = ItemModelUtils.specialModel(blockingModel, specialModelSupplier.get());
-        itemModelGenerators.itemModelOutput.accept(item,
-                ItemModelUtils.conditional(ShieldSpecialRenderer.DEFAULT_TRANSFORMATION,
-                        ItemModelUtils.isUsingItem(),
-                        blocking,
-                        normal));
     }
 }

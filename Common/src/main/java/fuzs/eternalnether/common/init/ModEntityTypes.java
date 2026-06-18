@@ -2,7 +2,8 @@ package fuzs.eternalnether.common.init;
 
 import com.google.common.collect.ImmutableList;
 import fuzs.eternalnether.common.world.entity.animal.horse.WitherSkeletonHorse;
-import fuzs.eternalnether.common.world.entity.monster.*;
+import fuzs.eternalnether.common.world.entity.monster.WarpedEnderman;
+import fuzs.eternalnether.common.world.entity.monster.Wex;
 import fuzs.eternalnether.common.world.entity.monster.piglin.PiglinHunter;
 import fuzs.eternalnether.common.world.entity.monster.piglin.PiglinPrisoner;
 import fuzs.eternalnether.common.world.entity.monster.skeleton.Corpor;
@@ -10,13 +11,13 @@ import fuzs.eternalnether.common.world.entity.monster.skeleton.WitherSkeletonKni
 import fuzs.eternalnether.common.world.entity.monster.skeleton.Wraither;
 import fuzs.eternalnether.common.world.entity.projectile.ThrownWarpedEnderpearl;
 import net.minecraft.core.Holder;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.monster.piglin.PiglinBrute;
-import net.minecraft.world.level.block.Blocks;
 
 public final class ModEntityTypes {
     public static final Holder.Reference<EntityType<Wex>> WEX = ModRegistry.REGISTRIES.registerEntityType("wex",
@@ -57,7 +58,7 @@ public final class ModEntityTypes {
             "wraither",
             () -> EntityType.Builder.of(Wraither::new, MobCategory.MONSTER)
                     .fireImmune()
-                    .immuneTo(Blocks.WITHER_ROSE)
+                    .immuneTo(BlockTags.WITHER_SKELETON_IMMUNE_TO)
                     .sized(0.7F, 2.4F)
                     .eyeHeight(2.1F)
                     .ridingOffset(-0.875F)
@@ -67,7 +68,7 @@ public final class ModEntityTypes {
             "wither_skeleton_knight",
             () -> EntityType.Builder.of(WitherSkeletonKnight::new, MobCategory.MONSTER)
                     .fireImmune()
-                    .immuneTo(Blocks.WITHER_ROSE)
+                    .immuneTo(BlockTags.WITHER_SKELETON_IMMUNE_TO)
                     .sized(0.7F, 2.4F)
                     .eyeHeight(2.1F)
                     .ridingOffset(-0.875F)
@@ -76,7 +77,7 @@ public final class ModEntityTypes {
     public static final Holder.Reference<EntityType<Corpor>> CORPOR = ModRegistry.REGISTRIES.registerEntityType("corpor",
             () -> EntityType.Builder.of(Corpor::new, MobCategory.MONSTER)
                     .fireImmune()
-                    .immuneTo(Blocks.WITHER_ROSE)
+                    .immuneTo(BlockTags.WITHER_SKELETON_IMMUNE_TO)
                     .sized(0.7F, 2.4F)
                     .eyeHeight(2.1F)
                     .ridingOffset(-0.875F)
