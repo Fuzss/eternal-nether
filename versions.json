@@ -1,9 +1,16 @@
 {
   "branches": {
-    "1.21.11": "archived",
-    "1.21.1": "maintained",
     "1.20.1": "fixes",
+    "1.21.1": "maintained",
+    "1.21.11": "archived",
     "26.1.x": "maintained",
     "26.2.x": "primary"
+  },
+  "properties": {
+    "distributions.curseforge.id": "1252482",
+    "distributions.curseforge.slug": "eternal-nether",
+    "distributions.github.slug": "eternal-nether",
+    "distributions.modrinth.id": "s6R4jmL8",
+    "distributions.modrinth.slug": "eternal-nether"
   }
 }
