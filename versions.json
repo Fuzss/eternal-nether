@@ -6,11 +6,17 @@
     "26.1.x": "maintained",
     "26.2.x": "primary"
   },
-  "properties": {
-    "distributions.curseforge.id": "1252482",
-    "distributions.curseforge.slug": "eternal-nether",
-    "distributions.github.slug": "eternal-nether",
-    "distributions.modrinth.id": "s6R4jmL8",
-    "distributions.modrinth.slug": "eternal-nether"
+  "distributions": {
+    "curseforge": {
+      "id": "1252482",
+      "slug": "eternal-nether"
+    },
+    "github": {
+      "slug": "eternal-nether"
+    },
+    "modrinth": {
+      "id": "s6R4jmL8",
+      "slug": "eternal-nether"
+    }
   }
 }
