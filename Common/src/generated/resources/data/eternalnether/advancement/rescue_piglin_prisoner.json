@@ -1,5 +1,5 @@
 {
-  "parent": "eternalnether:piglin_manor",
+  "parent": "eternalnether:catacomb",
   "criteria": {
     "rescue_prisoner": {
       "conditions": {
