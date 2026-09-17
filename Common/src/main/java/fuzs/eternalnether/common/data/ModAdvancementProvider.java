@@ -109,7 +109,7 @@ public class ModAdvancementProvider extends AbstractAdvancementProvider {
                 .display(display(new ItemStackTemplate(ModItems.NETHERITE_BELL.value()),
                         RESCUE_PIGLIN_PRISONER_ADVANCEMENT.id(),
                         AdvancementType.CHALLENGE))
-                .parent(PIGLIN_MANOR_ADVANCEMENT.asParent())
+                .parent(CATACOMB_ADVANCEMENT.asParent())
                 .rewards(AdvancementRewards.Builder.experience(500))
                 .addCriterion("rescue_prisoner",
                         SummonedEntityTrigger.TriggerInstance.summonedEntity(EntityPredicate.Builder.entity()
