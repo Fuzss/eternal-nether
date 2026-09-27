@@ -1,7 +1,12 @@
 {
-  "type": "eternalnether:catacomb",
+  "type": "eternalnether:nether_jigsaw",
   "biomes": "#eternalnether:has_structure/catacomb",
+  "check_lava_lake": true,
+  "end_height": {
+    "absolute": 56
+  },
   "max_distance_from_center": 128,
+  "required_vertical_space": 0,
   "size": 3,
   "spawn_overrides": {
     "monster": {

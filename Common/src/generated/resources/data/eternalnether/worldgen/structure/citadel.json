@@ -1,7 +1,12 @@
 {
-  "type": "eternalnether:citadel",
+  "type": "eternalnether:nether_jigsaw",
   "biomes": "#eternalnether:has_structure/citadel",
+  "check_lava_lake": true,
+  "end_height": {
+    "absolute": 48
+  },
   "max_distance_from_center": 116,
+  "required_vertical_space": 12,
   "size": 4,
   "spawn_overrides": {
     "monster": {

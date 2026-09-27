@@ -1,4 +1,4 @@
-// 26.3	2026-09-27T17:13:18.735466	Registries for world
+// 26.3	2026-09-27T18:06:17.033526	Registries for world
 c100d0c1caa4a50a90d50723e41110943a45d68c data/eternalnether/jukebox_song/wither_waltz.json
 75258a0869b58fabe92535bcaed4743cd9b0df3b data/eternalnether/worldgen/feature/mob_feature_catacomb.json
 76a150d8825cb0295f8b5a41bbc1cb46e41198c0 data/eternalnether/worldgen/feature/mob_feature_piglin_manor_inside.json
@@ -20,9 +20,9 @@ ba382197cd74f339bd16c222cf7a7149b259f79f data/eternalnether/worldgen/placed_feat
 34e1563951da417390f23148dbbb4fda80485464 data/eternalnether/worldgen/processor_list/catacomb/withered_blackstone.json
 53e4aa93a3f55aec9625aa36929e860426339f5b data/eternalnether/worldgen/processor_list/citadel/citadel.json
 eb1ed270a2c99d49dc2a1e78b0f5975441e6f083 data/eternalnether/worldgen/processor_list/piglin_manor/piglin_manor.json
-c1d57fbed8943f5716a56831182971f4cb39f067 data/eternalnether/worldgen/structure/catacomb.json
-5c0443cdb1148322b04f7afbe5818498a0228711 data/eternalnether/worldgen/structure/citadel.json
-6b73007eb1d987a5f58e9ed1a91c5de1768cdc1b data/eternalnether/worldgen/structure/piglin_manor.json
+d2cf3e4a66a687d762f622a21768f7911f6768dc data/eternalnether/worldgen/structure/catacomb.json
+2409478e1d824f9d7d1b4bc337b8562917f35cac data/eternalnether/worldgen/structure/citadel.json
+c3f7899cb69d672c11efde30c1be90e5b90bc55c data/eternalnether/worldgen/structure/piglin_manor.json
 0f7f31bc549d7e934ebf8d32775c700c05e9cd91 data/eternalnether/worldgen/structure_set/catacomb.json
 68d67c0525cb55868b893ea39ad70f7a56ea52ab data/eternalnether/worldgen/structure_set/citadel.json
 e00f8d10129745c7ab95c9677c16232701c9007d data/eternalnether/worldgen/structure_set/piglin_manor.json

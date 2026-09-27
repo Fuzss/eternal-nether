@@ -1,8 +1,6 @@
 package fuzs.eternalnether.common.init;
 
-import fuzs.eternalnether.common.world.level.levelgen.structure.CatacombStructure;
-import fuzs.eternalnether.common.world.level.levelgen.structure.CitadelStructure;
-import fuzs.eternalnether.common.world.level.levelgen.structure.PiglinManorStructure;
+import fuzs.eternalnether.common.world.level.levelgen.structure.NetherJigsawStructure;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
@@ -34,7 +32,7 @@ public final class ModStructures {
 
     public static void bootstrap(BootstrapContext<Structure> context) {
         context.register(CATACOMB_STRUCTURE,
-                new CatacombStructure(new Structure.StructureSettings.Builder(context.lookup(Registries.BIOME)
+                new NetherJigsawStructure(new Structure.StructureSettings.Builder(context.lookup(Registries.BIOME)
                         .getOrThrow(ModTags.Biomes.HAS_CATACOMB)).spawnOverrides(Map.of(MobCategory.MONSTER,
                                 new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.PIECE,
                                         WeightedList.of(new MobSpawnSettings.SpawnerData(EntityTypes.MAGMA_CUBE,
@@ -46,9 +44,10 @@ public final class ModStructures {
                         3,
                         UniformHeight.of(VerticalAnchor.absolute(56), VerticalAnchor.absolute(84)),
                         Optional.empty(),
-                        new JigsawStructure.MaxDistance(128)));
+                        new JigsawStructure.MaxDistance(128),
+                        new NetherJigsawStructure.Placement(VerticalAnchor.absolute(56), 0, true)));
         context.register(CITADEL_STRUCTURE,
-                new CitadelStructure(new Structure.StructureSettings.Builder(context.lookup(Registries.BIOME)
+                new NetherJigsawStructure(new Structure.StructureSettings.Builder(context.lookup(Registries.BIOME)
                         .getOrThrow(ModTags.Biomes.HAS_CITADEL)).spawnOverrides(Map.of(MobCategory.MONSTER,
                                 new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.PIECE,
                                         WeightedList.of(new Weighted<>(new MobSpawnSettings.SpawnerData(EntityTypes.ENDERMAN,
@@ -63,9 +62,10 @@ public final class ModStructures {
                         4,
                         UniformHeight.of(VerticalAnchor.absolute(48), VerticalAnchor.absolute(70)),
                         Optional.empty(),
-                        new JigsawStructure.MaxDistance(116)));
+                        new JigsawStructure.MaxDistance(116),
+                        new NetherJigsawStructure.Placement(VerticalAnchor.absolute(48), 12, true)));
         context.register(PIGLIN_MANOR_STRUCTURE,
-                new PiglinManorStructure(new Structure.StructureSettings.Builder(context.lookup(Registries.BIOME)
+                new NetherJigsawStructure(new Structure.StructureSettings.Builder(context.lookup(Registries.BIOME)
                         .getOrThrow(ModTags.Biomes.HAS_PIGLIN_MANOR)).spawnOverrides(Map.of(MobCategory.MONSTER,
                                 new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.PIECE,
                                         WeightedList.of(new Weighted<>(new MobSpawnSettings.SpawnerData(EntityTypes.PIGLIN,
@@ -80,6 +80,7 @@ public final class ModStructures {
                         1,
                         UniformHeight.of(VerticalAnchor.absolute(34), VerticalAnchor.absolute(72)),
                         Optional.empty(),
-                        new JigsawStructure.MaxDistance(116)));
+                        new JigsawStructure.MaxDistance(116),
+                        new NetherJigsawStructure.Placement(VerticalAnchor.absolute(34), 24, true)));
     }
 }
