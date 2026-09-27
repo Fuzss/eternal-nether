@@ -3,26 +3,39 @@ package fuzs.eternalnether.common.data.structures;
 import com.google.common.hash.Hashing;
 import com.google.common.hash.HashingOutputStream;
 import fuzs.puzzleslib.common.api.data.v3.core.DataProviderContext;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.structures.NbtToSnbt;
 import net.minecraft.data.structures.StructureUpdater;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtAccounter;
-import net.minecraft.nbt.NbtIo;
-import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.*;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Util;
+import net.minecraft.util.datafix.DataFixTypes;
+import net.minecraft.util.datafix.DataFixers;
+import net.minecraft.world.RandomizableContainer;
+import net.minecraft.world.level.BaseSpawner;
+import net.minecraft.world.level.SpawnData;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.minecraft.world.level.storage.loot.LootTable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -34,62 +47,78 @@ import java.util.stream.Stream;
  * palette against the registered blocks (including all modded ones while data generation is running). The generated
  * {@code snbt} file is a human-readable representation of the upgraded {@code nbt} file and is intended for reviewing
  * changes in version control.
+ * <p>
+ * Structures are validated before they are upgraded, as {@link StructureUpdater} silently replaces unknown blocks with
+ * air and drops unknown block state properties. Every structure that references an unknown block, an invalid block
+ * state property, or an unknown block entity type, loot table, template pool, or spawner entity type is skipped and
+ * reported once all structures have been processed.
  *
  * @see net.minecraft.data.structures.SnbtToNbt
  */
 public class StructureTemplateProvider implements DataProvider {
     private final PackOutput output;
     private final Collection<Path> inputs;
+    private final CompletableFuture<HolderLookup.Provider> lookupProvider;
 
     public StructureTemplateProvider(DataProviderContext context) {
         // TODO replace with the data generator input directories once they are provided by the data provider context
-        this(context.getPackOutput(), List.of(Path.of("../Common/src/main/nbt")));
+        this(context.getPackOutput(), List.of(Path.of("../Common/src/main/nbt")), context.getRegistries());
     }
 
-    public StructureTemplateProvider(PackOutput output, Collection<Path> inputs) {
+    public StructureTemplateProvider(PackOutput output, Collection<Path> inputs, CompletableFuture<HolderLookup.Provider> lookupProvider) {
         this.output = output;
         this.inputs = inputs;
+        this.lookupProvider = lookupProvider;
     }
 
     @Override
     public CompletableFuture<?> run(CachedOutput cache) {
-        Path outputDirectory = this.output.getOutputFolder();
-        List<Throwable> failures = Collections.synchronizedList(new ArrayList<>());
-        List<CompletableFuture<?>> tasks = new ArrayList<>();
+        return this.lookupProvider.thenCompose((HolderLookup.Provider lookupProvider) -> {
+            Path outputDirectory = this.output.getOutputFolder();
+            List<Throwable> failures = Collections.synchronizedList(new ArrayList<>());
+            List<CompletableFuture<?>> tasks = new ArrayList<>();
 
-        for (Path inputDirectory : this.inputs) {
-            // Skip absent input directories, the data generator might not have been provided with any.
-            if (!Files.isDirectory(inputDirectory)) {
-                continue;
-            }
-
-            // Flatten the nested future, so this task only completes once all structure files of the directory are converted.
-            tasks.add(CompletableFuture.supplyAsync(() -> {
-                try (Stream<Path> files = Files.walk(inputDirectory)) {
-                    return CompletableFuture.allOf(files.filter((Path path) -> path.toString().endsWith(".nbt"))
-                            .map((Path path) -> CompletableFuture.runAsync(() -> {
-                                String name = this.getName(inputDirectory, path);
-                                try {
-                                    this.convertStructure(cache, outputDirectory, path, name);
-                                } catch (Exception exception) {
-                                    failures.add(new RuntimeException("Failed to convert structure " + path, exception));
-                                }
-                            }, Util.backgroundExecutor().forName(this.getName())))
-                            .toArray(CompletableFuture[]::new));
-                } catch (Exception exception) {
-                    failures.add(new RuntimeException("Failed to read structure input directory " + inputDirectory, exception));
-                    return CompletableFuture.<Void>completedFuture(null);
+            for (Path inputDirectory : this.inputs) {
+                // Skip absent input directories, the data generator might not have been provided with any.
+                if (!Files.isDirectory(inputDirectory)) {
+                    continue;
                 }
-            }, Util.backgroundExecutor().forName(this.getName())).thenCompose(Function.identity()));
-        }
 
-        return Util.sequenceFailFast(tasks).thenRun(() -> {
-            if (!failures.isEmpty()) {
-                RuntimeException exception = new RuntimeException("Failed to convert " + failures.size()
-                        + " structure template file(s)");
-                failures.forEach(exception::addSuppressed);
-                throw exception;
+                // Flatten the nested future, so this task only completes once all structure files of the directory are converted.
+                tasks.add(CompletableFuture.supplyAsync(() -> {
+                    try (Stream<Path> files = Files.walk(inputDirectory)) {
+                        return CompletableFuture.allOf(files.filter((Path path) -> path.toString().endsWith(".nbt"))
+                                .map((Path path) -> CompletableFuture.runAsync(() -> {
+                                    String name = this.getName(inputDirectory, path);
+                                    try {
+                                        this.convertStructure(cache,
+                                                outputDirectory,
+                                                path,
+                                                name,
+                                                lookupProvider,
+                                                failures);
+                                    } catch (Exception exception) {
+                                        failures.add(new RuntimeException("Failed to convert structure " + path,
+                                                exception));
+                                    }
+                                }, Util.backgroundExecutor().forName(this.getName())))
+                                .toArray(CompletableFuture[]::new));
+                    } catch (Exception exception) {
+                        failures.add(new RuntimeException("Failed to read structure input directory " + inputDirectory,
+                                exception));
+                        return CompletableFuture.<Void>completedFuture(null);
+                    }
+                }, Util.backgroundExecutor().forName(this.getName())).thenCompose(Function.identity()));
             }
+
+            return Util.sequenceFailFast(tasks).thenRun(() -> {
+                if (!failures.isEmpty()) {
+                    RuntimeException exception = new RuntimeException(
+                            "Failed to process structure templates (" + failures.size() + " problem(s))");
+                    failures.forEach(exception::addSuppressed);
+                    throw exception;
+                }
+            });
         });
     }
 
@@ -98,15 +127,158 @@ public class StructureTemplateProvider implements DataProvider {
         return name.substring(0, name.length() - ".nbt".length());
     }
 
-    protected void convertStructure(CachedOutput cache, Path outputDirectory, Path structureFile, String name) {
+    protected void convertStructure(CachedOutput cache, Path outputDirectory, Path structureFile, String name, HolderLookup.Provider lookupProvider, List<Throwable> failures) {
         try {
             CompoundTag tag = NbtIo.readCompressed(structureFile, NbtAccounter.unlimitedHeap());
+            CompoundTag fixedTag = DataFixTypes.STRUCTURE.updateToCurrentVersion(DataFixers.getDataFixer(),
+                    tag,
+                    NbtUtils.getDataVersion(tag, 500));
+            // Invalid structures are skipped entirely, mirroring vanilla data generators which fail instead of emitting
+            // broken data.
+            if (!this.validateStructure(name, fixedTag, lookupProvider, failures)) {
+                return;
+            }
+
             CompoundTag upgradedTag = StructureUpdater.update(name, tag);
             this.writeNbt(cache, outputDirectory, name, upgradedTag);
             this.writeSnbt(cache, outputDirectory, name, upgradedTag);
         } catch (IOException exception) {
             throw new RuntimeException("Failed to convert structure " + structureFile, exception);
         }
+    }
+
+    protected boolean validateStructure(String name, CompoundTag tag, HolderLookup.Provider lookupProvider, List<Throwable> failures) {
+        // Collect every issue independently, so all problems of a single structure are reported at once.
+        List<Throwable> issues = new ArrayList<>();
+        this.validatePalette(name, tag, issues::add);
+        this.validateBlockEntities(name, tag, lookupProvider, issues::add);
+        failures.addAll(issues);
+        return issues.isEmpty();
+    }
+
+    protected void validatePalette(String name, CompoundTag tag, Consumer<Throwable> issues) {
+        // Structures either use a single palette for all blocks...
+        tag.getList(StructureTemplate.PALETTE_TAG).ifPresent((ListTag palette) -> {
+            this.validatePalette(name, palette, issues);
+        });
+        // ...or multiple palettes, one of which is picked per block.
+        tag.getList(StructureTemplate.PALETTE_LIST_TAG).ifPresent((ListTag palettes) -> {
+            for (int i = 0; i < palettes.size(); i++) {
+                this.validatePalette(name, palettes.getListOrEmpty(i), issues);
+            }
+        });
+    }
+
+    protected void validatePalette(String name, ListTag palette, Consumer<Throwable> issues) {
+        for (int i = 0; i < palette.size(); i++) {
+            // Each palette entry is a block state stored as an "id" with an optional "properties" compound.
+            CompoundTag entry = palette.getCompoundOrEmpty(i);
+            Optional<String> blockId = entry.getString("id");
+            if (blockId.isEmpty()) {
+                issues.accept(new RuntimeException("Structure '" + name + "' has a palette entry without a block id"));
+                continue;
+            }
+
+            Identifier identifier = Identifier.tryParse(blockId.get());
+            if (identifier == null) {
+                issues.accept(new RuntimeException(
+                        "Structure '" + name + "' has an invalid block id '" + blockId.get() + "'"));
+                continue;
+            }
+
+            Optional<Block> block = BuiltInRegistries.BLOCK.getOptional(identifier);
+            if (block.isEmpty()) {
+                issues.accept(new RuntimeException(
+                        "Structure '" + name + "' references unknown block '" + blockId.get() + "'"));
+                continue;
+            }
+
+            entry.getCompound("properties").ifPresent((CompoundTag properties) -> {
+                StateDefinition<Block, BlockState> definition = block.get().getStateDefinition();
+                for (String key : properties.keySet()) {
+                    Property<?> property = definition.getProperty(key);
+                    if (property == null) {
+                        issues.accept(new RuntimeException(
+                                "Structure '" + name + "' has unknown property '" + key + "' for block '"
+                                        + blockId.get() + "'"));
+                    } else {
+                        Optional<String> value = properties.getString(key);
+                        if (value.isEmpty() || property.getValue(value.get()).isEmpty()) {
+                            issues.accept(new RuntimeException(
+                                    "Structure '" + name + "' has invalid property value '" + value.orElse("")
+                                            + "' for property '" + key + "' of block '" + blockId.get() + "'"));
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    protected void validateBlockEntities(String name, CompoundTag tag, HolderLookup.Provider lookupProvider, Consumer<Throwable> issues) {
+        HolderLookup.RegistryLookup<StructureTemplatePool> templatePools = lookupProvider.lookupOrThrow(Registries.TEMPLATE_POOL);
+        HolderLookup.RegistryLookup<LootTable> lootTables = lookupProvider.lookupOrThrow(Registries.LOOT_TABLE);
+        ListTag blocks = tag.getListOrEmpty(StructureTemplate.BLOCKS_TAG);
+        for (int i = 0; i < blocks.size(); i++) {
+            // Block entities are stored as a raw "nbt" compound on their entry in the "blocks" list.
+            blocks.getCompoundOrEmpty(i).getCompound("nbt").ifPresent((CompoundTag blockEntity) -> {
+                this.validateBlockEntity(name, blockEntity, templatePools, lootTables, issues);
+            });
+        }
+    }
+
+    protected void validateBlockEntity(String name, CompoundTag blockEntity, HolderLookup.RegistryLookup<StructureTemplatePool> templatePools, HolderLookup.RegistryLookup<LootTable> lootTables, Consumer<Throwable> issues) {
+        // "id" is the block entity type.
+        this.validateStaticReference(name,
+                blockEntity,
+                "id",
+                "block entity type",
+                BuiltInRegistries.BLOCK_ENTITY_TYPE,
+                issues);
+        // Chest-like block entities reference their loot table.
+        blockEntity.getString(RandomizableContainer.LOOT_TABLE_TAG).ifPresent((String lootTable) -> {
+            Identifier identifier = Identifier.tryParse(lootTable);
+            if (identifier == null || lootTables.get(ResourceKey.create(Registries.LOOT_TABLE, identifier)).isEmpty()) {
+                issues.accept(new RuntimeException(
+                        "Structure '" + name + "' references unknown loot table '" + lootTable + "'"));
+            }
+        });
+        // Jigsaw blocks reference the template pool they connect to.
+        blockEntity.getString("pool").ifPresent((String templatePool) -> {
+            Identifier identifier = Identifier.tryParse(templatePool);
+            if (identifier == null || templatePools.get(ResourceKey.create(Registries.TEMPLATE_POOL, identifier))
+                    .isEmpty()) {
+                issues.accept(new RuntimeException(
+                        "Structure '" + name + "' references unknown template pool '" + templatePool + "'"));
+            }
+        });
+        // Spawners store their mobs in "SpawnData" and "SpawnPotentials".
+        blockEntity.getCompound(BaseSpawner.SPAWN_DATA_TAG).ifPresent((CompoundTag spawnData) -> {
+            this.validateSpawnData(name, spawnData, issues);
+        });
+        blockEntity.getList("SpawnPotentials").ifPresent((ListTag spawnPotentials) -> {
+            for (int i = 0; i < spawnPotentials.size(); i++) {
+                spawnPotentials.getCompoundOrEmpty(i).getCompound("data").ifPresent((CompoundTag spawnData) -> {
+                    this.validateSpawnData(name, spawnData, issues);
+                });
+            }
+        });
+    }
+
+    protected void validateSpawnData(String name, CompoundTag spawnData, Consumer<Throwable> issues) {
+        // "entity" holds the mob nbt, its "id" is the entity type.
+        spawnData.getCompound(SpawnData.ENTITY_TAG).ifPresent((CompoundTag entity) -> {
+            this.validateStaticReference(name, entity, "id", "entity type", BuiltInRegistries.ENTITY_TYPE, issues);
+        });
+    }
+
+    private void validateStaticReference(String name, CompoundTag tag, String key, String description, Registry<?> registry, Consumer<Throwable> issues) {
+        tag.getString(key).ifPresent((String id) -> {
+            Identifier identifier = Identifier.tryParse(id);
+            if (identifier == null || !registry.containsKey(identifier)) {
+                issues.accept(new RuntimeException(
+                        "Structure '" + name + "' references unknown " + description + " '" + id + "'"));
+            }
+        });
     }
 
     @SuppressWarnings("UnstableApiUsage")
