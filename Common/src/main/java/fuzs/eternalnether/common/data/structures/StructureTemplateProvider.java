@@ -12,6 +12,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.util.Util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -35,8 +37,8 @@ import java.util.stream.Stream;
  * @see net.minecraft.data.structures.SnbtToNbt
  */
 public class StructureTemplateProvider implements DataProvider {
-    private final PackOutput output;
-    private final Collection<Path> inputs;
+    protected final PackOutput output;
+    protected final Collection<Path> inputs;
 
     public StructureTemplateProvider(DataProviderContext context) {
         // TODO replace with the data generator input directories once they are provided by the data provider context
@@ -51,44 +53,54 @@ public class StructureTemplateProvider implements DataProvider {
     @Override
     public CompletableFuture<?> run(CachedOutput cache) {
         Path outputDirectory = this.output.getOutputFolder();
+        List<CompletableFuture<?>> tasks = new ArrayList<>();
+
         for (Path inputDirectory : this.inputs) {
-            if (!Files.isDirectory(inputDirectory)) {
-                continue;
-            }
-
-            List<Path> structureFiles = new ArrayList<>();
-            try (Stream<Path> files = Files.walk(inputDirectory)) {
-                files.filter((Path path) -> path.toString().endsWith(".nbt")).forEach(structureFiles::add);
-            } catch (IOException exception) {
-                throw new RuntimeException("Failed to read structure input directory " + inputDirectory, exception);
-            }
-
-            for (Path structureFile : structureFiles) {
-                this.convertStructure(cache, outputDirectory, inputDirectory, structureFile);
-            }
+            // Flatten the nested future, so this task only completes once all structure files of the directory are converted.
+            tasks.add(CompletableFuture.supplyAsync(() -> {
+                try (Stream<Path> files = Files.walk(inputDirectory)) {
+                    return CompletableFuture.allOf(files.filter((Path path) -> path.toString().endsWith(".nbt"))
+                            .map((Path path) -> CompletableFuture.runAsync(() -> {
+                                this.convertStructure(cache, outputDirectory, path, this.getName(inputDirectory, path));
+                            }, Util.backgroundExecutor().forName(this.getName())))
+                            .toArray(CompletableFuture[]::new));
+                } catch (Exception exception) {
+                    throw new RuntimeException("Failed to read structure input directory, aborting", exception);
+                }
+            }, Util.backgroundExecutor().forName(this.getName())).thenCompose(Function.identity()));
         }
 
-        return CompletableFuture.completedFuture(null);
+        return Util.sequenceFailFast(tasks);
     }
 
-    private void convertStructure(CachedOutput cache, Path outputDirectory, Path inputDirectory, Path structureFile) {
+    protected String getName(Path inputDirectory, Path structureFile) {
         String name = inputDirectory.relativize(structureFile).toString().replace('\\', '/');
-        name = name.substring(0, name.length() - ".nbt".length());
+        return name.substring(0, name.length() - ".nbt".length());
+    }
+
+    protected void convertStructure(CachedOutput cache, Path outputDirectory, Path structureFile, String name) {
         try {
             CompoundTag tag = NbtIo.readCompressed(structureFile, NbtAccounter.unlimitedHeap());
             CompoundTag upgradedTag = StructureUpdater.update(name, tag);
-            this.writeNbt(cache, outputDirectory.resolve(name + ".nbt"), upgradedTag);
-            NbtToSnbt.writeSnbt(cache, outputDirectory.resolve(name + ".snbt"), NbtUtils.structureToSnbt(upgradedTag));
+            this.writeNbt(cache, outputDirectory, name, upgradedTag);
+            this.writeSnbt(cache, outputDirectory, name, upgradedTag);
         } catch (IOException exception) {
             throw new RuntimeException("Failed to convert structure " + structureFile, exception);
         }
     }
 
-    private void writeNbt(CachedOutput cache, Path path, CompoundTag tag) throws IOException {
+    @SuppressWarnings("UnstableApiUsage")
+    protected void writeNbt(CachedOutput cache, Path outputDirectory, String name, CompoundTag tag) throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         HashingOutputStream hashingOutputStream = new HashingOutputStream(Hashing.sha1(), byteArrayOutputStream);
         NbtIo.writeCompressed(tag, hashingOutputStream);
+        Path path = outputDirectory.resolve(name + ".nbt");
         cache.writeIfNeeded(path, byteArrayOutputStream.toByteArray(), hashingOutputStream.hash());
+    }
+
+    protected void writeSnbt(CachedOutput cache, Path outputDirectory, String name, CompoundTag tag) throws IOException {
+        Path path = outputDirectory.resolve(name + ".snbt");
+        NbtToSnbt.writeSnbt(cache, path, NbtUtils.structureToSnbt(tag));
     }
 
     @Override
