@@ -1,0 +1,9 @@
+{
+  "type": "eternalnether:mob_feature",
+  "entities": [
+    {
+      "data": "eternalnether:piglin_prisoner",
+      "weight": 1
+    }
+  ]
+}

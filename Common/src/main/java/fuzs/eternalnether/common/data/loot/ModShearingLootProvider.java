@@ -1,6 +1,6 @@
 package fuzs.eternalnether.common.data.loot;
 
-import fuzs.eternalnether.common.init.ModRegistry;
+import fuzs.eternalnether.common.init.ModLootTables;
 import fuzs.puzzleslib.common.api.data.v3.loot.AbstractLootSubProvider;
 import net.minecraft.data.loot.LootTableSubProvider;
 import net.minecraft.world.item.Items;
@@ -18,7 +18,7 @@ public class ModShearingLootProvider extends AbstractLootSubProvider {
 
     @Override
     public void generate() {
-        this.output.accept(ModRegistry.SHEARING_WARPED_ENDER_MAN_LOOT_TABLE,
+        this.output.accept(ModLootTables.SHEARING_WARPED_ENDER_MAN_LOOT_TABLE,
                 LootTable.lootTable()
                         .withPool(LootPool.lootPool()
                                 .setRolls(ContextIntProviders.exactly(1))

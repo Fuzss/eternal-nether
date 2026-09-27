@@ -1,0 +1,9 @@
+{
+  "type": "eternalnether:mob_feature",
+  "entities": [
+    {
+      "data": "minecraft:strider",
+      "weight": 1
+    }
+  ]
+}

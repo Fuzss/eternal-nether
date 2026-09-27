@@ -1,0 +1,21 @@
+{
+  "type": "eternalnether:mob_feature",
+  "entities": [
+    {
+      "data": "eternalnether:corpor",
+      "weight": 1
+    },
+    {
+      "data": "eternalnether:wither_skeleton_knight",
+      "weight": 2
+    },
+    {
+      "data": "eternalnether:wraither",
+      "weight": 3
+    },
+    {
+      "data": "minecraft:wither_skeleton",
+      "weight": 1
+    }
+  ]
+}

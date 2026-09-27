@@ -6,11 +6,13 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.ShieldItem;
+import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.item.component.BlocksAttacks;
 import net.minecraft.world.level.block.entity.BannerPatternLayers;
 
@@ -31,13 +33,12 @@ public final class ModItems {
     public static final Holder.Reference<Item> SOUL_STONE = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.SOUL_STONE);
     public static final Holder.Reference<Item> WITHERED_BONE_BLOCK = ModRegistry.REGISTRIES.registerBlockItem(ModBlocks.WITHERED_BONE_BLOCK);
 
-    public static final ResourceKey<JukeboxSong> WITHER_WALTZ_JUKEBOX_SONG = ModRegistry.REGISTRIES.makeResourceKey(
-            Registries.JUKEBOX_SONG,
-            "wither_waltz");
     public static final Holder.Reference<Item> WITHER_WALTZ_MUSIC_DISC = ModRegistry.REGISTRIES.registerItem(
             "wither_waltz_music_disc",
             () -> {
-                return new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(WITHER_WALTZ_JUKEBOX_SONG);
+                return new Item.Properties().stacksTo(1)
+                        .rarity(Rarity.RARE)
+                        .jukeboxPlayable(ModJukeboxSongs.WITHER_WALTZ_JUKEBOX_SONG);
             });
     public static final Holder.Reference<Item> WARPED_ENDER_PEARL = ModRegistry.REGISTRIES.registerItem(
             "warped_ender_pearl",

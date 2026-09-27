@@ -1,7 +1,7 @@
 package fuzs.eternalnether.common.world.level.levelgen.structure;
 
 import com.mojang.serialization.MapCodec;
-import fuzs.eternalnether.common.init.ModRegistry;
+import fuzs.eternalnether.common.init.ModStructureTypes;
 import fuzs.eternalnether.common.util.ModStructureUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -90,6 +90,6 @@ public final class CitadelStructure extends JigsawStructure {
 
     @Override
     public StructureType<?> type() {
-        return ModRegistry.CITADEL_STRUCTURE_TYPE.value();
+        return ModStructureTypes.CITADEL_STRUCTURE_TYPE.value();
     }
 }

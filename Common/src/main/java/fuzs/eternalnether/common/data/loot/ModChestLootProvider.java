@@ -1,7 +1,7 @@
 package fuzs.eternalnether.common.data.loot;
 
 import fuzs.eternalnether.common.init.ModItems;
-import fuzs.eternalnether.common.init.ModRegistry;
+import fuzs.eternalnether.common.init.ModLootTables;
 import fuzs.puzzleslib.common.api.data.v3.loot.AbstractLootSubProvider;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
@@ -26,7 +26,7 @@ public class ModChestLootProvider extends AbstractLootSubProvider {
     @Override
     public void generate() {
         HolderGetter<Enchantment> enchantments = this.output.lookup(Registries.ENCHANTMENT);
-        this.output.accept(ModRegistry.CITADEL_LOOT_TABLE,
+        this.output.accept(ModLootTables.CITADEL_LOOT_TABLE,
                 LootTable.lootTable()
                         .withPool(LootPool.lootPool()
                                 .setRolls(ContextIntProviders.exactly(1))
@@ -110,7 +110,7 @@ public class ModChestLootProvider extends AbstractLootSubProvider {
                                 .add(LootItem.lootTableItem(Items.NETHER_BRICK)
                                         .setWeight(1)
                                         .apply(SetItemCountFunction.setCount(ContextIntProviders.between(6, 16))))));
-        this.output.accept(ModRegistry.CATACOMB_TREASURE_RIB_LOOT_TABLE,
+        this.output.accept(ModLootTables.CATACOMB_TREASURE_RIB_LOOT_TABLE,
                 LootTable.lootTable()
                         .withPool(LootPool.lootPool()
                                 .setRolls(ContextIntProviders.between(3, 5))

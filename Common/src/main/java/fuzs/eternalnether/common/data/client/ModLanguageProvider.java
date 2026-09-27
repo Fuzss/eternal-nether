@@ -40,7 +40,7 @@ public class ModLanguageProvider extends AbstractLanguageProvider {
         this.addSpawnEgg(ModItems.WITHER_SKELETON_KNIGHT_SPAWN_EGG.value(), "Wither Skeleton Knight");
         this.addSpawnEgg(ModItems.CORPOR_SPAWN_EGG.value(), "Corpor");
         this.addSpawnEgg(ModItems.WITHER_SKELETON_HORSE_SPAWN_EGG.value(), "Withered Skeleton Horse");
-        this.add(ModItems.WITHER_WALTZ_JUKEBOX_SONG, "Izofar - Wither Waltz");
+        this.add(ModJukeboxSongs.WITHER_WALTZ_JUKEBOX_SONG, "Izofar - Wither Waltz");
         this.add(ModItems.WITHER_WALTZ_MUSIC_DISC.value(), "Music Disc");
         this.add(ModItems.WARPED_ENDER_PEARL.value(), "Warped Ender Pearl");
         this.add(ModItems.WITHERED_BONE.value(), "Withered Bone");

@@ -1,0 +1,5 @@
+{
+  "type": "eternalnether:mob_passenger_feature",
+  "passenger": "eternalnether:piglin_hunter",
+  "vehicle": "eternalnether:wither_skeleton_horse"
+}

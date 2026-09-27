@@ -1,9 +1,6 @@
 package fuzs.eternalnether.common;
 
-import fuzs.eternalnether.common.init.ModEntityTypes;
-import fuzs.eternalnether.common.init.ModFeatures;
-import fuzs.eternalnether.common.init.ModItems;
-import fuzs.eternalnether.common.init.ModRegistry;
+import fuzs.eternalnether.common.init.*;
 import fuzs.eternalnether.common.world.entity.animal.horse.WitherSkeletonHorse;
 import fuzs.eternalnether.common.world.entity.monster.WarpedEnderman;
 import fuzs.eternalnether.common.world.entity.monster.Wex;
@@ -15,12 +12,15 @@ import fuzs.eternalnether.common.world.entity.monster.skeleton.Wraither;
 import fuzs.eternalnether.common.world.entity.projectile.ThrownWarpedEnderpearl;
 import fuzs.eternalnether.common.world.item.WitheredBoneMealItem;
 import fuzs.puzzleslib.common.api.biome.v2.BiomeLoadingPhase;
+import fuzs.puzzleslib.common.api.biome.v2.BiomeTransformer;
 import fuzs.puzzleslib.common.api.core.v1.ModConstructor;
 import fuzs.puzzleslib.common.api.core.v1.context.BiomeTransformationsContext;
 import fuzs.puzzleslib.common.api.core.v1.context.EntityAttributesContext;
 import fuzs.puzzleslib.common.api.core.v1.context.SpawnPlacementsContext;
 import fuzs.puzzleslib.common.api.event.v1.entity.EnderPearlTeleportCallback;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
 import net.minecraft.resources.Identifier;
@@ -30,8 +30,10 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.piglin.PiglinBrute;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.Heightmap;
 import org.slf4j.Logger;
@@ -69,7 +71,7 @@ public class EternalNether implements ModConstructor {
                         null)) {
                     this.setSuccess(false);
                 } else if (!level.isClientSide()) {
-                    level.levelEvent(1505, target, 15);
+                    level.levelEvent(LevelEvent.PARTICLES_AND_SOUND_PLANT_GROWTH, target, 15);
                 }
 
                 return dispensed;
@@ -80,11 +82,13 @@ public class EternalNether implements ModConstructor {
     @Override
     public void onRegisterBiomeTransformations(BiomeTransformationsContext context) {
         context.registerBiomeTransformation(BiomeLoadingPhase.ADD,
-                (registries, biome) -> biome.is(Biomes.SOUL_SAND_VALLEY),
-                (registries, biome, transformation) -> {
+                (HolderGetter.Provider lookupProvider, Holder<Biome> biome) -> {
+                    return biome.is(Biomes.SOUL_SAND_VALLEY);
+                },
+                (HolderGetter.Provider lookupProvider, Holder<Biome> biome, BiomeTransformer.Context transformation) -> {
                     transformation.generation()
                             .addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION,
-                                    registries.getOrThrow(ModRegistry.SOUL_STONE_BLOBS_PLACED_FEATURE));
+                                    lookupProvider.getOrThrow(ModPlacedFeatures.SOUL_STONE_BLOBS));
                 });
     }
 

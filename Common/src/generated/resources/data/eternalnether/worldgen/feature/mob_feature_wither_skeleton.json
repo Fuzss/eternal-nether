@@ -1,0 +1,9 @@
+{
+  "type": "eternalnether:mob_feature",
+  "entities": [
+    {
+      "data": "minecraft:wither_skeleton",
+      "weight": 1
+    }
+  ]
+}

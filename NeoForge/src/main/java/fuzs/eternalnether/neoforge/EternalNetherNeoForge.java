@@ -8,9 +8,7 @@ import fuzs.eternalnether.common.data.loot.ModChestLootProvider;
 import fuzs.eternalnether.common.data.loot.ModEntityLootProvider;
 import fuzs.eternalnether.common.data.loot.ModShearingLootProvider;
 import fuzs.eternalnether.common.data.tags.*;
-import fuzs.eternalnether.common.init.ModRegistry;
-import fuzs.eternalnether.common.init.ModStructureSets;
-import fuzs.eternalnether.common.init.ModStructures;
+import fuzs.eternalnether.common.init.*;
 import fuzs.puzzleslib.common.api.core.v1.ModConstructor;
 import fuzs.puzzleslib.neoforge.api.data.v3.core.DataProviderBuilder;
 import net.minecraft.core.registries.Registries;
@@ -23,7 +21,9 @@ public class EternalNetherNeoForge {
     public EternalNetherNeoForge() {
         ModConstructor.construct(EternalNether.MOD_ID, EternalNether::new);
         DataProviderBuilder.of(EternalNether.MOD_ID)
-                .addWorldBootstrap(Registries.JUKEBOX_SONG, ModRegistry::bootstrapJukeboxSongs)
+                .addWorldBootstrap(Registries.JUKEBOX_SONG, ModJukeboxSongs::bootstrap)
+                .addWorldBootstrap(Registries.FEATURE, ModFeatures::bootstrap)
+                .addWorldBootstrap(Registries.PLACED_FEATURE, ModPlacedFeatures::bootstrap)
                 .addWorldBootstrap(Registries.STRUCTURE, ModStructures::bootstrapStructures)
                 .addWorldBootstrap(Registries.STRUCTURE_SET, ModStructureSets::bootstrapStructureSets)
                 .addProvider(ModBlockTagsProvider::new,

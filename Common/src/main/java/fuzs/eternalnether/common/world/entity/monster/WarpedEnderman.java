@@ -2,6 +2,7 @@ package fuzs.eternalnether.common.world.entity.monster;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
+import fuzs.eternalnether.common.init.ModLootTables;
 import fuzs.eternalnether.common.init.ModRegistry;
 import fuzs.eternalnether.common.init.ModSoundEvents;
 import fuzs.eternalnether.common.init.ModTags;
@@ -155,7 +156,7 @@ public class WarpedEnderman extends Enderman implements Shearable {
     public void shear(ServerLevel level, SoundSource soundSource, ItemStack shears) {
         level.playSound(null, this, SoundEvents.SHEEP_SHEAR, soundSource, 1.0F, 1.0F);
         this.dropFromShearingLootTable(level,
-                ModRegistry.SHEARING_WARPED_ENDER_MAN_LOOT_TABLE,
+                ModLootTables.SHEARING_WARPED_ENDER_MAN_LOOT_TABLE,
                 shears,
                 (ServerLevel serverLevel, ItemStack itemStack) -> {
                     this.spawnAtLocation(serverLevel, itemStack, this.getEyeHeight());

@@ -1,0 +1,9 @@
+{
+  "type": "eternalnether:mob_feature",
+  "entities": [
+    {
+      "data": "eternalnether:warped_enderman",
+      "weight": 1
+    }
+  ]
+}
