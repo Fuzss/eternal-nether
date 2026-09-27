@@ -24,7 +24,7 @@ public class ModBlockTagsProvider extends AbstractTagsProvider<Block> {
         ModBlockFamilies.getAllBlockSetFamilies().forEach((BlockSetFamily blockSetFamily) -> {
             this.generateFor(blockSetFamily.getBlockVariants(), VARIANT_STONE_BLOCK_TAGS);
         });
-        this.tag(ModTags.WITHERED_BLOCK_TAG_KEY)
+        this.tag(ModTags.Blocks.WITHERED_BLOCK_TAG_KEY)
                 .add(ModBlocks.WITHERED_BLACKSTONE,
                         ModBlockFamilies.WITHERED_BLACKSTONE_FAMILY.getBlock(BlockSetVariant.STAIRS),
                         ModBlockFamilies.WITHERED_BLACKSTONE_FAMILY.getBlock(BlockSetVariant.SLAB),
@@ -47,8 +47,8 @@ public class ModBlockTagsProvider extends AbstractTagsProvider<Block> {
                         ModBlockFamilies.WARPED_NETHER_BRICKS_FAMILY.getBlock(BlockSetVariant.SLAB),
                         ModBlockFamilies.WARPED_NETHER_BRICKS_FAMILY.getBlock(BlockSetVariant.WALL),
                         ModBlockFamilies.WARPED_NETHER_BRICKS_FAMILY.getBlock(BlockSetVariant.CHISELED))
-                .addTag(ModTags.WITHERED_BLOCK_TAG_KEY);
-        this.tag(BlockTags.NEEDS_DIAMOND_TOOL).addTag(ModTags.WITHERED_BLOCK_TAG_KEY);
+                .addTag(ModTags.Blocks.WITHERED_BLOCK_TAG_KEY);
+        this.tag(BlockTags.NEEDS_DIAMOND_TOOL).addTag(ModTags.Blocks.WITHERED_BLOCK_TAG_KEY);
         this.tag(BlockTags.WITHER_SUMMON_BASE_BLOCKS).add(ModBlocks.SOUL_STONE);
         this.tag(BlockTags.CANNOT_PLACE_BASALT_PILLAR_ON)
                 // New Fortresses

@@ -24,7 +24,7 @@ public final class ModStructureSets {
             Registries.STRUCTURE_SET,
             "piglin_manor");
 
-    public static void bootstrapStructureSets(BootstrapContext<StructureSet> context) {
+    public static void bootstrap(BootstrapContext<StructureSet> context) {
         context.register(CATACOMB_STRUCTURE_SET,
                 new StructureSet(List.of(StructureSet.entry(context.lookup(Registries.STRUCTURE)
                         .getOrThrow(ModStructures.CATACOMB_STRUCTURE))),

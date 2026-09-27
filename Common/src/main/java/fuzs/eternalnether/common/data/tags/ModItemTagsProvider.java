@@ -32,7 +32,7 @@ public class ModItemTagsProvider extends AbstractTagsProvider<Item> {
         this.tag("c:tools/shield").add(ModItems.GILDED_NETHERITE_SHIELD);
         this.tag(ItemTags.SWORDS).add(ModItems.CUTLASS);
         this.tag("c:tools/melee_weapon").add(ModItems.CUTLASS);
-        this.tag(ModTags.PIGLIN_BRUTE_SAFE_ARMOR_ITEM_TAG_KEY)
+        this.tag(ModTags.Items.PIGLIN_BRUTE_SAFE_ARMOR_ITEM_TAG_KEY)
                 .add(ItemIds.NETHERITE_HELMET,
                         ItemIds.NETHERITE_CHESTPLATE,
                         ItemIds.NETHERITE_LEGGINGS,

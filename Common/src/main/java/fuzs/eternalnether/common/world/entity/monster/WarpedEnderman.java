@@ -139,7 +139,7 @@ public class WarpedEnderman extends Enderman implements Shearable {
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand interactionResult) {
         ItemStack itemStack = player.getItemInHand(interactionResult);
-        if (itemStack.is(ModTags.SHEAR_TOOLS_ITEM_TAG_KEY) && this.readyForShearing()) {
+        if (itemStack.is(ModTags.Items.SHEAR_TOOLS_ITEM_TAG_KEY) && this.readyForShearing()) {
             if (this.level() instanceof ServerLevel serverLevel) {
                 this.shear(serverLevel, SoundSource.PLAYERS, itemStack);
                 this.gameEvent(GameEvent.SHEAR, player);

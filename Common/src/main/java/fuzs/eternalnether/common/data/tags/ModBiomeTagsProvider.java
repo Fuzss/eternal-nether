@@ -16,16 +16,16 @@ public class ModBiomeTagsProvider extends AbstractTagsProvider<Biome> {
 
     @Override
     public void addTags(HolderLookup.Provider provider) {
-        this.tag(ModTags.HAS_CATACOMB_BIOME_TAG_KEY)
+        this.tag(ModTags.Biomes.HAS_CATACOMB_BIOME_TAG_KEY)
                 .add(Biomes.SOUL_SAND_VALLEY)
                 .addOptionalTag("biomesoplenty:withered_abyss",
                         "incendium:weeping_valley",
                         "incendium:withered_forest",
                         "byg:wailing_garth");
-        this.tag(ModTags.HAS_CITADEL_BIOME_TAG_KEY)
+        this.tag(ModTags.Biomes.HAS_CITADEL_BIOME_TAG_KEY)
                 .add(Biomes.WARPED_FOREST)
                 .addOptionalTag("incendium:inverted_forest", "byg:glowstone_gardens");
-        this.tag(ModTags.HAS_PIGLIN_MANOR_BIOME_TAG_KEY)
+        this.tag(ModTags.Biomes.HAS_PIGLIN_MANOR_BIOME_TAG_KEY)
                 .add(Biomes.CRIMSON_FOREST)
                 .addOptionalTag("incendium:ash_barrens", "byg:crimson_gardens");
     }

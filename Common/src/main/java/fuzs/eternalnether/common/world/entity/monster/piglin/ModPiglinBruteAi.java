@@ -75,11 +75,11 @@ public class ModPiglinBruteAi extends PiglinBruteAi {
     }
 
     private static boolean makesPiglinBrutesNeutral(ItemStack itemStack) {
-        return itemStack.is(ModTags.PIGLIN_BRUTE_SAFE_ARMOR_ITEM_TAG_KEY) && makesPiglinsNeutral(itemStack);
+        return itemStack.is(ModTags.Items.PIGLIN_BRUTE_SAFE_ARMOR_ITEM_TAG_KEY) && makesPiglinsNeutral(itemStack);
     }
 
     public static boolean makesPiglinsNeutral(ItemStack itemStack) {
         ArmorTrim armorTrim = itemStack.get(DataComponents.TRIM);
-        return armorTrim != null && armorTrim.material().is(ModTags.PIGLIN_SAFE_TRIM_MATERIAL_TAG_KEY);
+        return armorTrim != null && armorTrim.material().is(ModTags.TrimMaterials.PIGLIN_SAFE_TRIM_MATERIAL_TAG_KEY);
     }
 }
