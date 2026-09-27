@@ -1,4 +1,5 @@
-// 26.3	2026-09-27T17:13:18.733805	Registries for reloadable
+// 26.3	2026-09-27T17:36:25.755501	Registries for reloadable
+72305d7567dddb2da31941b25258ecc8b0ddb6cb data/eternalnether/advancement/acquire_wither_waltz.json
 6f03a71d315b3309806cf07d058ef517c19df104 data/eternalnether/advancement/catacomb.json
 c18d5e9bfdd982c1340e94d8457e55d6df87175a data/eternalnether/advancement/citadel.json
 613ca1a113691f92bde1098147ceb6a7a4f1e326 data/eternalnether/advancement/explore_structures.json
@@ -33,7 +34,7 @@ d4cd07448da7ebffadae3c53b85c84d378eb1d84 data/eternalnether/advancement/recipes/
 a44d3323dbe0d86bbd5d0692ccf82174fb18127a data/eternalnether/advancement/recipes/misc/withered_bone_meal_from_withered_bone_block.json
 24f169eaf807688bedee17c48532399aa4a5920f data/eternalnether/advancement/rescue_piglin_prisoner.json
 2269298192f68baf55d9cc3fdf8881e765ca896e data/eternalnether/advancement/ride_wither_skeleton_horse.json
-08af09d105c292ff2de08dacb8c5e587e6d58099 data/eternalnether/advancement/root.json
+df4eb0184d3eef665b74abc93ad29dfc0e3594b4 data/eternalnether/advancement/root.json
 86e87d68bdfd253f0f12b841a09a2ac82e6caa89 data/eternalnether/advancement/summon_enderman.json
 43e34db2cf0b53e7e8ebe1869d7ffa0ebe384c42 data/eternalnether/loot_table/blocks/chiseled_warped_nether_bricks.json
 a0c9bb5d1720ba6fafd0f1c910eb632b13c751fd data/eternalnether/loot_table/blocks/chiseled_withered_blackstone.json

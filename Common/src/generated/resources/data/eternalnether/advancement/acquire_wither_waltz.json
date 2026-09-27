@@ -1,0 +1,32 @@
+{
+  "parent": "eternalnether:catacomb",
+  "criteria": {
+    "music_disc": {
+      "conditions": {
+        "items": [
+          {
+            "items": "eternalnether:wither_waltz_music_disc"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.eternalnether.acquire_wither_waltz.description"
+    },
+    "icon": {
+      "id": "eternalnether:wither_waltz_music_disc"
+    },
+    "title": {
+      "translate": "advancements.eternalnether.acquire_wither_waltz.title"
+    }
+  },
+  "requirements": [
+    [
+      "music_disc"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
