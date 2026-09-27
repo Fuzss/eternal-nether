@@ -24,6 +24,8 @@ public class EternalNetherNeoForge {
                 .addWorldBootstrap(Registries.JUKEBOX_SONG, ModJukeboxSongs::bootstrap)
                 .addWorldBootstrap(Registries.FEATURE, ModFeatures::bootstrap)
                 .addWorldBootstrap(Registries.PLACED_FEATURE, ModPlacedFeatures::bootstrap)
+                 .addWorldBootstrap(Registries.PROCESSOR_LIST, ModProcessorLists::bootstrap)
+                .addWorldBootstrap(Registries.TEMPLATE_POOL, ModTemplatePools::bootstrap)
                 .addWorldBootstrap(Registries.STRUCTURE, ModStructures::bootstrap)
                 .addWorldBootstrap(Registries.STRUCTURE_SET, ModStructureSets::bootstrap)
                 .addProvider(ModBlockTagsProvider::new,

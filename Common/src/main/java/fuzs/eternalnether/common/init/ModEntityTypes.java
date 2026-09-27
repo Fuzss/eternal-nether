@@ -94,6 +94,7 @@ public final class ModEntityTypes {
     public static final Holder.Reference<EntityType<ThrownWarpedEnderpearl>> WARPED_ENDER_PEARL = ModRegistry.REGISTRIES.registerEntityType(
             "warped_ender_pearl",
             () -> EntityType.Builder.<ThrownWarpedEnderpearl>of(ThrownWarpedEnderpearl::new, MobCategory.MISC)
+                    .noLootTable()
                     .sized(0.25F, 0.25F)
                     .clientTrackingRange(4)
                     .updateInterval(10));

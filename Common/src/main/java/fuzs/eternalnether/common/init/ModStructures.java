@@ -18,7 +18,6 @@ import net.minecraft.world.level.levelgen.heightproviders.UniformHeight;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureSpawnOverride;
 import net.minecraft.world.level.levelgen.structure.TerrainAdjustment;
-import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.level.levelgen.structure.structures.JigsawStructure;
 
 import java.util.Map;
@@ -32,15 +31,6 @@ public final class ModStructures {
     public static final ResourceKey<Structure> PIGLIN_MANOR_STRUCTURE = ModRegistry.REGISTRIES.makeResourceKey(
             Registries.STRUCTURE,
             "piglin_manor");
-    public static final ResourceKey<StructureTemplatePool> CATACOMB_START_POOL = ModRegistry.REGISTRIES.makeResourceKey(
-            Registries.TEMPLATE_POOL,
-            "catacomb/start_pool");
-    public static final ResourceKey<StructureTemplatePool> CITADEL_START_POOL = ModRegistry.REGISTRIES.makeResourceKey(
-            Registries.TEMPLATE_POOL,
-            "citadel/start_pool");
-    public static final ResourceKey<StructureTemplatePool> PIGLIN_MANOR_START_POOL = ModRegistry.REGISTRIES.makeResourceKey(
-            Registries.TEMPLATE_POOL,
-            "piglin_manor/start_pool");
 
     public static void bootstrap(BootstrapContext<Structure> context) {
         context.register(CATACOMB_STRUCTURE,
@@ -51,7 +41,7 @@ public final class ModStructures {
                                                 UniformInt.of(1, 1))))))
                         .generationStep(GenerationStep.Decoration.UNDERGROUND_DECORATION)
                         .build(),
-                        context.lookup(Registries.TEMPLATE_POOL).getOrThrow(CATACOMB_START_POOL),
+                        context.lookup(Registries.TEMPLATE_POOL).getOrThrow(ModTemplatePools.CATACOMB_START_POOL),
                         Optional.empty(),
                         3,
                         UniformHeight.of(VerticalAnchor.absolute(56), VerticalAnchor.absolute(84)),
@@ -68,7 +58,7 @@ public final class ModStructures {
                         .generationStep(GenerationStep.Decoration.SURFACE_STRUCTURES)
                         .terrainAdapation(TerrainAdjustment.BEARD_THIN)
                         .build(),
-                        context.lookup(Registries.TEMPLATE_POOL).getOrThrow(CITADEL_START_POOL),
+                        context.lookup(Registries.TEMPLATE_POOL).getOrThrow(ModTemplatePools.CITADEL_START_POOL),
                         Optional.empty(),
                         4,
                         UniformHeight.of(VerticalAnchor.absolute(48), VerticalAnchor.absolute(70)),
@@ -85,7 +75,7 @@ public final class ModStructures {
                         .generationStep(GenerationStep.Decoration.SURFACE_STRUCTURES)
                         .terrainAdapation(TerrainAdjustment.BEARD_THIN)
                         .build(),
-                        context.lookup(Registries.TEMPLATE_POOL).getOrThrow(PIGLIN_MANOR_START_POOL),
+                        context.lookup(Registries.TEMPLATE_POOL).getOrThrow(ModTemplatePools.PIGLIN_MANOR_START_POOL),
                         Optional.empty(),
                         1,
                         UniformHeight.of(VerticalAnchor.absolute(34), VerticalAnchor.absolute(72)),
