@@ -15,7 +15,7 @@ public final class ModRegistry {
             "warped_ender_man_variant",
             () -> EntityDataSerializer.forValueType(WarpedEnderman.Variant.STREAM_CODEC));
     public static final Holder.Reference<CreativeModeTab> CREATIVE_MODE_TAB = REGISTRIES.registerCreativeModeTab(() -> new ItemStack(
-            ModItems.WITHERED_DEBRIS), (CreativeModeTab.DisplayItemsGenerator generator) -> {
+            ModItems.WARPED_ENDER_PEARL), (CreativeModeTab.DisplayItemsGenerator generator) -> {
         return (CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) -> {
             output.accept(ModItems.COBBLED_BLACKSTONE.value());
             output.accept(ModItems.WITHERED_BLACKSTONE.value());

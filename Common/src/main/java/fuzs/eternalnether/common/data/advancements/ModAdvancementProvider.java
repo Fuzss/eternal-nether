@@ -15,6 +15,7 @@ import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.predicates.LocationPredicate;
 import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.ChangeDimensionTrigger;
+import net.minecraft.advancements.triggers.InventoryChangeTrigger;
 import net.minecraft.advancements.triggers.PlayerTrigger;
 import net.minecraft.advancements.triggers.StartRidingTrigger;
 import net.minecraft.advancements.triggers.SummonedEntityTrigger;
@@ -58,10 +59,8 @@ public class ModAdvancementProvider extends AbstractAdvancementProvider {
         HolderGetter<EntityType<?>> entityLookup = this.output.lookup(Registries.ENTITY_TYPE);
         HolderGetter<Structure> structureLookup = this.output.lookup(Registries.STRUCTURE);
         AdvancementHolder root = Advancement.Builder.advancement()
-                .display(display(new ItemStackTemplate(ModBlockFamilies.WITHERED_BLACKSTONE_FAMILY.getItem(
-                                        BlockSetVariant.CHISELED).value()),
-                                ROOT_ADVANCEMENT.id())
-                        .setBackground(EternalNether.id("block/soul_stone"))
+                .display(display(new ItemStackTemplate(ModItems.WARPED_ENDER_PEARL.value()),
+                        ROOT_ADVANCEMENT.id()).setBackground(EternalNether.id("block/soul_stone"))
                         .setType(AdvancementType.TASK)
                         .setHidden(false)
                         .build())
@@ -69,9 +68,7 @@ public class ModAdvancementProvider extends AbstractAdvancementProvider {
                 .save(this.output, ROOT_ADVANCEMENT.name());
         AdvancementHolder exploreStructures = Advancement.Builder.advancement()
                 .display(display(getNetheriteBootsDisplayItem(this.output),
-                                EXPLORE_STRUCTURES_ADVANCEMENT.id())
-                        .setType(AdvancementType.CHALLENGE)
-                        .build())
+                        EXPLORE_STRUCTURES_ADVANCEMENT.id()).setType(AdvancementType.CHALLENGE).build())
                 .parent(root)
                 .rewards(AdvancementRewards.Builder.experience(500))
                 .addCriterion("in_catacomb",
@@ -92,6 +89,13 @@ public class ModAdvancementProvider extends AbstractAdvancementProvider {
                         PlayerTrigger.TriggerInstance.located(LocationPredicate.Builder.inStructure(structureLookup.getOrThrow(
                                 ModStructures.CATACOMB_STRUCTURE))))
                 .save(this.output, CATACOMB_ADVANCEMENT.name());
+        Advancement.Builder.advancement()
+                .display(display(new ItemStackTemplate(ModItems.WITHER_WALTZ_MUSIC_DISC.value()),
+                        ACQUIRE_WITHER_WALTZ_ADVANCEMENT.id()).build())
+                .parent(catacomb)
+                .addCriterion("music_disc",
+                        InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.WITHER_WALTZ_MUSIC_DISC.value()))
+                .save(this.output, ACQUIRE_WITHER_WALTZ_ADVANCEMENT.name());
         AdvancementHolder citadel = Advancement.Builder.advancement()
                 .display(display(new ItemStackTemplate(ModBlockFamilies.WARPED_NETHER_BRICKS_FAMILY.getItem(
                         BlockSetVariant.CHISELED).value()), CITADEL_ADVANCEMENT.id()).build())
@@ -109,9 +113,7 @@ public class ModAdvancementProvider extends AbstractAdvancementProvider {
                 .save(this.output, PIGLIN_MANOR_ADVANCEMENT.name());
         Advancement.Builder.advancement()
                 .display(display(new ItemStackTemplate(ModItems.NETHERITE_BELL.value()),
-                                RESCUE_PIGLIN_PRISONER_ADVANCEMENT.id())
-                        .setType(AdvancementType.CHALLENGE)
-                        .build())
+                        RESCUE_PIGLIN_PRISONER_ADVANCEMENT.id()).setType(AdvancementType.CHALLENGE).build())
                 .parent(catacomb)
                 .rewards(AdvancementRewards.Builder.experience(500))
                 .addCriterion("rescue_prisoner",
@@ -130,8 +132,7 @@ public class ModAdvancementProvider extends AbstractAdvancementProvider {
                                                 .of(entityLookup, EntityTypes.PLAYER)))))
                 .save(this.output, RIDE_WITHER_SKELETON_HORSE_ADVANCEMENT.name());
         Advancement.Builder.advancement()
-                .display(display(new ItemStackTemplate(Items.ENDER_PEARL),
-                        SUMMON_ENDERMAN_ADVANCEMENT.id()).build())
+                .display(display(new ItemStackTemplate(Items.ENDER_PEARL), SUMMON_ENDERMAN_ADVANCEMENT.id()).build())
                 .parent(citadel)
                 .addCriterion("summon_enderman",
                         SummonedEntityTrigger.TriggerInstance.summonedEntity(EntityPredicate.Builder.entity()
