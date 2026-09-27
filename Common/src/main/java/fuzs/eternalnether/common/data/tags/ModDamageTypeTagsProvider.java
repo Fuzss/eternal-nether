@@ -16,6 +16,6 @@ public class ModDamageTypeTagsProvider extends AbstractTagsProvider<DamageType> 
 
     @Override
     public void addTags(HolderLookup.Provider registries) {
-        this.tag(ModTags.DamageTypes.BYPASSES_CUTLASS_DAMAGE_TYPE_TAG_KEY).addTag(DamageTypeTags.BYPASSES_SHIELD);
+        this.tag(ModTags.DamageTypes.BYPASSES_CUTLASS).addTag(DamageTypeTags.BYPASSES_SHIELD);
     }
 }

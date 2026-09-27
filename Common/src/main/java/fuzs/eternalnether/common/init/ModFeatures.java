@@ -1,9 +1,7 @@
 package fuzs.eternalnether.common.init;
 
-import com.google.common.collect.ImmutableList;
 import fuzs.eternalnether.common.world.level.levelgen.feature.MobFeature;
 import fuzs.eternalnether.common.world.level.levelgen.feature.MobPassengerFeature;
-import fuzs.puzzleslib.common.api.init.v3.family.BlockSetVariant;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
@@ -13,9 +11,7 @@ import net.minecraft.util.random.WeightedList;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.levelgen.feature.DeltaFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.ReplaceBlobsFeature;
 
@@ -67,25 +63,5 @@ public final class ModFeatures {
                 new ReplaceBlobsFeature(Blocks.NETHERRACK.defaultBlockState(),
                         ModBlocks.SOUL_STONE.value().defaultBlockState(),
                         UniformInt.of(3, 7)));
-    }
-
-    public static void setBasaltFeatureRestrictions() {
-        DeltaFeature.CANNOT_REPLACE = ImmutableList.<Block>builder().addAll(DeltaFeature.CANNOT_REPLACE).add(
-                // New Fortresses
-                Blocks.NETHER_BRICK_SLAB,
-                Blocks.CRACKED_NETHER_BRICKS,
-                Blocks.CHISELED_NETHER_BRICKS,
-                Blocks.RED_NETHER_BRICKS,
-                Blocks.RED_NETHER_BRICK_STAIRS,
-                Blocks.RED_NETHER_BRICK_SLAB,
-                Blocks.CRIMSON_TRAPDOOR,
-                // Wither Forts
-                ModBlocks.COBBLED_BLACKSTONE.value(),
-                ModBlocks.WITHERED_BLACKSTONE.value(),
-                ModBlockFamilies.WITHERED_BLACKSTONE_FAMILY.getBlock(BlockSetVariant.CHISELED).value(),
-                ModBlockFamilies.WITHERED_BLACKSTONE_FAMILY.getBlock(BlockSetVariant.CRACKED).value(),
-                ModBlocks.WITHERED_DEBRIS.value(),
-                Blocks.IRON_BARS,
-                Blocks.COAL_BLOCK).build();
     }
 }

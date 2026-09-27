@@ -7,11 +7,13 @@ import fuzs.puzzleslib.common.api.data.v3.core.DataProviderContext;
 import fuzs.puzzleslib.common.api.data.v3.tags.AbstractTagsProvider;
 import fuzs.puzzleslib.common.api.init.v3.family.BlockSetFamily;
 import fuzs.puzzleslib.common.api.init.v3.family.BlockSetVariant;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.references.BlockItemIds;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.levelgen.feature.DeltaFeature;
 
 public class ModBlockTagsProvider extends AbstractTagsProvider<Block> {
 
@@ -24,7 +26,7 @@ public class ModBlockTagsProvider extends AbstractTagsProvider<Block> {
         ModBlockFamilies.getAllBlockSetFamilies().forEach((BlockSetFamily blockSetFamily) -> {
             this.generateFor(blockSetFamily.getBlockVariants(), VARIANT_STONE_BLOCK_TAGS);
         });
-        this.tag(ModTags.Blocks.WITHERED_BLOCK_TAG_KEY)
+        this.tag(ModTags.Blocks.WITHERED)
                 .add(ModBlocks.WITHERED_BLACKSTONE,
                         ModBlockFamilies.WITHERED_BLACKSTONE_FAMILY.getBlock(BlockSetVariant.STAIRS),
                         ModBlockFamilies.WITHERED_BLACKSTONE_FAMILY.getBlock(BlockSetVariant.SLAB),
@@ -47,8 +49,8 @@ public class ModBlockTagsProvider extends AbstractTagsProvider<Block> {
                         ModBlockFamilies.WARPED_NETHER_BRICKS_FAMILY.getBlock(BlockSetVariant.SLAB),
                         ModBlockFamilies.WARPED_NETHER_BRICKS_FAMILY.getBlock(BlockSetVariant.WALL),
                         ModBlockFamilies.WARPED_NETHER_BRICKS_FAMILY.getBlock(BlockSetVariant.CHISELED))
-                .addTag(ModTags.Blocks.WITHERED_BLOCK_TAG_KEY);
-        this.tag(BlockTags.NEEDS_DIAMOND_TOOL).addTag(ModTags.Blocks.WITHERED_BLOCK_TAG_KEY);
+                .addTag(ModTags.Blocks.WITHERED);
+        this.tag(BlockTags.NEEDS_DIAMOND_TOOL).addTag(ModTags.Blocks.WITHERED);
         this.tag(BlockTags.WITHER_SUMMON_BASE_BLOCKS).add(ModBlocks.SOUL_STONE);
         this.tag(BlockTags.CANNOT_PLACE_BASALT_PILLAR_ON)
                 // New Fortresses
@@ -62,6 +64,25 @@ public class ModBlockTagsProvider extends AbstractTagsProvider<Block> {
                         BlockItemIds.IRON_BARS.block(),
                         BlockItemIds.COAL_BLOCK.block())
                 // Wither Forts
+                .add(ModBlocks.COBBLED_BLACKSTONE,
+                        ModBlocks.WITHERED_BLACKSTONE,
+                        ModBlockFamilies.WITHERED_BLACKSTONE_FAMILY.getBlock(BlockSetVariant.CHISELED),
+                        ModBlockFamilies.WITHERED_BLACKSTONE_FAMILY.getBlock(BlockSetVariant.CRACKED),
+                        ModBlocks.WITHERED_DEBRIS);
+        this.tag(ModTags.Blocks.BASALT_DELTA_CANNOT_REPLACE)
+                .addAll(DeltaFeature.CANNOT_REPLACE.stream()
+                        .map(Block::builtInRegistryHolder)
+                        .map(Holder.Reference::key))
+                // New Fortresses
+                .add(BlockItemIds.NETHER_BRICK_SLAB.block(),
+                        BlockItemIds.CRACKED_NETHER_BRICKS.block(),
+                        BlockItemIds.CHISELED_NETHER_BRICKS.block(),
+                        BlockItemIds.RED_NETHER_BRICKS.block(),
+                        BlockItemIds.RED_NETHER_BRICK_STAIRS.block(),
+                        BlockItemIds.RED_NETHER_BRICK_SLAB.block(),
+                        BlockItemIds.CRIMSON_TRAPDOOR.block())
+                // Wither Forts
+                .add(BlockItemIds.IRON_BARS.block(), BlockItemIds.COAL_BLOCK.block())
                 .add(ModBlocks.COBBLED_BLACKSTONE,
                         ModBlocks.WITHERED_BLACKSTONE,
                         ModBlockFamilies.WITHERED_BLACKSTONE_FAMILY.getBlock(BlockSetVariant.CHISELED),

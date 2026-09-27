@@ -14,7 +14,8 @@ public final class ModTags {
     static final TagFactory TAGS = TagFactory.make(EternalNether.MOD_ID);
 
     public static class Blocks {
-        public static final TagKey<Block> WITHERED_BLOCK_TAG_KEY = register("withered");
+        public static final TagKey<Block> WITHERED = register("withered");
+        public static final TagKey<Block> BASALT_DELTA_CANNOT_REPLACE = register("basalt_delta_cannot_replace");
 
         private static TagKey<Block> register(String name) {
             return TAGS.registerBlockTag(name);
@@ -22,8 +23,11 @@ public final class ModTags {
     }
 
     public static class Items {
-        public static final TagKey<Item> SHEAR_TOOLS_ITEM_TAG_KEY = TagFactory.COMMON.registerItemTag("tools/shear");
-        public static final TagKey<Item> PIGLIN_BRUTE_SAFE_ARMOR_ITEM_TAG_KEY = register("piglin_brute_safe_armor");
+        public static final TagKey<Item> SHEAR_TOOLS = TagFactory.COMMON.registerItemTag("tools/shear");
+        /**
+         * @see net.minecraft.tags.ItemTags#PIGLIN_SAFE_ARMOR
+         */
+        public static final TagKey<Item> PIGLIN_BRUTE_SAFE_ARMOR = register("piglin_brute_safe_armor");
 
         private static TagKey<Item> register(String name) {
             return TAGS.registerItemTag(name);
@@ -31,7 +35,7 @@ public final class ModTags {
     }
 
     public static class DamageTypes {
-        public static final TagKey<DamageType> BYPASSES_CUTLASS_DAMAGE_TYPE_TAG_KEY = register("bypasses_cutlass");
+        public static final TagKey<DamageType> BYPASSES_CUTLASS = register("bypasses_cutlass");
 
         private static TagKey<DamageType> register(String name) {
             return TAGS.registerDamageTypeTag(name);
@@ -39,7 +43,7 @@ public final class ModTags {
     }
 
     public static class TrimMaterials {
-        public static final TagKey<TrimMaterial> PIGLIN_SAFE_TRIM_MATERIAL_TAG_KEY = register("piglin_safe");
+        public static final TagKey<TrimMaterial> PIGLIN_SAFE = register("piglin_safe");
 
         private static TagKey<TrimMaterial> register(String name) {
             return TAGS.registerTagKey(Registries.TRIM_MATERIAL, name);
@@ -47,9 +51,9 @@ public final class ModTags {
     }
 
     public static class Biomes {
-        public static final TagKey<Biome> HAS_PIGLIN_MANOR_BIOME_TAG_KEY = register("has_structure/piglin_manor");
-        public static final TagKey<Biome> HAS_CITADEL_BIOME_TAG_KEY = register("has_structure/citadel");
-        public static final TagKey<Biome> HAS_CATACOMB_BIOME_TAG_KEY = register("has_structure/catacomb");
+        public static final TagKey<Biome> HAS_PIGLIN_MANOR = register("has_structure/piglin_manor");
+        public static final TagKey<Biome> HAS_CITADEL = register("has_structure/citadel");
+        public static final TagKey<Biome> HAS_CATACOMB = register("has_structure/catacomb");
 
         private static TagKey<Biome> register(String name) {
             return TAGS.registerBiomeTag(name);

@@ -1,6 +1,9 @@
 package fuzs.eternalnether.common;
 
-import fuzs.eternalnether.common.init.*;
+import fuzs.eternalnether.common.init.ModEntityTypes;
+import fuzs.eternalnether.common.init.ModItems;
+import fuzs.eternalnether.common.init.ModPlacedFeatures;
+import fuzs.eternalnether.common.init.ModRegistry;
 import fuzs.eternalnether.common.world.entity.animal.horse.WitherSkeletonHorse;
 import fuzs.eternalnether.common.world.entity.monster.WarpedEnderman;
 import fuzs.eternalnether.common.world.entity.monster.Wex;
@@ -56,7 +59,6 @@ public class EternalNether implements ModConstructor {
 
     @Override
     public void onCommonSetup() {
-        ModFeatures.setBasaltFeatureRestrictions();
         ModEntityTypes.setPiglinBruteSensorsAndMemories();
         DispenserBlock.registerBehavior(ModItems.WITHERED_BONE_MEAL.value(), new OptionalDispenseItemBehavior() {
             @Override

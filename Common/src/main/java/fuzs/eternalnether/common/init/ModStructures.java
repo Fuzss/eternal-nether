@@ -45,7 +45,7 @@ public final class ModStructures {
     public static void bootstrap(BootstrapContext<Structure> context) {
         context.register(CATACOMB_STRUCTURE,
                 new CatacombStructure(new Structure.StructureSettings.Builder(context.lookup(Registries.BIOME)
-                        .getOrThrow(ModTags.Biomes.HAS_CATACOMB_BIOME_TAG_KEY)).spawnOverrides(Map.of(MobCategory.MONSTER,
+                        .getOrThrow(ModTags.Biomes.HAS_CATACOMB)).spawnOverrides(Map.of(MobCategory.MONSTER,
                                 new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.PIECE,
                                         WeightedList.of(new MobSpawnSettings.SpawnerData(EntityTypes.MAGMA_CUBE,
                                                 UniformInt.of(1, 1))))))
@@ -59,7 +59,7 @@ public final class ModStructures {
                         new JigsawStructure.MaxDistance(128)));
         context.register(CITADEL_STRUCTURE,
                 new CitadelStructure(new Structure.StructureSettings.Builder(context.lookup(Registries.BIOME)
-                        .getOrThrow(ModTags.Biomes.HAS_CITADEL_BIOME_TAG_KEY)).spawnOverrides(Map.of(MobCategory.MONSTER,
+                        .getOrThrow(ModTags.Biomes.HAS_CITADEL)).spawnOverrides(Map.of(MobCategory.MONSTER,
                                 new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.PIECE,
                                         WeightedList.of(new Weighted<>(new MobSpawnSettings.SpawnerData(EntityTypes.ENDERMAN,
                                                         UniformInt.of(1, 1)), 1),
@@ -76,7 +76,7 @@ public final class ModStructures {
                         new JigsawStructure.MaxDistance(116)));
         context.register(PIGLIN_MANOR_STRUCTURE,
                 new PiglinManorStructure(new Structure.StructureSettings.Builder(context.lookup(Registries.BIOME)
-                        .getOrThrow(ModTags.Biomes.HAS_PIGLIN_MANOR_BIOME_TAG_KEY)).spawnOverrides(Map.of(MobCategory.MONSTER,
+                        .getOrThrow(ModTags.Biomes.HAS_PIGLIN_MANOR)).spawnOverrides(Map.of(MobCategory.MONSTER,
                                 new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.PIECE,
                                         WeightedList.of(new Weighted<>(new MobSpawnSettings.SpawnerData(EntityTypes.PIGLIN,
                                                         UniformInt.of(1, 1)), 2),

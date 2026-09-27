@@ -16,6 +16,6 @@ public class ModTrimMaterialTagsProvider extends AbstractTagsProvider<TrimMateri
 
     @Override
     public void addTags(HolderLookup.Provider registries) {
-        this.tag(ModTags.TrimMaterials.PIGLIN_SAFE_TRIM_MATERIAL_TAG_KEY).add(TrimMaterials.GOLD);
+        this.tag(ModTags.TrimMaterials.PIGLIN_SAFE).add(TrimMaterials.GOLD);
     }
 }

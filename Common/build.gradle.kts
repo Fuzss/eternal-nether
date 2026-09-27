@@ -8,6 +8,6 @@ dependencies {
 
 multiloader {
     mixins {
-        mixin("PiglinAiMixin", "PiglinBruteAiMixin")
+        mixin("DeltaFeatureMixin", "PiglinAiMixin", "PiglinBruteAiMixin")
     }
 }

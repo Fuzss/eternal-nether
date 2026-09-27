@@ -86,7 +86,7 @@ public final class ModItems {
                             List.of(new BlocksAttacks.DamageReduction(180.0F, Optional.empty(), 0.0F, 0.5F)),
                             BlocksAttacks.ItemDamageFunction.DEFAULT,
                             Optional.of(context.lookupOrThrow(Registries.DAMAGE_TYPE)
-                                    .getOrThrow(ModTags.DamageTypes.BYPASSES_CUTLASS_DAMAGE_TYPE_TAG_KEY)),
+                                    .getOrThrow(ModTags.DamageTypes.BYPASSES_CUTLASS)),
                             Optional.of(ModSoundEvents.ITEM_SWORD_BLOCK_SOUND_EVENT),
                             Optional.empty());
                 });
