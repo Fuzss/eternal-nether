@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "eternalnether:withered_blackstone_slab"
+        "recipes": "eternalnether:withered_blackstone_slab"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

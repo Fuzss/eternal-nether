@@ -9,14 +9,20 @@
       "spawns": [
         {
           "type": "minecraft:piglin",
-          "maxCount": 1,
-          "minCount": 1,
+          "count": {
+            "type": "minecraft:uniform",
+            "max_inclusive": 1,
+            "min_inclusive": 1
+          },
           "weight": 2
         },
         {
           "type": "eternalnether:piglin_hunter",
-          "maxCount": 1,
-          "minCount": 1,
+          "count": {
+            "type": "minecraft:uniform",
+            "max_inclusive": 1,
+            "min_inclusive": 1
+          },
           "weight": 1
         }
       ]

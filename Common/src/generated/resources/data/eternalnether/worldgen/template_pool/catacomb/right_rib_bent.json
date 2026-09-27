@@ -1,0 +1,32 @@
+{
+  "elements": [
+    {
+      "element": {
+        "element_type": "minecraft:legacy_single_pool_element",
+        "location": "eternalnether:catacomb/right_rib/bent_treasure",
+        "processors": "eternalnether:catacomb/withered_blackstone",
+        "projection": "rigid"
+      },
+      "weight": 2
+    },
+    {
+      "element": {
+        "element_type": "minecraft:legacy_single_pool_element",
+        "location": "eternalnether:catacomb/right_rib/bent_prison",
+        "processors": "eternalnether:catacomb/withered_blackstone",
+        "projection": "rigid"
+      },
+      "weight": 1
+    },
+    {
+      "element": {
+        "element_type": "minecraft:legacy_single_pool_element",
+        "location": "eternalnether:catacomb/right_rib/bent_portal",
+        "processors": "eternalnether:catacomb/withered_blackstone",
+        "projection": "rigid"
+      },
+      "weight": 1
+    }
+  ],
+  "fallback": "minecraft:empty"
+}

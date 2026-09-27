@@ -1,5 +1,7 @@
-// 26.2	2026-06-18T23:05:09.748354	Tags for minecraft:block mod id vanilla
+// 26.3	2026-09-27T17:13:18.731924	Tags for minecraft:block mod id vanilla
+5e38aee6aca21ecbb0c0a099167a26dda215f965 data/eternalnether/tags/block/basalt_delta_cannot_replace.json
 703d42eb71daef5dbc3d0b70013d625be952a947 data/eternalnether/tags/block/withered.json
+78734b35684c9498bf039f1d858b60558dce161a data/minecraft/tags/block/cannot_place_basalt_pillar_on.json
 cead91bb4afda9c8acc90f9c5490bce16466b30c data/minecraft/tags/block/mineable/pickaxe.json
 c47079e5f55cc933640771f59c27c961c089a136 data/minecraft/tags/block/needs_diamond_tool.json
 8032c6d8c5595b62e4988972608bd8918900572e data/minecraft/tags/block/slabs.json

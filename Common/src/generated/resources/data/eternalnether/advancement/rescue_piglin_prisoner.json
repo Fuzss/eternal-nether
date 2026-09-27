@@ -3,15 +3,13 @@
   "criteria": {
     "rescue_prisoner": {
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:entity_type": "eternalnether:piglin_prisoner"
-            }
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "eternalnether:piglin_prisoner"
           }
-        ]
+        }
       },
       "trigger": "minecraft:summoned_entity"
     }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "eternalnether:cracked_withered_blackstone_wall"
+        "recipes": "eternalnether:cracked_withered_blackstone_wall"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

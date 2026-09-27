@@ -1,9 +1,0 @@
-// 26.2	2026-06-18T23:05:09.749843	Entity Type Loot Tables
-54c9e9b20ab76f49f9f65ed52ab02f4d8db6038d data/eternalnether/loot_table/entities/corpor.json
-6db6e516dd502283fd7d3af712555f9c9b8ae656 data/eternalnether/loot_table/entities/piglin_hunter.json
-fbb3bd55140c87a49a270378974c05963a698dd5 data/eternalnether/loot_table/entities/piglin_prisoner.json
-a3c046b702bb6ca7d9a3456b3a4639ebdb75cae7 data/eternalnether/loot_table/entities/warped_enderman.json
-c36ac4255a2c4a292e51428ce2b129e5b79b5051 data/eternalnether/loot_table/entities/wex.json
-eb46694e8e969130f1faa10c65c6f835c68307c3 data/eternalnether/loot_table/entities/wither_skeleton_horse.json
-b42a62f4632704bd18c1f8a2e1cf1813ef0fdff8 data/eternalnether/loot_table/entities/wither_skeleton_knight.json
-6d9978b14750676b7a09c3a6b61cedff95a5418b data/eternalnether/loot_table/entities/wraither.json

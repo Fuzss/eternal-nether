@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "eternalnether:chiseled_warped_nether_bricks"
+        "recipes": "eternalnether:chiseled_warped_nether_bricks"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

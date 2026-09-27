@@ -3,49 +3,43 @@
   "criteria": {
     "in_catacomb": {
       "conditions": {
-        "player": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:location": {
-                "structures": "eternalnether:catacomb"
-              }
+        "player": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:location": {
+              "structures": "eternalnether:catacomb"
             }
           }
-        ]
+        }
       },
       "trigger": "minecraft:location"
     },
     "in_citadel": {
       "conditions": {
-        "player": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:location": {
-                "structures": "eternalnether:citadel"
-              }
+        "player": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:location": {
+              "structures": "eternalnether:citadel"
             }
           }
-        ]
+        }
       },
       "trigger": "minecraft:location"
     },
     "in_piglin_manor": {
       "conditions": {
-        "player": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:location": {
-                "structures": "eternalnether:piglin_manor"
-              }
+        "player": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:location": {
+              "structures": "eternalnether:piglin_manor"
             }
           }
-        ]
+        }
       },
       "trigger": "minecraft:location"
     }

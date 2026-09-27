@@ -3,17 +3,15 @@
   "criteria": {
     "in_piglin_manor": {
       "conditions": {
-        "player": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:location": {
-                "structures": "eternalnether:piglin_manor"
-              }
+        "player": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:location": {
+              "structures": "eternalnether:piglin_manor"
             }
           }
-        ]
+        }
       },
       "trigger": "minecraft:location"
     }

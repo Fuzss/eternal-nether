@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "eternalnether:cracked_withered_blackstone_stairs"
+        "recipes": "eternalnether:cracked_withered_blackstone_stairs"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

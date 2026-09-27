@@ -3,15 +3,13 @@
   "criteria": {
     "summon_enderman": {
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:entity_type": "eternalnether:warped_enderman"
-            }
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "eternalnether:warped_enderman"
           }
-        ]
+        }
       },
       "trigger": "minecraft:summoned_entity"
     }

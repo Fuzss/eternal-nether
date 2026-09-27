@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "eternalnether:cracked_withered_blackstone"
+        "recipes": "eternalnether:cracked_withered_blackstone"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

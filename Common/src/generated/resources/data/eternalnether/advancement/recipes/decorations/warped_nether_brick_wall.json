@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "eternalnether:warped_nether_brick_wall"
+        "recipes": "eternalnether:warped_nether_brick_wall"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

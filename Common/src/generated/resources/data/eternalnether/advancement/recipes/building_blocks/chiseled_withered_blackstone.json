@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "eternalnether:chiseled_withered_blackstone"
+        "recipes": "eternalnether:chiseled_withered_blackstone"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
