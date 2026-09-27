@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
@@ -37,8 +38,8 @@ import java.util.stream.Stream;
  * @see net.minecraft.data.structures.SnbtToNbt
  */
 public class StructureTemplateProvider implements DataProvider {
-    protected final PackOutput output;
-    protected final Collection<Path> inputs;
+    private final PackOutput output;
+    private final Collection<Path> inputs;
 
     public StructureTemplateProvider(DataProviderContext context) {
         // TODO replace with the data generator input directories once they are provided by the data provider context
@@ -53,24 +54,43 @@ public class StructureTemplateProvider implements DataProvider {
     @Override
     public CompletableFuture<?> run(CachedOutput cache) {
         Path outputDirectory = this.output.getOutputFolder();
+        List<Throwable> failures = Collections.synchronizedList(new ArrayList<>());
         List<CompletableFuture<?>> tasks = new ArrayList<>();
 
         for (Path inputDirectory : this.inputs) {
+            // Skip absent input directories, the data generator might not have been provided with any.
+            if (!Files.isDirectory(inputDirectory)) {
+                continue;
+            }
+
             // Flatten the nested future, so this task only completes once all structure files of the directory are converted.
             tasks.add(CompletableFuture.supplyAsync(() -> {
                 try (Stream<Path> files = Files.walk(inputDirectory)) {
                     return CompletableFuture.allOf(files.filter((Path path) -> path.toString().endsWith(".nbt"))
                             .map((Path path) -> CompletableFuture.runAsync(() -> {
-                                this.convertStructure(cache, outputDirectory, path, this.getName(inputDirectory, path));
+                                String name = this.getName(inputDirectory, path);
+                                try {
+                                    this.convertStructure(cache, outputDirectory, path, name);
+                                } catch (Exception exception) {
+                                    failures.add(new RuntimeException("Failed to convert structure " + path, exception));
+                                }
                             }, Util.backgroundExecutor().forName(this.getName())))
                             .toArray(CompletableFuture[]::new));
                 } catch (Exception exception) {
-                    throw new RuntimeException("Failed to read structure input directory, aborting", exception);
+                    failures.add(new RuntimeException("Failed to read structure input directory " + inputDirectory, exception));
+                    return CompletableFuture.<Void>completedFuture(null);
                 }
             }, Util.backgroundExecutor().forName(this.getName())).thenCompose(Function.identity()));
         }
 
-        return Util.sequenceFailFast(tasks);
+        return Util.sequenceFailFast(tasks).thenRun(() -> {
+            if (!failures.isEmpty()) {
+                RuntimeException exception = new RuntimeException("Failed to convert " + failures.size()
+                        + " structure template file(s)");
+                failures.forEach(exception::addSuppressed);
+                throw exception;
+            }
+        });
     }
 
     protected String getName(Path inputDirectory, Path structureFile) {
