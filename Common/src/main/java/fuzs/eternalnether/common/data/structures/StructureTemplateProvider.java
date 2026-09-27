@@ -57,8 +57,8 @@ import java.util.stream.Stream;
  * <p>
  * Structures are validated before they are upgraded, as {@link StructureUpdater} silently replaces unknown blocks with
  * air and drops unknown block state properties. Every structure that references an unknown block, an invalid block
- * state property, or an unknown block entity type, loot table, template pool, or spawner entity type is skipped and
- * reported once all structures have been processed.
+ * state property or palette index, or an unknown block entity type, loot table, template pool, or spawner entity type
+ * is skipped and reported once all structures have been processed.
  *
  * @see net.minecraft.data.structures.SnbtToNbt
  */
@@ -84,7 +84,7 @@ public class StructureTemplateProvider implements DataProvider {
     public CompletableFuture<?> run(CachedOutput cache) {
         return this.lookupProvider.thenCompose((HolderLookup.Provider lookupProvider) -> {
             Path outputDirectory = this.output.getOutputFolder();
-            List<Throwable> failures = Collections.synchronizedList(new ArrayList<>());
+            List<Throwable> failureCollector = Collections.synchronizedList(new ArrayList<>());
             List<CompletableFuture<?>> tasks = new ArrayList<>();
 
             for (Path inputDirectory : this.inputs) {
@@ -116,7 +116,7 @@ public class StructureTemplateProvider implements DataProvider {
                             }
                         });
                     } catch (Exception exception) {
-                        failures.add(new StructureConversionException(inputDirectory, exception));
+                        failureCollector.add(new StructureConversionException(inputDirectory, exception));
                         return CompletableFuture.<Void>completedFuture(null);
                     }
 
@@ -129,9 +129,9 @@ public class StructureTemplateProvider implements DataProvider {
                                             entry.getValue(),
                                             entry.getKey(),
                                             lookupProvider,
-                                            failures);
+                                            failureCollector);
                                 } catch (Exception exception) {
-                                    failures.add(new StructureConversionException(entry.getValue(), exception));
+                                    failureCollector.add(new StructureConversionException(entry.getValue(), exception));
                                 }
                             }, Util.backgroundExecutor().forName(this.getName())))
                             .toArray(CompletableFuture[]::new));
@@ -139,10 +139,10 @@ public class StructureTemplateProvider implements DataProvider {
             }
 
             return Util.sequenceFailFast(tasks).thenRun(() -> {
-                if (!failures.isEmpty()) {
+                if (!failureCollector.isEmpty()) {
                     RuntimeException exception = new StructureConversionException(
-                            "Failed to process structure templates (" + failures.size() + " problem(s))");
-                    failures.forEach(exception::addSuppressed);
+                            "Failed to process structure templates (" + failureCollector.size() + " problem(s))");
+                    failureCollector.forEach(exception::addSuppressed);
                     throw exception;
                 }
             });
@@ -166,14 +166,14 @@ public class StructureTemplateProvider implements DataProvider {
         return name.substring(0, name.lastIndexOf('.'));
     }
 
-    public void convertStructure(CachedOutput cache, Path outputDirectory, Path structureFile, String name, HolderLookup.Provider lookupProvider, List<Throwable> failures) throws IOException, CommandSyntaxException {
+    public void convertStructure(CachedOutput cache, Path outputDirectory, Path structureFile, String name, HolderLookup.Provider lookupProvider, List<Throwable> failureCollector) throws IOException, CommandSyntaxException {
         CompoundTag tag = this.readStructure(structureFile);
         CompoundTag fixedTag = DataFixTypes.STRUCTURE.updateToCurrentVersion(DataFixers.getDataFixer(),
                 tag,
                 NbtUtils.getDataVersion(tag, 500));
         // Invalid structures are skipped entirely, mirroring vanilla data generators which fail instead of emitting
         // broken data.
-        if (!this.validateStructure(name, fixedTag, lookupProvider, failures)) {
+        if (!this.validateStructure(name, fixedTag, lookupProvider, failureCollector)) {
             return;
         }
 
@@ -191,49 +191,50 @@ public class StructureTemplateProvider implements DataProvider {
         return NbtIo.readCompressed(structureFile, NbtAccounter.unlimitedHeap());
     }
 
-    private boolean validateStructure(String name, CompoundTag tag, HolderLookup.Provider lookupProvider, List<Throwable> failures) {
+    private boolean validateStructure(String name, CompoundTag tag, HolderLookup.Provider lookupProvider, List<Throwable> failureCollector) {
         // Collect every issue independently, so all problems of a single structure are reported at once.
-        List<Throwable> issues = new ArrayList<>();
-        this.validatePalette(name, tag, issues::add);
-        this.validateBlockEntities(name, tag, lookupProvider, issues::add);
-        failures.addAll(issues);
-        return issues.isEmpty();
+        List<Throwable> problemCollector = new ArrayList<>();
+        this.validatePalette(name, tag, problemCollector::add);
+        this.validateBlocks(name, tag, problemCollector::add);
+        this.validateBlockEntities(name, tag, lookupProvider, problemCollector::add);
+        failureCollector.addAll(problemCollector);
+        return problemCollector.isEmpty();
     }
 
-    public void validatePalette(String name, CompoundTag tag, Consumer<Throwable> issues) {
+    public void validatePalette(String name, CompoundTag tag, Consumer<Throwable> problemCollector) {
         // Structures either use a single palette for all blocks...
         tag.getList(StructureTemplate.PALETTE_TAG).ifPresent((ListTag palette) -> {
-            this.validatePalette(name, palette, issues);
+            this.validatePalette(name, palette, problemCollector);
         });
         // ...or multiple palettes, one of which is picked per block.
         tag.getList(StructureTemplate.PALETTE_LIST_TAG).ifPresent((ListTag palettes) -> {
             for (int i = 0; i < palettes.size(); i++) {
-                this.validatePalette(name, palettes.getListOrEmpty(i), issues);
+                this.validatePalette(name, palettes.getListOrEmpty(i), problemCollector);
             }
         });
     }
 
-    public void validatePalette(String name, ListTag palette, Consumer<Throwable> issues) {
+    public void validatePalette(String name, ListTag palette, Consumer<Throwable> problemCollector) {
         for (int i = 0; i < palette.size(); i++) {
             // Each palette entry is a block state stored as an "id" with an optional "properties" compound.
             CompoundTag entry = palette.getCompoundOrEmpty(i);
             Optional<String> blockId = entry.getString("id");
             if (blockId.isEmpty()) {
-                issues.accept(new StructureConversionException(
+                problemCollector.accept(new StructureConversionException(
                         "Structure '" + name + "' has a palette entry without a block id"));
                 continue;
             }
 
             Identifier identifier = Identifier.tryParse(blockId.get());
             if (identifier == null) {
-                issues.accept(new StructureConversionException(
+                problemCollector.accept(new StructureConversionException(
                         "Structure '" + name + "' has an invalid block id '" + blockId.get() + "'"));
                 continue;
             }
 
             Optional<Block> block = BuiltInRegistries.BLOCK.getOptional(identifier);
             if (block.isEmpty()) {
-                issues.accept(new StructureConversionException(
+                problemCollector.accept(new StructureConversionException(
                         "Structure '" + name + "' references unknown block '" + blockId.get() + "'"));
                 continue;
             }
@@ -243,13 +244,13 @@ public class StructureTemplateProvider implements DataProvider {
                 for (String key : properties.keySet()) {
                     Property<?> property = definition.getProperty(key);
                     if (property == null) {
-                        issues.accept(new StructureConversionException(
+                        problemCollector.accept(new StructureConversionException(
                                 "Structure '" + name + "' has unknown property '" + key + "' for block '"
                                         + blockId.get() + "'"));
                     } else {
                         Optional<String> value = properties.getString(key);
                         if (value.isEmpty() || property.getValue(value.get()).isEmpty()) {
-                            issues.accept(new StructureConversionException(
+                            problemCollector.accept(new StructureConversionException(
                                     "Structure '" + name + "' has invalid property value '" + value.orElse("")
                                             + "' for property '" + key + "' of block '" + blockId.get() + "'"));
                         }
@@ -259,31 +260,56 @@ public class StructureTemplateProvider implements DataProvider {
         }
     }
 
-    public void validateBlockEntities(String name, CompoundTag tag, HolderLookup.Provider lookupProvider, Consumer<Throwable> issues) {
+    public void validateBlocks(String name, CompoundTag tag, Consumer<Throwable> problemCollector) {
+        // Collect the size of every palette a block state index can refer to.
+        List<Integer> paletteSizes = new ArrayList<>();
+        tag.getList(StructureTemplate.PALETTE_TAG).ifPresent((ListTag palette) -> paletteSizes.add(palette.size()));
+        tag.getList(StructureTemplate.PALETTE_LIST_TAG).ifPresent((ListTag palettes) -> {
+            for (int i = 0; i < palettes.size(); i++) {
+                paletteSizes.add(palettes.getListOrEmpty(i).size());
+            }
+        });
+
+        ListTag blocks = tag.getListOrEmpty(StructureTemplate.BLOCKS_TAG);
+        for (int i = 0; i < blocks.size(); i++) {
+            // "state" is the index into the palette, an out-of-bounds index silently resolves to air when loading.
+            int state = blocks.getCompoundOrEmpty(i).getIntOr("state", 0);
+            for (int paletteSize : paletteSizes) {
+                if (state < 0 || state >= paletteSize) {
+                    problemCollector.accept(new StructureConversionException(
+                            "Structure '" + name + "' has a block with state index " + state
+                                    + " outside of the palette (size " + paletteSize + ")"));
+                    break;
+                }
+            }
+        }
+    }
+
+    public void validateBlockEntities(String name, CompoundTag tag, HolderLookup.Provider lookupProvider, Consumer<Throwable> problemCollector) {
         HolderLookup.RegistryLookup<StructureTemplatePool> templatePools = lookupProvider.lookupOrThrow(Registries.TEMPLATE_POOL);
         HolderLookup.RegistryLookup<LootTable> lootTables = lookupProvider.lookupOrThrow(Registries.LOOT_TABLE);
         ListTag blocks = tag.getListOrEmpty(StructureTemplate.BLOCKS_TAG);
         for (int i = 0; i < blocks.size(); i++) {
             // Block entities are stored as a raw "nbt" compound on their entry in the "blocks" list.
             blocks.getCompoundOrEmpty(i).getCompound("nbt").ifPresent((CompoundTag blockEntity) -> {
-                this.validateBlockEntity(name, blockEntity, templatePools, lootTables, issues);
+                this.validateBlockEntity(name, blockEntity, templatePools, lootTables, problemCollector);
             });
         }
     }
 
-    public void validateBlockEntity(String name, CompoundTag blockEntity, HolderLookup.RegistryLookup<StructureTemplatePool> templatePools, HolderLookup.RegistryLookup<LootTable> lootTables, Consumer<Throwable> issues) {
+    public void validateBlockEntity(String name, CompoundTag blockEntity, HolderLookup.RegistryLookup<StructureTemplatePool> templatePools, HolderLookup.RegistryLookup<LootTable> lootTables, Consumer<Throwable> problemCollector) {
         // "id" is the block entity type.
         this.validateStaticReference(name,
                 blockEntity,
                 "id",
                 "block entity type",
                 BuiltInRegistries.BLOCK_ENTITY_TYPE,
-                issues);
+                problemCollector);
         // Chest-like block entities reference their loot table.
         blockEntity.getString(RandomizableContainer.LOOT_TABLE_TAG).ifPresent((String lootTable) -> {
             Identifier identifier = Identifier.tryParse(lootTable);
             if (identifier == null || lootTables.get(ResourceKey.create(Registries.LOOT_TABLE, identifier)).isEmpty()) {
-                issues.accept(new StructureConversionException(
+                problemCollector.accept(new StructureConversionException(
                         "Structure '" + name + "' references unknown loot table '" + lootTable + "'"));
             }
         });
@@ -292,35 +318,40 @@ public class StructureTemplateProvider implements DataProvider {
             Identifier identifier = Identifier.tryParse(templatePool);
             if (identifier == null || templatePools.get(ResourceKey.create(Registries.TEMPLATE_POOL, identifier))
                     .isEmpty()) {
-                issues.accept(new StructureConversionException(
+                problemCollector.accept(new StructureConversionException(
                         "Structure '" + name + "' references unknown template pool '" + templatePool + "'"));
             }
         });
         // Spawners store their mobs in "SpawnData" and "SpawnPotentials".
         blockEntity.getCompound(BaseSpawner.SPAWN_DATA_TAG).ifPresent((CompoundTag spawnData) -> {
-            this.validateSpawnData(name, spawnData, issues);
+            this.validateSpawnData(name, spawnData, problemCollector);
         });
         blockEntity.getList("SpawnPotentials").ifPresent((ListTag spawnPotentials) -> {
             for (int i = 0; i < spawnPotentials.size(); i++) {
                 spawnPotentials.getCompoundOrEmpty(i).getCompound("data").ifPresent((CompoundTag spawnData) -> {
-                    this.validateSpawnData(name, spawnData, issues);
+                    this.validateSpawnData(name, spawnData, problemCollector);
                 });
             }
         });
     }
 
-    public void validateSpawnData(String name, CompoundTag spawnData, Consumer<Throwable> issues) {
+    public void validateSpawnData(String name, CompoundTag spawnData, Consumer<Throwable> problemCollector) {
         // "entity" holds the mob nbt, its "id" is the entity type.
         spawnData.getCompound(SpawnData.ENTITY_TAG).ifPresent((CompoundTag entity) -> {
-            this.validateStaticReference(name, entity, "id", "entity type", BuiltInRegistries.ENTITY_TYPE, issues);
+            this.validateStaticReference(name,
+                    entity,
+                    "id",
+                    "entity type",
+                    BuiltInRegistries.ENTITY_TYPE,
+                    problemCollector);
         });
     }
 
-    private void validateStaticReference(String name, CompoundTag tag, String key, String description, Registry<?> registry, Consumer<Throwable> issues) {
+    private void validateStaticReference(String name, CompoundTag tag, String key, String description, Registry<?> registry, Consumer<Throwable> problemCollector) {
         tag.getString(key).ifPresent((String id) -> {
             Identifier identifier = Identifier.tryParse(id);
             if (identifier == null || !registry.containsKey(identifier)) {
-                issues.accept(new StructureConversionException(
+                problemCollector.accept(new StructureConversionException(
                         "Structure '" + name + "' references unknown " + description + " '" + id + "'"));
             }
         });
