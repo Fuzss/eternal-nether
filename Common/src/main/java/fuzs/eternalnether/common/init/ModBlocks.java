@@ -54,7 +54,7 @@ public final class ModBlocks {
                     .strength(50.0F, 1200.0F)
                     .sound(SoundType.ANVIL)
                     .forceSolidOn()
-                    .pushReaction(PushReaction.DESTROY));
+                    .pushReaction(PushReaction.POPPED));
 
     public static final Holder.Reference<BlockEntityType<NetheriteBellBlockEntity>> NETHERITE_BELL_BLOCK_ENTITY_TYPE = ModRegistry.REGISTRIES.registerBlockEntityType(
             "netherite_bell",

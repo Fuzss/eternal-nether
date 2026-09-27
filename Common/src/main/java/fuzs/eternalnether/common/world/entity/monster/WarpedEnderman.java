@@ -28,7 +28,7 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.ResetUniversalAngerTargetGoal;
-import net.minecraft.world.entity.monster.EnderMan;
+import net.minecraft.world.entity.monster.Enderman;
 import net.minecraft.world.entity.monster.Endermite;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
@@ -43,7 +43,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.Locale;
 import java.util.Map;
 
-public class WarpedEnderman extends EnderMan implements Shearable {
+public class WarpedEnderman extends Enderman implements Shearable {
     private static final Map<SoundEvent, SoundEvent> SOUND_EVENTS = ImmutableMap.of(SoundEvents.ENDERMAN_AMBIENT,
             ModSoundEvents.WARPED_ENDERMAN_AMBIENT.value(),
             SoundEvents.ENDERMAN_DEATH,
@@ -62,7 +62,7 @@ public class WarpedEnderman extends EnderMan implements Shearable {
 
     private int shearCooldownCounter;
 
-    public WarpedEnderman(EntityType<? extends EnderMan> entityType, Level level) {
+    public WarpedEnderman(EntityType<? extends Enderman> entityType, Level level) {
         super(entityType, level);
     }
 
@@ -169,7 +169,7 @@ public class WarpedEnderman extends EnderMan implements Shearable {
             case FRESH -> {
                 this.convertTo(EntityTypes.ENDERMAN,
                         ConversionParams.single(this, false, false),
-                        (EnderMan enderMan) -> {
+                        (Enderman enderMan) -> {
                             level.sendParticles(ParticleTypes.EXPLOSION,
                                     this.getX(),
                                     this.getY(0.5),

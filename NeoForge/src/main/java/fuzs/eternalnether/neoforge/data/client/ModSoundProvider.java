@@ -2,8 +2,8 @@ package fuzs.eternalnether.neoforge.data.client;
 
 import fuzs.eternalnether.common.EternalNether;
 import fuzs.eternalnether.common.init.ModSoundEvents;
-import fuzs.puzzleslib.common.api.data.v2.core.DataProviderContext;
-import fuzs.puzzleslib.neoforge.api.client.data.v2.AbstractSoundProvider;
+import fuzs.puzzleslib.common.api.data.v3.core.DataProviderContext;
+import fuzs.puzzleslib.neoforge.api.client.data.v3.sounds.AbstractSoundProvider;
 
 public class ModSoundProvider extends AbstractSoundProvider {
 
@@ -12,7 +12,7 @@ public class ModSoundProvider extends AbstractSoundProvider {
     }
 
     @Override
-    public void addSounds() {
+    public void registerSounds() {
         this.addRecord(ModSoundEvents.WITHER_WALTZ);
         this.add(ModSoundEvents.ITEM_SWORD_BLOCK_SOUND_EVENT.value(),
                 sound(EternalNether.id("item/sword/block1")).volume(0.8),

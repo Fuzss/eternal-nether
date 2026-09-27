@@ -7,7 +7,7 @@ import fuzs.eternalnether.common.data.client.ModModelProvider;
 import fuzs.eternalnether.common.data.client.ModAtlasProvider;
 import fuzs.eternalnether.neoforge.data.client.ModSoundProvider;
 import fuzs.puzzleslib.common.api.client.core.v1.ClientModConstructor;
-import fuzs.puzzleslib.neoforge.api.data.v2.core.DataProviderHelper;
+import fuzs.puzzleslib.neoforge.api.data.v3.core.DataProviderBuilder;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.common.Mod;
 
@@ -16,10 +16,10 @@ public class EternalNetherNeoForgeClient {
 
     public EternalNetherNeoForgeClient() {
         ClientModConstructor.construct(EternalNether.MOD_ID, EternalNetherClient::new);
-        DataProviderHelper.registerDataProviders(EternalNether.MOD_ID,
-                ModLanguageProvider::new,
-                ModModelProvider::new,
-                ModAtlasProvider::new,
-                ModSoundProvider::new);
+        DataProviderBuilder.of(EternalNether.MOD_ID)
+                .addProvider(ModLanguageProvider::new,
+                        ModModelProvider::new,
+                        ModAtlasProvider::new,
+                        ModSoundProvider::new);
     }
 }

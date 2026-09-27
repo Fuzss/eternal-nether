@@ -2,18 +2,18 @@ package fuzs.eternalnether.common.data.loot;
 
 import fuzs.eternalnether.common.init.ModBlockFamilies;
 import fuzs.eternalnether.common.init.ModBlocks;
-import fuzs.puzzleslib.common.api.data.v2.AbstractLootProvider;
-import fuzs.puzzleslib.common.api.data.v2.core.DataProviderContext;
+import fuzs.puzzleslib.common.api.data.v3.loot.AbstractBlockLootSubProvider;
 import fuzs.puzzleslib.common.api.init.v3.family.BlockSetFamily;
+import net.minecraft.data.loot.LootTableSubProvider;
 
-public class ModBlockLootProvider extends AbstractLootProvider.Blocks {
+public class ModBlockLootProvider extends AbstractBlockLootSubProvider {
 
-    public ModBlockLootProvider(DataProviderContext context) {
-        super(context);
+    public ModBlockLootProvider(LootTableSubProvider.Context output) {
+        super(output);
     }
 
     @Override
-    public void addLootTables() {
+    public void generate() {
         ModBlockFamilies.getAllBlockSetFamilies().forEach((BlockSetFamily blockSetFamily) -> {
             this.generateFor(blockSetFamily, VARIANT_PROVIDERS);
         });

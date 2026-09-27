@@ -43,7 +43,17 @@ public class NetheriteBellRenderer extends BellRenderer {
                 -1,
                 NETHERITE_BELL_TEXTURE,
                 this.sprites,
-                0,
-                state.breakProgress);
+                0);
+        if (state.breakProgress != null) {
+            submitNodeCollector.order(1)
+                    .submitCrumblingOverlay(this.model,
+                            modelState,
+                            poseStack,
+                            NETHERITE_BELL_TEXTURE.renderType(this.model.renderType()),
+                            state.lightCoords,
+                            OverlayTexture.NO_OVERLAY,
+                            -1,
+                            state.breakProgress);
+        }
     }
 }

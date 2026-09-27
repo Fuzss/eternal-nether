@@ -3,8 +3,8 @@ package fuzs.eternalnether.common.data.tags;
 import fuzs.eternalnether.common.init.ModBlockFamilies;
 import fuzs.eternalnether.common.init.ModItems;
 import fuzs.eternalnether.common.init.ModTags;
-import fuzs.puzzleslib.common.api.data.v2.core.DataProviderContext;
-import fuzs.puzzleslib.common.api.data.v2.tags.AbstractTagProvider;
+import fuzs.puzzleslib.common.api.data.v3.core.DataProviderContext;
+import fuzs.puzzleslib.common.api.data.v3.tags.AbstractTagsProvider;
 import fuzs.puzzleslib.common.api.init.v3.family.BlockSetFamily;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -12,7 +12,7 @@ import net.minecraft.references.ItemIds;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 
-public class ModItemTagsProvider extends AbstractTagProvider<Item> {
+public class ModItemTagsProvider extends AbstractTagsProvider<Item> {
 
     public ModItemTagsProvider(DataProviderContext context) {
         super(Registries.ITEM, context);

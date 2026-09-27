@@ -54,16 +54,28 @@ public class GildedNetheriteShieldSpecialRenderer extends ShieldSpecialRenderer 
         DyeColor baseColor = components != null ? components.get(DataComponents.BASE_COLOR) : null;
         boolean hasPatterns = !patterns.layers().isEmpty() || baseColor != null;
         SpriteId base = hasPatterns ? SHIELD_BASE : SHIELD_BASE_NO_PATTERN;
-        submitNodeCollector.submitModel(this.model,
-                Unit.INSTANCE,
-                poseStack,
-                lightCoords,
-                overlayCoords,
-                -1,
-                base,
-                this.sprites,
-                outlineColor,
-                null);
+        if (hasFoil && !hasPatterns) {
+            submitNodeCollector.submitModel(this.model,
+                    Unit.INSTANCE,
+                    poseStack,
+                    RenderTypes.entitySolidGlint(base.atlasLocation()),
+                    lightCoords,
+                    overlayCoords,
+                    -1,
+                    this.sprites.get(base),
+                    outlineColor);
+        } else {
+            submitNodeCollector.submitModel(this.model,
+                    Unit.INSTANCE,
+                    poseStack,
+                    lightCoords,
+                    overlayCoords,
+                    -1,
+                    base,
+                    this.sprites,
+                    outlineColor);
+        }
+
         if (hasPatterns) {
             BannerRenderer.submitPatterns(this.sprites,
                     poseStack,
@@ -74,21 +86,19 @@ public class GildedNetheriteShieldSpecialRenderer extends ShieldSpecialRenderer 
                     Unit.INSTANCE,
                     false,
                     Objects.requireNonNullElse(baseColor, DyeColor.WHITE),
-                    patterns,
-                    null);
-        }
-
-        if (hasFoil) {
-            submitNodeCollector.submitModel(this.model,
-                    Unit.INSTANCE,
-                    poseStack,
-                    RenderTypes.entityGlint(),
-                    lightCoords,
-                    overlayCoords,
-                    -1,
-                    this.sprites.get(base),
-                    0,
-                    null);
+                    patterns);
+            if (hasFoil) {
+                submitNodeCollector.order(patterns.layers().size() + 2)
+                        .submitModel(this.model,
+                                Unit.INSTANCE,
+                                poseStack,
+                                RenderTypes.patternedShieldGlint(),
+                                lightCoords,
+                                overlayCoords,
+                                -1,
+                                this.sprites.get(base),
+                                0);
+            }
         }
     }
 

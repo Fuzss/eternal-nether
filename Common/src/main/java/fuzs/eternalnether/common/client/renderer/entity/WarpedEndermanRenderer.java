@@ -16,7 +16,7 @@ import net.minecraft.client.renderer.entity.EndermanRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider.Context;
 import net.minecraft.client.renderer.entity.state.EndermanRenderState;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.monster.EnderMan;
+import net.minecraft.world.entity.monster.Enderman;
 
 import java.util.Map;
 
@@ -62,7 +62,7 @@ public class WarpedEndermanRenderer extends EndermanRenderer {
     }
 
     @Override
-    public void extractRenderState(EnderMan enderMan, EndermanRenderState endermanRenderState, float partialTick) {
+    public void extractRenderState(Enderman enderMan, EndermanRenderState endermanRenderState, float partialTick) {
         super.extractRenderState(enderMan, endermanRenderState, partialTick);
         ((WarpedEndermanRenderState) endermanRenderState).variant = ((WarpedEnderman) enderMan).getVariant();
     }

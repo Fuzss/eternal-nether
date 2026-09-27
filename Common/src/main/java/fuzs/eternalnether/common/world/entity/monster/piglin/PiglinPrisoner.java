@@ -25,6 +25,7 @@ import net.minecraft.world.entity.monster.piglin.AbstractPiglin;
 import net.minecraft.world.entity.monster.piglin.PiglinArmPose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.SwingAnimation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -149,7 +150,7 @@ public class PiglinPrisoner extends AgeablePiglin implements OwnableEntity {
 
     private void throwItemsTowardPos(List<ItemStack> stacks, Vec3 pos) {
         if (!stacks.isEmpty()) {
-            this.swing(InteractionHand.OFF_HAND);
+            this.swing(InteractionHand.OFF_HAND, SwingAnimation.DEFAULT);
 
             for (ItemStack itemStack : stacks) {
                 BehaviorUtils.throwItem(this, itemStack, pos.add(0.0, 1.0, 0.0));

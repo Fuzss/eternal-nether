@@ -14,11 +14,9 @@ import fuzs.eternalnether.common.world.entity.monster.skeleton.WitherSkeletonKni
 import fuzs.eternalnether.common.world.entity.monster.skeleton.Wraither;
 import fuzs.eternalnether.common.world.entity.projectile.ThrownWarpedEnderpearl;
 import fuzs.eternalnether.common.world.item.WitheredBoneMealItem;
-import fuzs.puzzleslib.common.api.biome.v1.BiomeLoadingContext;
-import fuzs.puzzleslib.common.api.biome.v1.BiomeLoadingPhase;
-import fuzs.puzzleslib.common.api.biome.v1.BiomeModificationContext;
+import fuzs.puzzleslib.common.api.biome.v2.BiomeLoadingPhase;
 import fuzs.puzzleslib.common.api.core.v1.ModConstructor;
-import fuzs.puzzleslib.common.api.core.v1.context.BiomeModificationsContext;
+import fuzs.puzzleslib.common.api.core.v1.context.BiomeTransformationsContext;
 import fuzs.puzzleslib.common.api.core.v1.context.EntityAttributesContext;
 import fuzs.puzzleslib.common.api.core.v1.context.SpawnPlacementsContext;
 import fuzs.puzzleslib.common.api.event.v1.entity.EnderPearlTeleportCallback;
@@ -80,13 +78,13 @@ public class EternalNether implements ModConstructor {
     }
 
     @Override
-    public void onRegisterBiomeModifications(BiomeModificationsContext context) {
-        context.registerBiomeModification(BiomeLoadingPhase.ADDITIONS,
-                (BiomeLoadingContext biomeLoadingContext) -> biomeLoadingContext.is(Biomes.SOUL_SAND_VALLEY),
-                (BiomeModificationContext biomeModificationContext) -> {
-                    biomeModificationContext.generationSettings()
+    public void onRegisterBiomeTransformations(BiomeTransformationsContext context) {
+        context.registerBiomeTransformation(BiomeLoadingPhase.ADD,
+                (registries, biome) -> biome.is(Biomes.SOUL_SAND_VALLEY),
+                (registries, biome, transformation) -> {
+                    transformation.generation()
                             .addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION,
-                                    ModRegistry.SOUL_STONE_BLOBS_PLACED_FEATURE);
+                                    registries.getOrThrow(ModRegistry.SOUL_STONE_BLOBS_PLACED_FEATURE));
                 });
     }
 

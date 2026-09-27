@@ -4,10 +4,10 @@ import fuzs.eternalnether.common.client.renderer.special.GildedNetheriteShieldSp
 import fuzs.eternalnether.common.init.ModBlockFamilies;
 import fuzs.eternalnether.common.init.ModBlocks;
 import fuzs.eternalnether.common.init.ModItems;
-import fuzs.puzzleslib.common.api.client.data.v2.AbstractModelProvider;
-import fuzs.puzzleslib.common.api.client.data.v2.models.ItemModelGenerationHelper;
-import fuzs.puzzleslib.common.api.client.data.v2.models.ModelLocationHelper;
-import fuzs.puzzleslib.common.api.data.v2.core.DataProviderContext;
+import fuzs.puzzleslib.common.api.client.data.v3.models.AbstractModelProvider;
+import fuzs.puzzleslib.common.api.client.data.v3.models.ItemModelGenerationHelper;
+import fuzs.puzzleslib.common.api.client.data.v3.models.ModelLocationHelper;
+import fuzs.puzzleslib.common.api.data.v3.core.DataProviderContext;
 import fuzs.puzzleslib.common.api.init.v3.family.BlockSetVariant;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;

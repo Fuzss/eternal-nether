@@ -1,6 +1,5 @@
 package fuzs.eternalnether.common.world.level.block;
 
-import com.mojang.serialization.MapCodec;
 import fuzs.eternalnether.common.init.ModBlocks;
 import fuzs.eternalnether.common.world.level.block.entity.NetheriteBellBlockEntity;
 import fuzs.puzzleslib.common.api.block.v1.entity.TickingEntityBlock;
@@ -14,15 +13,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
 public class NetheriteBellBlock extends BellBlock implements TickingEntityBlock<NetheriteBellBlockEntity> {
-    public static final MapCodec<BellBlock> CODEC = simpleCodec(NetheriteBellBlock::new);
 
     public NetheriteBellBlock(Properties properties) {
         super(properties);
-    }
-
-    @Override
-    public MapCodec<BellBlock> codec() {
-        return CODEC;
     }
 
     @Override

@@ -90,8 +90,7 @@ public class HoglinSkullLayer extends RenderLayer<PiglinRenderState, PiglinModel
                     RenderTypes.entitySolid(SKULL_TEXTURE_LOCATION),
                     packedLight,
                     OverlayTexture.NO_OVERLAY,
-                    renderState.outlineColor,
-                    null);
+                    renderState.outlineColor);
             poseStack.popPose();
         }
     }

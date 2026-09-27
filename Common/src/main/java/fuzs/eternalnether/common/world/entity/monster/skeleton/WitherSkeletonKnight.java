@@ -138,8 +138,8 @@ public class WitherSkeletonKnight extends WitherSkeleton implements ShieldedMob 
      * @see Player#blockUsingItem(ServerLevel, LivingEntity, DamageSource, float)
      */
     @Override
-    protected void blockUsingItem(ServerLevel level, LivingEntity attacker, DamageSource source, float damage) {
-        super.blockUsingItem(level, attacker, source, damage);
+    protected void blockUsingItem(ServerLevel level, LivingEntity attacker, DamageSource source, float damage, boolean fullyBlocked) {
+        super.blockUsingItem(level, attacker, source, damage, fullyBlocked);
         ItemStack itemStack = this.getItemBlockingWith();
         BlocksAttacks blocksAttacks = itemStack != null ? itemStack.get(DataComponents.BLOCKS_ATTACKS) : null;
         float secondsToDisableBlocking = attacker.getSecondsToDisableBlocking();

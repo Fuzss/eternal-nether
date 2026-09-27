@@ -5,10 +5,9 @@ import fuzs.eternalnether.common.world.entity.monster.WarpedEnderman;
 import fuzs.eternalnether.common.world.level.levelgen.structure.CatacombStructure;
 import fuzs.eternalnether.common.world.level.levelgen.structure.CitadelStructure;
 import fuzs.eternalnether.common.world.level.levelgen.structure.PiglinManorStructure;
-import fuzs.puzzleslib.common.api.data.v2.AbstractDatapackRegistriesProvider;
+import fuzs.puzzleslib.common.api.init.v3.registry.ContentRegistrationHelper;
 import fuzs.puzzleslib.common.api.init.v3.registry.RegistryManager;
 import net.minecraft.core.Holder;
-import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.syncher.EntityDataSerializer;
@@ -22,10 +21,6 @@ import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.storage.loot.LootTable;
 
 public final class ModRegistry {
-    public static final RegistrySetBuilder REGISTRY_SET_BUILDER = new RegistrySetBuilder().add(Registries.JUKEBOX_SONG,
-                    ModRegistry::bootstrapJukeboxSongs)
-            .add(Registries.STRUCTURE, ModStructures::bootstrapStructures)
-            .add(Registries.STRUCTURE_SET, ModStructureSets::bootstrapStructureSets);
     static final RegistryManager REGISTRIES = RegistryManager.from(EternalNether.MOD_ID);
     public static final Holder.Reference<StructureType<PiglinManorStructure>> PIGLIN_MANOR_STRUCTURE_TYPE = REGISTRIES.register(
             Registries.STRUCTURE_TYPE,
@@ -88,7 +83,7 @@ public final class ModRegistry {
     }
 
     public static void bootstrapJukeboxSongs(BootstrapContext<JukeboxSong> context) {
-        AbstractDatapackRegistriesProvider.registerJukeboxSong(context,
+        ContentRegistrationHelper.registerJukeboxSong(context,
                 ModItems.WITHER_WALTZ_JUKEBOX_SONG,
                 ModSoundEvents.WITHER_WALTZ,
                 5040.0F,
