@@ -103,7 +103,7 @@ public class PiglinPrisoner extends AgeablePiglin implements OwnableEntity {
             this.playConvertedSound();
             this.throwItems(Collections.singletonList(new ItemStack(ModItems.GILDED_NETHERITE_SHIELD)));
             ModFeatures.PIGLIN_PRISONER_CONVERSIONS.getRandom(this.random).map(Holder::value).ifPresent(entityType -> {
-                this.finishRescue(serverLevel, entityType);
+                this.finishRescue(serverLevel, (EntityType<? extends Mob>) entityType);
             });
         }
     }

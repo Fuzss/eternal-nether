@@ -2,6 +2,7 @@ package fuzs.eternalnether.common.init;
 
 import fuzs.eternalnether.common.world.level.levelgen.structure.CatacombStructure;
 import fuzs.eternalnether.common.world.level.levelgen.structure.CitadelStructure;
+import fuzs.eternalnether.common.world.level.levelgen.structure.PiglinManorStructure;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
@@ -74,7 +75,7 @@ public final class ModStructures {
                         Optional.empty(),
                         new JigsawStructure.MaxDistance(116)));
         context.register(PIGLIN_MANOR_STRUCTURE,
-                new CitadelStructure(new Structure.StructureSettings.Builder(context.lookup(Registries.BIOME)
+                new PiglinManorStructure(new Structure.StructureSettings.Builder(context.lookup(Registries.BIOME)
                         .getOrThrow(ModTags.HAS_PIGLIN_MANOR_BIOME_TAG_KEY)).spawnOverrides(Map.of(MobCategory.MONSTER,
                                 new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.PIECE,
                                         WeightedList.of(new Weighted<>(new MobSpawnSettings.SpawnerData(EntityTypes.PIGLIN,

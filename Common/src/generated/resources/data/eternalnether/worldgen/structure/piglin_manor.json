@@ -1,5 +1,5 @@
 {
-  "type": "eternalnether:citadel",
+  "type": "eternalnether:piglin_manor",
   "biomes": "#eternalnether:has_structure/piglin_manor",
   "max_distance_from_center": 116,
   "size": 1,

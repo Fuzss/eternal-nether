@@ -20,8 +20,9 @@ public record MobFeature(WeightedList<Holder<EntityType<?>>> entities) implement
                     BuiltInRegistries.ENTITY_TYPE.holderByNameCodec()).fieldOf("entities").forGetter(MobFeature::entities))
             .apply(instance, MobFeature::new));
 
-    public MobFeature(Holder<EntityType<?>> entityType) {
-        this(WeightedList.of(entityType));
+    @SuppressWarnings("unchecked")
+    public MobFeature(Holder<? extends EntityType<?>> entityType) {
+        this(WeightedList.of((Holder<EntityType<?>>) entityType));
     }
 
     @Override

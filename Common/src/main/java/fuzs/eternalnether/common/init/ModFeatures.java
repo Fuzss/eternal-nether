@@ -22,15 +22,19 @@ public final class ModFeatures {
     public static final WeightedList<Holder<EntityType<?>>> PIGLIN_PRISONER_CONVERSIONS;
 
     static {
-        PIGLIN_MANOR_MOBS = WeightedList.of(new Weighted<>(ModEntityTypes.PIGLIN_HUNTER, 1),
-                new Weighted<>(EntityTypes.PIGLIN.builtInRegistryHolder(), 3));
-        CATACOMB_MOBS = WeightedList.of(new Weighted<>(ModEntityTypes.CORPOR, 1),
-                new Weighted<>(ModEntityTypes.WITHER_SKELETON_KNIGHT, 2),
-                new Weighted<>(ModEntityTypes.WRAITHER, 3),
-                new Weighted<>(EntityTypes.WITHER_SKELETON.builtInRegistryHolder(), 1));
-        PIGLIN_PRISONER_CONVERSIONS = WeightedList.of(new Weighted<>(EntityTypes.PIGLIN.builtInRegistryHolder(), 4),
-                new Weighted<>((Holder<EntityType<?>>) (Holder<?>) ModEntityTypes.PIGLIN_HUNTER, 3),
-                new Weighted<>(EntityTypes.PIGLIN_BRUTE.builtInRegistryHolder(), 1));
+        PIGLIN_MANOR_MOBS = WeightedList.of(weighted(ModEntityTypes.PIGLIN_HUNTER, 1),
+                weighted(EntityTypes.PIGLIN.builtInRegistryHolder(), 3));
+        CATACOMB_MOBS = WeightedList.of(weighted(ModEntityTypes.CORPOR, 1),
+                weighted(ModEntityTypes.WITHER_SKELETON_KNIGHT, 2),
+                weighted(ModEntityTypes.WRAITHER, 3),
+                weighted(EntityTypes.WITHER_SKELETON.builtInRegistryHolder(), 1));
+        PIGLIN_PRISONER_CONVERSIONS = WeightedList.of(weighted(EntityTypes.PIGLIN.builtInRegistryHolder(), 4),
+                weighted(ModEntityTypes.PIGLIN_HUNTER, 3),
+                weighted(EntityTypes.PIGLIN_BRUTE.builtInRegistryHolder(), 1));
+    }
+
+    private static Weighted<Holder<EntityType<?>>> weighted(Holder<? extends EntityType<?>> entityType, int weight) {
+        return new Weighted<>((Holder<EntityType<?>>) (Holder<?>) entityType, weight);
     }
 
     public static final Holder.Reference<Feature> MOB_FEATURE_PIGLIN_PRISONER = ModRegistry.REGISTRIES.register(

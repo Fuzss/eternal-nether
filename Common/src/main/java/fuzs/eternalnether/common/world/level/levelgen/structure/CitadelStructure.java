@@ -5,12 +5,9 @@ import fuzs.eternalnether.common.init.ModRegistry;
 import fuzs.eternalnether.common.util.ModStructureUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.QuartPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.NoiseColumn;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.LegacyRandomSource;
-import net.minecraft.world.level.levelgen.WorldgenRandom;
 import net.minecraft.world.level.levelgen.heightproviders.HeightProvider;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
@@ -84,23 +81,11 @@ public final class CitadelStructure extends JigsawStructure {
         BlockPos blockpos = context.chunkPos().getMiddleBlockPosition(0);
         NoiseColumn blockReader = context.chunkGenerator()
                 .getBaseColumn(blockpos.getX(), blockpos.getZ(), context.heightAccessor(), context.randomState());
-        return this.isChunkValid(context) && !ModStructureUtils.isLavaLake(blockReader)
+        return !ModStructureUtils.isLavaLake(blockReader)
                 && ModStructureUtils.verticalSpace(blockReader,
                 34,
                 ModStructureUtils.getScaledNetherHeight(context, 72),
                 12);
-    }
-
-    private boolean isChunkValid(Structure.GenerationContext context) {
-        WorldgenRandom worldgenrandom = new WorldgenRandom(new LegacyRandomSource(0L));
-        worldgenrandom.setLargeFeatureSeed(context.seed(), context.chunkPos().x(), context.chunkPos().z());
-        return context.validBiome()
-                .test(context.chunkGenerator()
-                        .getBiomeSource()
-                        .getNoiseBiome(QuartPos.fromBlock(context.chunkPos().getMiddleBlockX()),
-                                QuartPos.fromBlock(64),
-                                QuartPos.fromBlock(context.chunkPos().getMiddleBlockZ()),
-                                context.randomState().sampler()));
     }
 
     @Override
