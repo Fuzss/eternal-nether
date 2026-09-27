@@ -71,7 +71,7 @@ public class StructureTemplateProvider implements DataProvider {
 
     public StructureTemplateProvider(DataProviderContext context) {
         // TODO replace with the data generator input directories once they are provided by the data provider context
-        this(context.getPackOutput(), List.of(Path.of("../Common/src/main/nbt")), context.getRegistries());
+        this(context.getPackOutput(), List.of(Path.of("../Common/src/provided/resources")), context.getRegistries());
     }
 
     public StructureTemplateProvider(PackOutput output, Collection<Path> inputs, CompletableFuture<HolderLookup.Provider> lookupProvider) {

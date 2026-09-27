@@ -7,7 +7,6 @@ import fuzs.eternalnether.common.data.loot.ModChestLootProvider;
 import fuzs.eternalnether.common.data.loot.ModEntityLootProvider;
 import fuzs.eternalnether.common.data.loot.ModShearingLootProvider;
 import fuzs.eternalnether.common.data.recipes.ModRecipeProvider;
-import fuzs.eternalnether.common.data.structures.StructureTemplateProvider;
 import fuzs.eternalnether.common.data.tags.*;
 import fuzs.eternalnether.common.init.*;
 import fuzs.puzzleslib.common.api.core.v1.ModConstructor;
@@ -35,7 +34,6 @@ public class EternalNetherNeoForge {
                         ModBiomeTagsProvider::new,
                         ModTrimMaterialTagsProvider::new,
                         ModDamageTypeTagsProvider::new)
-                .addProvider(StructureTemplateProvider::new)
                 .addLootProvider(ModBlockLootProvider::new, LootContextParamSets.BLOCK)
                 .addLootProvider(ModEntityLootProvider::new, LootContextParamSets.ENTITY)
                 .addLootProvider(ModChestLootProvider::new, LootContextParamSets.CHEST)
